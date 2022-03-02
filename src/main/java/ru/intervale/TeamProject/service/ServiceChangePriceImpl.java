@@ -23,6 +23,7 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
 
     @Autowired
     AlfabankService alfabank;
+
     @Autowired
     DatabaseAccess dto;
 
