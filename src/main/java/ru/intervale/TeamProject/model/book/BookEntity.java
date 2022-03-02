@@ -30,5 +30,6 @@ public class BookEntity {
 
     private String title;
 
+    // дата , цена
     private Map<String, BigDecimal> changePrice;
 }
