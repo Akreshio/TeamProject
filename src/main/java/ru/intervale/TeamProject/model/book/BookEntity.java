@@ -22,7 +22,7 @@ public class BookEntity {
 
     private BigDecimal price;
 
-    private BigDecimal weight;
+    private int weight;
 
     private String isbn;
 

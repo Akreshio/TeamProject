@@ -23,7 +23,7 @@ public class DatabaseAccessImpl implements DatabaseAccess {
     public List<BookEntity> get(String name) {
 
         List<BookEntity> bookEntities = new ArrayList<>();
-        BookEntity book = new BookEntity(10, new BigDecimal(10), new BigDecimal("50.55"), "10-1578-185", "name", "The test book", null);
+        BookEntity book = new BookEntity(10, new BigDecimal("10.50"),100, "10-1578-185", "name", "The test book", null);
         bookEntities.add(book);
 
         return bookEntities;
