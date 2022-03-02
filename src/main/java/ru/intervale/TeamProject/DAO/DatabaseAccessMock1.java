@@ -8,6 +8,7 @@
 package ru.intervale.TeamProject.DAO;
 
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
@@ -18,7 +19,8 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
-public class DatabaseAccessImpl implements DatabaseAccess {
+@Profile("mock1")
+public class DatabaseAccessMock1 implements DatabaseAccess {
 
     @Override
     public List<BookEntity> get(String name) {
