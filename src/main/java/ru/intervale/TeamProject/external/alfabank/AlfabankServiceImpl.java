@@ -54,8 +54,6 @@ public class AlfabankServiceImpl implements AlfabankService{
                 }
             }
         }
-
-
         return changePrice;
     }
 }

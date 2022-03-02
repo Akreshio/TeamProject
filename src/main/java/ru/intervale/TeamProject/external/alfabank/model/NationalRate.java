@@ -1,6 +1,5 @@
 package ru.intervale.TeamProject.external.alfabank.model;
 
-import java.time.LocalDate;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -14,7 +13,6 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Курс валюты Национального банка Республики Беларусь")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-02-18T13:29:10.146+02:00")
 
 public class NationalRate   {
   @JsonProperty("rate")
@@ -182,17 +180,16 @@ public class NationalRate   {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class NationalRate {\n");
-    
-    sb.append("    rate: ").append(toIndentedString(rate)).append("\n");
-    sb.append("    iso: ").append(toIndentedString(iso)).append("\n");
-    sb.append("    code: ").append(toIndentedString(code)).append("\n");
-    sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
-    sb.append("    date: ").append(toIndentedString(date)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("}");
-    return sb.toString();
+
+    String sb = "class NationalRate {\n" +
+            "    rate: " + toIndentedString(rate) + "\n" +
+            "    iso: " + toIndentedString(iso) + "\n" +
+            "    code: " + toIndentedString(code) + "\n" +
+            "    quantity: " + toIndentedString(quantity) + "\n" +
+            "    date: " + toIndentedString(date) + "\n" +
+            "    name: " + toIndentedString(name) + "\n" +
+            "}";
+    return sb;
   }
 
   /**
