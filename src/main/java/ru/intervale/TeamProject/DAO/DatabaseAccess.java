@@ -5,7 +5,7 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.DTO;
+package ru.intervale.TeamProject.DAO;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
 

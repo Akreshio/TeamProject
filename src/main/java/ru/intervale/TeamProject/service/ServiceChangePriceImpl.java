@@ -9,7 +9,7 @@ package ru.intervale.TeamProject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.intervale.TeamProject.DTO.DatabaseAccess;
+import ru.intervale.TeamProject.DAO.DatabaseAccess;
 import ru.intervale.TeamProject.external.alfabank.AlfabankService;
 import ru.intervale.TeamProject.model.book.BookEntity;
 

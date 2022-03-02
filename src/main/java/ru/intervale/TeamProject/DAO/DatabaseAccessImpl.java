@@ -5,7 +5,7 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.DTO;
+package ru.intervale.TeamProject.DAO;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
