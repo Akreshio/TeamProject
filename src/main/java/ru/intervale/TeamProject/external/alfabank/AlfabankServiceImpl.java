@@ -31,7 +31,7 @@ public class AlfabankServiceImpl implements AlfabankService{
 
 
     @Override
-    public Map<String, BigDecimal> get(BigDecimal price, int currency) {
+    public Map<String, BigDecimal> get(int currency) {
 
        /*
        https://ibapi.alfabank.by:8273/partner/1.0.1/public/nationalRates?date=17.01.2022&currencyCode=840'
@@ -49,7 +49,7 @@ public class AlfabankServiceImpl implements AlfabankService{
 
             if (rateList!=null) {
                 for (NationalRate rate : rateList.getRates()) {
-                    BigDecimal quantity = price.multiply(BigDecimal.valueOf(rate.getQuantity()));
+                    BigDecimal quantity = BigDecimal.valueOf(rate.getQuantity());
                     changePrice.put(d, quantity.divide(rate.getRate(), 5, RoundingMode.HALF_UP));
                 }
             }

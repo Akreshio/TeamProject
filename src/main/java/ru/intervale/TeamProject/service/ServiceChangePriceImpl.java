@@ -14,6 +14,8 @@ import ru.intervale.TeamProject.external.alfabank.AlfabankService;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,18 +33,19 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
         List<BookEntity> bookEntities = getBook(name);
 
         for (BookEntity book: bookEntities) {
-            book.setChangePrice(
-                    getChangePrice(
-                            book.getPrice(),currency
-                    )
-            );
+
+            Map<String, BigDecimal> changePrice = new HashMap<>();
+            for (Map.Entry<String, BigDecimal> rate :  getChangePrice(currency).entrySet()) {
+                changePrice.put(rate.getKey(),book.getPrice().multiply(rate.getValue()));
+            }
+            book.setChangePrice(changePrice);
         }
         return bookEntities;
     }
 
 
-    private Map<String, BigDecimal> getChangePrice(BigDecimal price, int currency) {
-        return  alfabank.get(price, currency);
+    private Map<String, BigDecimal> getChangePrice(int currency) {
+        return  alfabank.get(currency);
     }
 
     private List<BookEntity> getBook(String name) {

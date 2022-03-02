@@ -12,6 +12,6 @@ import java.util.Map;
 
 public interface AlfabankService {
 
-    Map<String, BigDecimal> get(BigDecimal price, int currency);
+    Map<String, BigDecimal> get(int currency);
 
 }
