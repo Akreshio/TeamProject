@@ -7,8 +7,8 @@
 
 package ru.intervale.TeamProject.service;
 
-import ru.intervale.TeamProject.DAO.DatabaseAccess;
-import ru.intervale.TeamProject.external.alfabank.AlfabankService;
+import ru.intervale.TeamProject.service.dao.DatabaseAccess;
+import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.util.List;

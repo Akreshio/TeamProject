@@ -9,12 +9,11 @@ package ru.intervale.TeamProject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.intervale.TeamProject.DAO.DatabaseAccess;
-import ru.intervale.TeamProject.external.alfabank.AlfabankService;
+import ru.intervale.TeamProject.service.dao.DatabaseAccess;
+import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
+import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,7 +21,7 @@ import java.util.*;
 
 
 @Service
-public class AlfabankServiceImpl implements AlfabankService{
+public class AlfabankServiceImpl implements AlfabankService {
 
     /**
      * The Rest template .
