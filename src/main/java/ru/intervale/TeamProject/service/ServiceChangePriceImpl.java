@@ -42,7 +42,6 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
         return bookEntities;
     }
 
-
     private Map<String, BigDecimal> getChangePrice(int currency) {
         return  alfabank.get(currency);
     }

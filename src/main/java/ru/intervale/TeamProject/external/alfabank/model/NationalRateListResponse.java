@@ -14,7 +14,6 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Выходная модель, содержащая курсы валют Национального банка Республики Беларусь")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-02-18T13:29:10.146+02:00")
 
 public class NationalRateListResponse   {
   @JsonProperty("rates")

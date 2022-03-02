@@ -1,13 +1,6 @@
 /*
  * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
- * @since "02.03.2022, 21:41"
- * @version V 1.0.0
- */
-
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
  * @since "02.03.2022, 18:58"
  * @version V 1.0.0
  */

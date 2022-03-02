@@ -31,6 +31,7 @@ public interface ServiceChangePrice {
      * @param currency the currency
      * @return the list
      */
+
     List<BookEntity> get (String name, int currency);
 
 
