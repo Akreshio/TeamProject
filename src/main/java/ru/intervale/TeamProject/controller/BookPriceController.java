@@ -36,7 +36,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @NoArgsConstructor
-public class BookPriceApiController implements BookPriceApi {
+public class BookPriceController implements BookPrice {
 
     @Autowired
     ServiceChangePriceImpl service;

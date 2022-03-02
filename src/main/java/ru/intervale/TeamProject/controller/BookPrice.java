@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
-public interface BookPriceApi {
+public interface BookPrice {
 
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "get", notes = "Возвращает json", tags={ "public", })
