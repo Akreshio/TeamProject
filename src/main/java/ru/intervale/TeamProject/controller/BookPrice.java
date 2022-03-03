@@ -9,12 +9,13 @@ package ru.intervale.TeamProject.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.intervale.TeamProject.model.book.Currency;
 
 import javax.validation.Valid;
-import java.util.List;
 public interface BookPrice {
 
 
@@ -22,12 +23,11 @@ public interface BookPrice {
     @RequestMapping(value = "/price/stat",
             produces = { "application/json;charset=UTF-8" },
             method = RequestMethod.GET)
-    List<?> get(
-
+    ResponseEntity<?> get(
             @ApiParam(value = "Наименование книги")
             @Valid @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @Valid @RequestParam(value = "currency") int currency);
+            @Valid @RequestParam(value = "currency") Currency currency);
 
 
 }

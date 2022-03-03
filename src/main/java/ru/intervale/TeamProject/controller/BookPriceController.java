@@ -24,7 +24,11 @@ package ru.intervale.TeamProject.controller;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import ru.intervale.TeamProject.model.book.Currency;
 import ru.intervale.TeamProject.service.ServiceChangePriceImpl;
 
 import java.util.List;
@@ -42,7 +46,9 @@ public class BookPriceController implements BookPrice {
     ServiceChangePriceImpl service;
 
     @Override
-    public List<?> get(String name, int currency) {
-        return service.get(name, currency);
+    public ResponseEntity<?> get(String name, Currency currency) {
+        return  ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/json"))
+                .body( service.get(name, currency.getCode()));
     }
 }
