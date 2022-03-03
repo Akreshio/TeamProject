@@ -8,8 +8,6 @@
 package ru.intervale.TeamProject.service;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;

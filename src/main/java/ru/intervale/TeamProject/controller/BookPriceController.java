@@ -22,14 +22,11 @@
 package ru.intervale.TeamProject.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import ru.intervale.TeamProject.model.book.Currency;
+import ru.intervale.TeamProject.model.Currency;
 import ru.intervale.TeamProject.service.ServiceChangePriceImpl;
 
 
