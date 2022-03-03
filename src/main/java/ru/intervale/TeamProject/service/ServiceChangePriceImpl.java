@@ -7,6 +7,8 @@
 
 package ru.intervale.TeamProject.service;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
@@ -19,13 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class ServiceChangePriceImpl implements ServiceChangePrice {
 
-    @Autowired
-    AlfabankService alfabank;
+    private AlfabankService alfabank;
 
-    @Autowired
-    DatabaseAccess dto;
+    private DatabaseAccess dto;
 
     @Override
     public List<BookEntity> get(String name, int currency) {

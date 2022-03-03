@@ -28,7 +28,7 @@ public class AlfabankServiceImpl implements AlfabankService {
      */
     @Autowired
     @Qualifier("alfaBank")
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
 
     @Override
