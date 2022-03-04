@@ -7,11 +7,9 @@
 
 package ru.intervale.TeamProject.service;
 
+import org.springframework.http.ResponseEntity;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
-import ru.intervale.TeamProject.model.book.BookEntity;
-
-import java.util.List;
 
 /**
  * The interface Service change price.
@@ -32,7 +30,7 @@ public interface ServiceChangePrice {
      * @return the list
      */
 
-    List<BookEntity> get (String name, int currency);
+    ResponseEntity<?> get (String name, int currency, String accept);
 
 
 }

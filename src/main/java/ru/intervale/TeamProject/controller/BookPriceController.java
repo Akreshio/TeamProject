@@ -23,12 +23,10 @@ package ru.intervale.TeamProject.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.intervale.TeamProject.model.Currency;
 import ru.intervale.TeamProject.service.ServiceChangePriceImpl;
-
 
 
 /**
@@ -41,10 +39,10 @@ public class BookPriceController implements BookPrice {
 
     private ServiceChangePriceImpl service;
 
+    // http://localhost:8080/price/stat?name=The test book&currency=EUR
+
     @Override
-    public ResponseEntity<?> get(String name, Currency currency) {
-        return  ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/json"))
-                .body( service.get(name, currency.getCode()));
+    public ResponseEntity<?> get(String name, Currency currency, String accept) {
+        return  service.get(name, currency.getCode(), accept);
     }
 }

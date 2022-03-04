@@ -54,7 +54,6 @@
 			<version>3.0.0</version>
 		</dependency>
 
-
 		<!--PDF-https://www.baeldung.com/java-pdf-creation-->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
