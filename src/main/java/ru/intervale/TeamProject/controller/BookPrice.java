@@ -10,17 +10,16 @@ package ru.intervale.TeamProject.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.intervale.TeamProject.model.Currency;
+import ru.intervale.TeamProject.external.alfabank.Currency;
 
 import javax.validation.Valid;
 public interface BookPrice {
 
 
-    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "get", notes = "Возвращает json", tags={ "public", })
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "get", notes = "Возвращает запрошенный формат", tags={ "public", })
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = { "application/json;charset=UTF-8", "application/xml;charset=UTF-8" },
             method = RequestMethod.GET)
@@ -28,8 +27,7 @@ public interface BookPrice {
             @ApiParam(value = "Наименование книги")
             @Valid @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @Valid @RequestParam(value = "currency") Currency currency,
-            @RequestHeader(value="Accept") String accept
+            @Valid @RequestParam(value = "currency") Currency currency
     );
 
 

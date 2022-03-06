@@ -25,8 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import ru.intervale.TeamProject.model.Currency;
-import ru.intervale.TeamProject.service.ServiceChangePriceImpl;
+import ru.intervale.TeamProject.external.alfabank.Currency;
+import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
 
 /**
@@ -37,12 +37,12 @@ import ru.intervale.TeamProject.service.ServiceChangePriceImpl;
 @AllArgsConstructor
 public class BookPriceController implements BookPrice {
 
-    private ServiceChangePriceImpl service;
+    private ServicePriceDynamic service;
 
     // http://localhost:8080/price/stat?name=The test book&currency=EUR
 
     @Override
-    public ResponseEntity<?> get(String name, Currency currency, String accept) {
-        return  service.get(name, currency.getCode(), accept);
+    public ResponseEntity<?> get(String name, Currency currency) {
+        return  service.get(name, currency, "application/json");
     }
 }

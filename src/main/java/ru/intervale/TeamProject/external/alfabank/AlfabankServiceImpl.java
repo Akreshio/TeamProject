@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-
 @Service
 public class AlfabankServiceImpl implements AlfabankService {
 
@@ -35,21 +34,26 @@ public class AlfabankServiceImpl implements AlfabankService {
     private String urn;
 
     @Override
-    public Map<String, BigDecimal> get(int currency) {
+    public Map<String, BigDecimal> get(Currency currency) {
 
         List <String> date = new ArrayList<>();
-        date.add("17.01.2022");
-        date.add("07.01.2022");
+        date.add("04.03.2022");
+        date.add("05.03.2022");
 
         Map<String, BigDecimal> changePrice = new HashMap<>();
 
         for (String d: date) {
-            NationalRateListResponse rateList = restTemplate.getForEntity(urn, NationalRateListResponse.class, d, currency).getBody();
+            NationalRateListResponse rateList = restTemplate.getForEntity(
+                    urn,
+                    NationalRateListResponse.class,
+                    d,
+                    currency.getCode()
+            ).getBody();
 
             if (rateList!=null) {
                 for (NationalRate rate : rateList.getRates()) {
                     BigDecimal quantity = BigDecimal.valueOf(rate.getQuantity());
-                    changePrice.put(d, quantity.divide(rate.getRate(), 5, RoundingMode.HALF_UP));
+                    changePrice.put(rate.getDate(), quantity.divide(rate.getRate(), 5, RoundingMode.HALF_UP));
                 }
             }
         }

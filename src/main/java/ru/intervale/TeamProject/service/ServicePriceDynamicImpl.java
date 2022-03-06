@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.external.alfabank.Currency;
+import ru.intervale.TeamProject.external.alfabank.FormationPeriod;
 import ru.intervale.TeamProject.model.book.BookEntityList;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
@@ -25,27 +27,28 @@ import java.util.Map;
  */
 @Service
 @AllArgsConstructor
-public class ServiceChangePriceImpl implements ServiceChangePrice {
+public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private AlfabankService alfabank;
     private DatabaseAccess dto;
     private BookEntityList bookEntities;
+    private FormationPeriod formationPeriod;
 
     @Override
-    public ResponseEntity<?> get(String name, int currency, String accept) {
+    public ResponseEntity<?> get(String name, Currency currency, String accept) {
          bookEntities.setBookEntities(getBook(name));
          bookEntities.addChangePrice(getChangePrice(currency));
+        formationPeriod.get();
 
         switch (accept) {
-
             case "application/json":
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(bookEntities);
+            case "application/xml":
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(accept))
                         .body(bookEntities);
-//            case "application/xml":
-//                return ResponseEntity.ok()
-//                        .contentType(MediaType.parseMediaType(accept))
-//                        .body(bookEntities);
             case "image/svg+xml":
                 return acceptSvg(accept, bookEntities.getBookEntities());
             case "text/csv":
@@ -54,7 +57,7 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
                 return acceptPdf(accept, bookEntities.getBookEntities());
             default:
                 return ResponseEntity.badRequest()
-                        .contentType(MediaType.parseMediaType("application/json"))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .body("Bad reques");
         }
     }
@@ -89,7 +92,7 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
                 .body("Bad reques");
     }
 
-    private Map<String, BigDecimal> getChangePrice(int currency) {
+    private Map<String, BigDecimal> getChangePrice(Currency currency) {
         return  alfabank.get(currency);
     }
 

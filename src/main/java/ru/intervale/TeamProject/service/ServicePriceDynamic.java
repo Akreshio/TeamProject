@@ -8,13 +8,14 @@
 package ru.intervale.TeamProject.service;
 
 import org.springframework.http.ResponseEntity;
+import ru.intervale.TeamProject.external.alfabank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 
 /**
  * The interface Service change price.
  */
-public interface ServiceChangePrice {
+public interface ServicePriceDynamic {
 
 
     /**
@@ -30,7 +31,7 @@ public interface ServiceChangePrice {
      * @return the list
      */
 
-    ResponseEntity<?> get (String name, int currency, String accept);
+    ResponseEntity<?> get (String name, Currency currency, String accept);
 
 
 }
