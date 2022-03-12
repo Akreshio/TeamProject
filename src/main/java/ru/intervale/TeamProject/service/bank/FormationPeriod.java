@@ -43,7 +43,6 @@ public class FormationPeriod {
      *
      *     std, date  - дата начала формирования
      *     find, date - дата окончания формирования
-     *     count, int - число отображаемых элементов
      *     per, enum - перечисление вида (месяц, неделя, день)
      *
      * @return the list
@@ -55,11 +54,11 @@ public class FormationPeriod {
         LocalDate std = LocalDate.now();
         LocalDate find;
 
-        if (paramMap.get("std")!=null){
-            std = strToDate(paramMap.get("std"));
-        }
         if (paramMap.get("find")!=null){
-            find = strToDate(paramMap.get("find"));
+            std = strToDate(paramMap.get("find"));
+        }
+        if (paramMap.get("std")!=null){
+            find = strToDate(paramMap.get("std"));
         } else { find = std.minusDays(10);}
 
         if (paramMap.get("per")!=null){
@@ -75,10 +74,11 @@ public class FormationPeriod {
                         std = std.minusDays(7);
                 }
                 case "month":
+                {
                     while (find.isBefore(std)){
                         dateList.add(format(std));
                         std = std.minusMonths(1);
-                    }
+                    }}
                 default:{
 
                 }

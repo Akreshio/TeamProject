@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * The type Book price api controller.
@@ -29,6 +32,11 @@ public class BookPriceController implements BookPrice {
 
     @Override
     public ResponseEntity<?> getJson(String name, Currency currency) {
-        return  service.getJson(name, currency, null);
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("std", "01.01.2021");
+        paramMap.put("find", "03.03.2022");
+        paramMap.put("per","month");
+
+        return  service.getJson(name, currency, paramMap);
     }
 }
