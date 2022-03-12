@@ -8,9 +8,13 @@
 package ru.intervale.TeamProject.service;
 
 import org.springframework.http.ResponseEntity;
-import ru.intervale.TeamProject.external.alfabank.Currency;
+import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The interface Service change price.
@@ -31,7 +35,10 @@ public interface ServicePriceDynamic {
      * @return the list
      */
 
-    ResponseEntity<?> get (String name, Currency currency, String accept);
+    List<BookEntity> get (String name, Currency currency, Map<String, String> term);
 
-
+    ResponseEntity<?> getJson (String name, Currency currency, Map<String, String> term);
+    ResponseEntity<?> getSvg (String name, Currency currency, Map<String, String> term);
+    ResponseEntity<?> getCsv (String name, Currency currency, Map<String, String> term);
+    ResponseEntity<?> getPdf (String name, Currency currency, Map<String, String> term);
 }

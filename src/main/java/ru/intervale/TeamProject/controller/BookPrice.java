@@ -13,21 +13,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.intervale.TeamProject.external.alfabank.Currency;
+import ru.intervale.TeamProject.service.bank.Currency;
 
-import javax.validation.Valid;
 public interface BookPrice {
 
 
-    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "get", notes = "Возвращает запрошенный формат", tags={ "public", })
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getJson", notes = "Возвращает запрошенный формат", tags={"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
-            produces = { "application/json;charset=UTF-8", "application/xml;charset=UTF-8" },
+            produces = { "application/json;charset=UTF-8"},
             method = RequestMethod.GET)
-    ResponseEntity<?> get(
+    ResponseEntity<?> getJson(
             @ApiParam(value = "Наименование книги")
-            @Valid @RequestParam(value = "name") String name,
+            @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @Valid @RequestParam(value = "currency") Currency currency
+            @RequestParam(value = "currency") Currency currency
     );
 
 

@@ -1,6 +1,13 @@
 /*
  * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
+ * @since "10.03.2022, 1:21"
+ * @version V 1.0.0
+ */
+
+/*
+ * @author Виктор Дробышевский
+ * E-mail: akreshios@gmail.com
  * @since "04.03.2022, 22:38"
  * @version V 1.0.0
  */
@@ -19,7 +26,7 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.external.alfabank;
+package ru.intervale.TeamProject.service.bank;
 
 import lombok.Getter;
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
+import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 
 import java.math.BigDecimal;
@@ -34,11 +35,7 @@ public class AlfabankServiceImpl implements AlfabankService {
     private String urn;
 
     @Override
-    public Map<String, BigDecimal> get(Currency currency) {
-
-        List <String> date = new ArrayList<>();
-        date.add("04.03.2022");
-        date.add("05.03.2022");
+    public Map<String, BigDecimal> get(Currency currency,  List <String> date) {
 
         Map<String, BigDecimal> changePrice = new HashMap<>();
 
