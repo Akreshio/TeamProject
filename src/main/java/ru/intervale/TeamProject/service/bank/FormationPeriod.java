@@ -36,8 +36,6 @@ import java.util.*;
 @NoArgsConstructor
 public class FormationPeriod {
 
-
-    //private LocalDate date = LocalDate.of(1914, 7, 28);
     /**
      * Get list.
      *
@@ -104,10 +102,6 @@ public class FormationPeriod {
             }
         return  dateList;
     }
-
-
-
-
 
     private LocalDate strToDate (@NotNull String str) {
         String [] strStd =str.split("\\.");
