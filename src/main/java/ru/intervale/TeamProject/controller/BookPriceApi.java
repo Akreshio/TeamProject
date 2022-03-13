@@ -9,6 +9,7 @@ package ru.intervale.TeamProject.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ public interface BookPriceApi {
     @RequestMapping(value = "/price/stat",
             produces = { "application/json;charset=UTF-8" },
             method = RequestMethod.GET)
-    List<?> get(
+    ResponseEntity<?> get(
 
             @ApiParam(value = "Наименование книги")
             @Valid @RequestParam(value = "name") String name,

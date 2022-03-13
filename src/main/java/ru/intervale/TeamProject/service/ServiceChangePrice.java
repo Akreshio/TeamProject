@@ -32,7 +32,7 @@ public interface ServiceChangePrice {
      * @return the list
      */
 
-    List<BookEntity> get (String name, int currency);
+    String get (String name, int currency);
 
 
 }

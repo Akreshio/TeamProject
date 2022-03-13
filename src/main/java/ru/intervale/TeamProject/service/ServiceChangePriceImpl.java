@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceChangePriceImpl implements ServiceChangePrice {
@@ -28,7 +29,7 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
     DatabaseAccess dto;
 
     @Override
-    public List<BookEntity> get(String name, int currency) {
+    public String get(String name, int currency) {
 
         List<BookEntity> bookEntities = getBook(name);
 
@@ -40,7 +41,11 @@ public class ServiceChangePriceImpl implements ServiceChangePrice {
             }
             book.setChangePrice(changePrice);
         }
-        return bookEntities;
+
+        String bookEntitiesString = bookEntities.stream().map(x -> x.toString()).collect(Collectors.joining());
+
+
+        return bookEntitiesString;
     }
 
     private Map<String, BigDecimal> getChangePrice(int currency) {
