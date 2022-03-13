@@ -23,30 +23,18 @@ public class BankImpl implements Bank {
     private AlfabankService alfabank;
     private FormationPeriod formationPeriod;
 
-    /**
-     * Get list.
-     *
-     * in map <string, string>
-     *
-     *     std, date  - дата начала формирования
-     *     find, date - дата окончания формирования
-     *     per, enum - перечисление вида (минуты, час, месяц, неделя, день)
-     *
-     * @return the list
-     */
-
     @Override
-    public Map<String, BigDecimal> getExchangeRate(Currency currency, Map<String, String> term) {
+    public Map<String, BigDecimal> getExchangeRate(Currency currency, Map<String, String> paramMap) {
 
-        if (term!=null) {
-            if (term.get("per")!=null){
-                switch (term.get("per")) {
+        if (paramMap!=null) {
+            if (paramMap.get("per")!=null){
+                switch (paramMap.get("per")) {
                     case "hour":
                         return null;
                     case "day":
                     case "week":
                     case "month":
-                        return alfabank.get(currency,formationPeriod.get(term));
+                        return alfabank.get(currency,formationPeriod.get(paramMap));
                     default:
                         return alfabank.get(currency,formationPeriod.get());
                 }

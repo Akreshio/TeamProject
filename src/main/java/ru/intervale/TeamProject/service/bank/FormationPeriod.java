@@ -41,8 +41,8 @@ public class FormationPeriod {
      *
      * in map <string, string>
      *
-     *     std, date  - дата начала формирования
-     *     find, date - дата окончания формирования
+     *     sDate, date  - дата начала формирования
+     *     fDate, date - дата окончания формирования
      *     per, enum - перечисление вида (месяц, неделя, день)
      *
      * @return the list
@@ -51,33 +51,33 @@ public class FormationPeriod {
 
         List<String> dateList = new ArrayList<>();
 
-        LocalDate std = LocalDate.now();
-        LocalDate find;
+        LocalDate sDate;
+        LocalDate fDate = LocalDate.now();
 
-        if (paramMap.get("find")!=null){
-            std = strToDate(paramMap.get("find"));
+        if (paramMap.get("fDate")!=null){
+            fDate = strToDate(paramMap.get("fDate"));
         }
-        if (paramMap.get("std")!=null){
-            find = strToDate(paramMap.get("std"));
-        } else { find = std.minusDays(10);}
+        if (paramMap.get("sDate")!=null){
+            sDate = strToDate(paramMap.get("sDate"));
+        } else { sDate = fDate.minusDays(10);}
 
         if (paramMap.get("per")!=null){
             switch (paramMap.get("per")) {
                 case "day":
-                    while (find.isBefore(std)){
-                        dateList.add(format(std));
-                        std = std.minusDays(1);
+                    while (sDate.isBefore(fDate)){
+                        dateList.add(format(sDate));
+                        sDate = sDate.plusDays(1);
                     }
                 case "week":
-                    while (find.isBefore(std)){
-                        dateList.add(format(std));
-                        std = std.minusDays(7);
+                    while (sDate.isBefore(fDate)){
+                        dateList.add(format(sDate));
+                        sDate = sDate.plusDays(7);
                 }
                 case "month":
                 {
-                    while (find.isBefore(std)){
-                        dateList.add(format(std));
-                        std = std.minusMonths(1);
+                    while (sDate.isBefore(fDate)){
+                        dateList.add(format(sDate));
+                        sDate = sDate.plusMonths(1);
                     }}
                 default:{
 
@@ -85,8 +85,8 @@ public class FormationPeriod {
             }
         } else {
             for (int i=0; i<=10; i++){
-                dateList.add(format(std));
-                std = std.minusDays(1);
+                dateList.add(format(fDate));
+                fDate = fDate.plusDays(1);
             }
         }
         return  dateList;
