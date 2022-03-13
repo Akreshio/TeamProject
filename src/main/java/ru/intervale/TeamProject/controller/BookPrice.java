@@ -29,8 +29,38 @@ public interface BookPrice {
             @RequestParam(value = "currency") Currency currency
     );
 
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags={"public"})
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "application/pdf;charset=UTF-8"},
+            method = RequestMethod.GET)
+    ResponseEntity<?> getPdf(
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "код валюты")
+            @RequestParam(value = "currency") Currency currency
+    );
 
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getSvg", notes = "Возвращает запрошенный формат", tags={"public"})
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "image/svg+xml;charset=UTF-8"},
+            method = RequestMethod.GET)
+    ResponseEntity<?> getSvg(
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "код валюты")
+            @RequestParam(value = "currency") Currency currency
+    );
 
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getCsv", notes = "Возвращает запрошенный формат", tags={"public"})
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "text/csv;charset=UTF-8"},
+            method = RequestMethod.GET)
+    ResponseEntity<?> getCsv(
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "код валюты")
+            @RequestParam(value = "currency") Currency currency
+    );
 
 }
 

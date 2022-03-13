@@ -17,6 +17,7 @@ import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.generatepdf.PDFGenerateServiceImpl;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private Bank bank;
     private DatabaseAccess dto;
+    private PDFGenerateServiceImpl pdfGenerateService;
 
     /**
      * Реализация: Виктор Дробышевский.
@@ -80,7 +82,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
-                .body(null);
+                .body(pdfGenerateService.getPdf(name, currency, term));
     }
 
 

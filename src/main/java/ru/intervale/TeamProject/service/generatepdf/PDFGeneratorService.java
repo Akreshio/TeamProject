@@ -1,12 +1,12 @@
 package ru.intervale.TeamProject.service.generatepdf;
 
-import com.itextpdf.text.DocumentException;
+import ru.intervale.TeamProject.service.bank.Currency;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 
 public interface PDFGeneratorService {
 
-    void export(HttpServletResponse response) throws DocumentException, IOException;
+    ByteArrayInputStream getPdf(String name, Currency currency, Map<String, String> term);
 }

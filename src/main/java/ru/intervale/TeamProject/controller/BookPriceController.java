@@ -39,4 +39,34 @@ public class BookPriceController implements BookPrice {
 
         return  service.getJson(name, currency, paramMap);
     }
+
+    @Override
+    public ResponseEntity<?> getPdf(String name, Currency currency) {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("std", "01.01.2021");
+        paramMap.put("find", "03.03.2022");
+        paramMap.put("per","month");
+
+        return  service.getPdf(name, currency, paramMap);
+    }
+
+    @Override
+    public ResponseEntity<?> getSvg(String name, Currency currency) {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("std", "01.01.2021");
+        paramMap.put("find", "03.03.2022");
+        paramMap.put("per","month");
+
+        return  service.getSvg(name, currency, paramMap);
+    }
+
+    @Override
+    public ResponseEntity<?> getCsv(String name, Currency currency) {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("std", "01.01.2021");
+        paramMap.put("find", "03.03.2022");
+        paramMap.put("per","month");
+
+        return  service.getCsv(name, currency, paramMap);
+    }
 }
