@@ -13,45 +13,47 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.jfree.graphics2d.svg.SVGUtils;
 import org.jfree.ui.RectangleInsets;
-import ru.intervale.TeamProject.util.DateParsing;
-import ru.intervale.TeamProject.util.model.DayDateModel;
+import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 
 public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
 
-    private XYDataset createDataset(Map<String, BigDecimal> changeMap, String currency) {
+    private XYDataset createDataset(List<BookEntity> bookEntityList) {
 
-        TimeSeries timeSeries = new TimeSeries("Цены указаны в " + currency);
-        changeMap.forEach((k, v) -> {
-            DayDateModel dayDateModel = DateParsing.dayDateParsing(k);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        for (BookEntity bookEntity : bookEntityList) {
+        TimeSeries timeSeries = new TimeSeries("Автор: " + bookEntity.getWriter());
+        bookEntity.getChangePrice().forEach((k, v) -> {
+            LocalDate localDate = LocalDate.parse(k, formatter);
             timeSeries.add(new Day(
-                    dayDateModel.getDay(),
-                    dayDateModel.getMonth(),
-                    dayDateModel.getYear()),
+                    localDate.getDayOfMonth(),
+                    localDate.getMonthValue(),
+                    localDate.getYear()),
                     v.doubleValue());
         });
-
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(timeSeries);
-
+    }
         return dataset;
     }
 
-    private JFreeChart createChart(Map<String, BigDecimal> changeMap, String name, String currency) {
+    private JFreeChart createChart(List<BookEntity> bookEntityList) {
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Изменение стоимости книги \"" + name + "\"" ,      // title
-                "",                                                 // x-axis label
-                "Стоимость",                                        // y-axis label
-                createDataset(changeMap, currency),                 // data
-                true,                                               // create legend
-                true,                                               // generate tooltips
-                false                                               // generate URLs
+                "Изменение стоимости книги \"" + bookEntityList.get(0).getTitle() + "\"" ,      // title
+                "",                                                                             // x-axis label
+                "Стоимость",                                                                    // y-axis label
+                createDataset(bookEntityList),                                                  // data
+                true,                                                                           // create legend
+                true,                                                                           // generate tooltips
+                false                                                                           // generate URLs
         );
 
         chart.setBackgroundPaint(Color.white);
@@ -73,16 +75,16 @@ public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
         }
 
         DateAxis axis = (DateAxis) plot.getDomainAxis();
-        axis.setDateFormatOverride(new SimpleDateFormat("dd.MM.yy"));
+        axis.setDateFormatOverride(new SimpleDateFormat("dd.MM.yyyy"));
 
         return chart;
     }
 
-    public void generateSvg (Map<String, BigDecimal> changeMap, String name, String currency) throws IOException {
+    public void generateSvg (List<BookEntity> bookEntityList) throws IOException {
 
         SVGGraphics2D graphics2D = new SVGGraphics2D(600, 400);
         Rectangle rectangle = new Rectangle(0, 0, 600, 400);
-        createChart(changeMap, name, currency).draw(graphics2D, rectangle);
+        createChart(bookEntityList).draw(graphics2D, rectangle);
         File file = new File("SVGChart.svg");
         SVGUtils.writeToSVG(file, graphics2D.getSVGElement());
     }
