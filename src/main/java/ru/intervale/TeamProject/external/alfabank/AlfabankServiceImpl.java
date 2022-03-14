@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
+import ru.intervale.TeamProject.external.alfabank.model.Rate;
+import ru.intervale.TeamProject.external.alfabank.model.RateListResponse;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 
@@ -33,6 +35,8 @@ public class AlfabankServiceImpl implements AlfabankService {
 
     @Value("${rest.template.alfabank.urn}")
     private String urn;
+    @Value("${rest.template.alfabank.urn.now}")
+    private String urnNow;
 
     @Override
     public Map<String, BigDecimal> get(Currency currency,  List <String> date) {
@@ -55,6 +59,22 @@ public class AlfabankServiceImpl implements AlfabankService {
             }
         }
         return changePrice;
+    }
+    @Override
+    public Map<Currency, BigDecimal> getNow() {
+        Map<Currency, BigDecimal> exchangeRateChange = new HashMap<>();
+        RateListResponse rateList = restTemplate.getForEntity(urnNow, RateListResponse.class).getBody();
+
+        for (Rate rate:rateList.getRates()) {
+            if (rate.getName()!=null) {
+                Currency currency = Currency.valueOf(rate.getSellIso());
+                exchangeRateChange.put(currency,rate.getSellRate());
+            }
+
+        }
+
+
+        return exchangeRateChange;
     }
 }
 

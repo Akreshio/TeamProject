@@ -38,7 +38,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Виктор Дробышевский.
      */
     public ResponseEntity<?> getJson (String name, Currency currency, Map<String, String> term) {
-         return  ResponseEntity.badRequest()
+         return  ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
     }
@@ -96,7 +96,11 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
             Map<String, BigDecimal> newMapSortedByKey =  changePriceBook.entrySet().stream()
                     .sorted(Comparator.comparing(e -> strToDate(e.getKey())))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                    .collect(
+                            Collectors.toMap(
+                                    Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new
+                            )
+                    );
             book.setChangePrice(newMapSortedByKey);
         }
         return bookEntities;

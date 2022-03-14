@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 
-public class Rate {
+public class RateDao {
 
     LocalDate date;
     Map<Currency, BigDecimal> currency;
