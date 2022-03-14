@@ -15,6 +15,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 public class CsvGeneratorServiceImpl implements CsvGeneratorService {
 
@@ -45,9 +46,9 @@ public class CsvGeneratorServiceImpl implements CsvGeneratorService {
                             .replace('.', ',') +
                     ";\n");
 
-            if (!book.getChangePrice().isEmpty()) {
+            if ((book.getChangePrice() != null) && (!book.getChangePrice().isEmpty())) {
 
-                booksString.append("Date;" + "Price in currency;\n");
+                booksString.append("Column: Date;" + "Column: Price in currency;\n");
 
                 for (Map.Entry<String, BigDecimal> price : book.getChangePrice().entrySet()) {
 
