@@ -8,6 +8,7 @@
 package ru.intervale.TeamProject.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,9 +18,11 @@ import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.generatepdf.PDFGenerateServiceImpl;
+import ru.intervale.TeamProject.service.generatepdf.PDFGenerator;
+import ru.intervale.TeamProject.service.generatepdf.PDFGeneratorService;
 
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -37,7 +40,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private Bank bank;
     private DatabaseAccess dto;
-    private PDFGenerateServiceImpl pdfGenerateService;
+    private PDFGeneratorService pdfGenerator;
+
 
     /**
      * Реализация: Виктор Дробышевский.
@@ -70,20 +74,25 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     /**
      * Реализация: Игорь Прохорченко.
+     * @return
      */
-    public ResponseEntity<?> getPdf (String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity getPdf (String name, Currency currency, Map<String, String> term) {
+        /**
+         * ???
+         *  ???
+         */
+        List<BookEntity> bookEntities = get(name, currency, term);
+
+        ByteArrayInputStream book = pdfGenerator.getPdf(bookEntities);
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Disposition", "inline; filename=customers.pdf");
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
-                .attachment()
-                .filename("demo-file.pdf")
-                .build()
-                .toString()
-        );
+
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
-                .body(pdfGenerateService.getPdf(name, currency, term));
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(book));
     }
 
 
@@ -123,4 +132,6 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private void checkOnNull(List<BookEntity> bookEntities) {
         if (bookEntities==null) throw new RuntimeException("Book not found");
     }
+
+
 }

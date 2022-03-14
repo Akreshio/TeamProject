@@ -1,12 +1,13 @@
 package ru.intervale.TeamProject.service.generatepdf;
 
-import ru.intervale.TeamProject.service.bank.Currency;
-
+import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.model.book.BookEntity;
 import java.io.ByteArrayInputStream;
-import java.util.Map;
+import java.util.List;
 
 
+@Service
 public interface PDFGeneratorService {
 
-    ByteArrayInputStream getPdf(String name, Currency currency, Map<String, String> term);
+    ByteArrayInputStream getPdf(List<BookEntity> bookEntities);
 }
