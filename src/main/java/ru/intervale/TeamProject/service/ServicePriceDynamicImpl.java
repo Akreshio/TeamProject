@@ -21,10 +21,7 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -94,9 +91,10 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
         for (BookEntity book: bookEntities) {
             //задаём изменение цены на книгу
-            changePrice.replaceAll((k, v) -> book.getPrice().multiply(v));
+            Map<String, BigDecimal> changePriceBook =  new HashMap<>(changePrice);
+            changePriceBook.replaceAll((k, v) -> book.getPrice().multiply(v));
 
-            Map<String, BigDecimal> newMapSortedByKey = changePrice.entrySet().stream()
+            Map<String, BigDecimal> newMapSortedByKey =  changePriceBook.entrySet().stream()
                     .sorted(Comparator.comparing(e -> strToDate(e.getKey())))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
             book.setChangePrice(newMapSortedByKey);
