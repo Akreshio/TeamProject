@@ -22,6 +22,7 @@ import ru.intervale.TeamProject.service.generatepdf.PDFGenerateServiceImpl;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,16 +91,15 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     public List<BookEntity> get(String name, Currency currency, Map<String, String> term) {
 
         List<BookEntity> bookEntities = getBook(name); // достаём книги из бд
+        checkOnNull(bookEntities);
         Map<String, BigDecimal> changePrice = getChangePrice(currency, term); // получаем курс валют за период
 
         for (BookEntity book: bookEntities) {
-            for (Map.Entry<String, BigDecimal> rate :  changePrice.entrySet()) {
-                //задаём изменение цены на книгу
-                changePrice.put(rate.getKey(),book.getPrice().multiply(rate.getValue()));
-            }
+            //задаём изменение цены на книгу
+            changePrice.replaceAll((k, v) -> book.getPrice().multiply(v));
 
             Map<String, BigDecimal> newMapSortedByKey = changePrice.entrySet().stream()
-                    .sorted((e1,e2) -> strToDate(e1.getKey()).compareTo(strToDate(e2.getKey())))
+                    .sorted(Comparator.comparing(e -> strToDate(e.getKey())))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
             book.setChangePrice(newMapSortedByKey);
         }
