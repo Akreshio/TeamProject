@@ -85,8 +85,13 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
         ByteArrayInputStream book = pdfGenerator.getPdf(bookEntities);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Disposition", "inline; filename=customers.pdf");
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
+                .attachment()
+                .filename("demo-file.pdf")
+                .build()
+                .toString()
+        );
 
         return ResponseEntity
                 .ok()
