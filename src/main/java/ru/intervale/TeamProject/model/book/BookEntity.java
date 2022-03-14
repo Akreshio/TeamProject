@@ -42,42 +42,4 @@ public class BookEntity {
     // дата , цена
     @XmlElement(name = "changePrice")
     private Map<String, BigDecimal> changePrice;
-
-    @Override
-    public String toString() {
-
-        StringBuilder book = new StringBuilder();
-
-        book.append("Isbn:;" + isbn + ";\n" +
-                "Title:;" + title + ";\n" +
-                "Writer:;" + writer + ";\n" +
-                "Page:;" + page + ";\n" +
-                "Weight:;" + weight + ";\n" +
-                "Price in BYN:;" +
-                price
-                        .setScale(2, RoundingMode.HALF_UP)
-                        .toString()
-                        .replace('.', ',') +
-                ";\n\n");
-
-        if (!this.changePrice.isEmpty()) {
-
-            book.append("Date;" + "Price in currency;\n");
-
-            for (Map.Entry<String, BigDecimal> price : changePrice.entrySet()) {
-
-                book.append(price.getKey() + ";" +
-                        price
-                                .getValue()
-                                .setScale(2, RoundingMode.HALF_UP)
-                                .toString()
-                                .replace('.', ',') +
-                        ";\n");
-            }
-
-            book.append("\n");
-        }
-
-        return book.toString();
-    }
 }

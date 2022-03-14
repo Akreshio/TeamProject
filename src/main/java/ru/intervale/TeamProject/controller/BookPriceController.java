@@ -33,9 +33,9 @@ public class BookPriceController implements BookPrice {
     @Override
     public ResponseEntity<?> getJson(String name, Currency currency) {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("sDate", "01.01.2021");
+        paramMap.put("sDate", "01.02.2022");
         paramMap.put("fDate", "03.03.2022");
-        paramMap.put("per","month");
+        paramMap.put("per","day");
 
         return  service.getJson(name, currency, paramMap);
     }
@@ -48,5 +48,15 @@ public class BookPriceController implements BookPrice {
         paramMap.put("per","day");
 
         return  service.getPdf(name, currency, paramMap);
+    }
+
+    @Override
+    public ResponseEntity<?> getCsv(String name, Currency currency) {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("sDate", "01.02.2022");
+        paramMap.put("fDate", "03.03.2022");
+        paramMap.put("per","day");
+
+        return  service.getCsv(name, currency, paramMap);
     }
 }

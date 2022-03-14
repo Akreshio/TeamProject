@@ -41,6 +41,17 @@ public interface BookPrice {
     );
 
 
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getCsv",
+            notes = "Возвращает запрошенный формат", tags={"public"})
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = {"text/csv"},
+            method = RequestMethod.GET)
+    ResponseEntity<?> getCsv(
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "код валюты")
+            @RequestParam(value = "currency") Currency currency
+    );
 }
 
 

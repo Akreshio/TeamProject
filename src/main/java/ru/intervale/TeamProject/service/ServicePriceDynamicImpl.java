@@ -21,10 +21,7 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +33,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private Bank bank;
     private DatabaseAccess dto;
+    private CsvGeneratorService csvGenerator;
+    private final static String TEXT_CSV = "text/csv";
 
     /**
      * Реализация: Виктор Дробышевский.
@@ -59,25 +58,27 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Сергей Маевский.
      */
-    public ResponseEntity<?> getCsv (String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity<String> getCsv (String name, Currency currency, Map<String, String> term) {
 
-        return  ResponseEntity.badRequest()
-                .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
-                .body("Bad reques");
+        List<BookEntity> bookEntities = get(name, currency, term);
+
+        String bookEntitiesString = csvGenerator.getCsv(bookEntities);
+
+        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
+
+        return  ResponseEntity
+                .ok()
+                .headers(httpHeaders)
+                .body(bookEntitiesString);
     }
 
     /**
      * Реализация: Игорь Прохорченко.
      */
     public ResponseEntity<?> getPdf (String name, Currency currency, Map<String, String> term) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
-                .attachment()
-                .filename("demo-file.pdf")
-                .build()
-                .toString()
-        );
+
+        HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
+
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
@@ -121,4 +122,19 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private void checkOnNull(List<BookEntity> bookEntities) {
         if (bookEntities==null) throw new RuntimeException("Book not found");
     }
+
+    private HttpHeaders getHttpHeaders(String mediaType, String format) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, mediaType);
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
+                .attachment()
+                .filename("price_change_report_" + LocalDate.now() + format)
+                .build()
+                .toString()
+        );
+
+        return httpHeaders;
+    }
+
 }
