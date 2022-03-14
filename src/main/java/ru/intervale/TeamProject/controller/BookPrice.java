@@ -31,7 +31,7 @@ public interface BookPrice {
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags={"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
-            produces = { "application/pdf"},
+            produces = { "application/pdf;charset=UTF-8"},
             method = RequestMethod.GET)
     ResponseEntity<?> getPdf(
             @ApiParam(value = "Наименование книги")
