@@ -1,13 +1,20 @@
 /*
  * @author S.Maevsky
+ * @since 14.03.2022, 14:26
+ * @version V 1.0.0
+ */
+
+/*
+ * @author S.Maevsky
  * @since 14.03.2022, 13:18
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service;
+package ru.intervale.TeamProject.service.generator.impl;
 
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

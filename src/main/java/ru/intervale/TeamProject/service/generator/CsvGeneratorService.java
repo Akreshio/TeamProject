@@ -1,12 +1,19 @@
 /*
  * @author S.Maevsky
+ * @since 14.03.2022, 14:25
+ * @version V 1.0.0
+ */
+
+/*
+ * @author S.Maevsky
  * @since 14.03.2022, 13:18
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service;
+package ru.intervale.TeamProject.service.generator;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
 import java.util.List;
 
