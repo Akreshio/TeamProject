@@ -43,5 +43,5 @@ public class BookEntity {
     @XmlElement(name = "changePrice")
     private Map<LocalDateTime, BigDecimal> changePrice;
 
-    private Map<LocalDateTime, BigDecimal> changeBookPrice;
+    private Map<LocalDateTime, BigDecimal> previousBookPrice;
 }

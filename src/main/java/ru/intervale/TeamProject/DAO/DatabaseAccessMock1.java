@@ -28,7 +28,7 @@ public class DatabaseAccessMock1 implements DatabaseAccess {
     @Override
     public List<BookEntity> get(String name) {
         Map<LocalDateTime, BigDecimal> price = new HashMap<>();
-        price.put(LocalDateTime.now().minusDays(1), new BigDecimal("10.50"));
+        price.put(LocalDateTime.now(), new BigDecimal("10.50"));
         price.put(LocalDateTime.now().minusDays(6), new BigDecimal("8.50"));
         price.put(LocalDateTime.now().minusDays(20), new BigDecimal("4.50"));
 

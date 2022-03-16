@@ -61,7 +61,6 @@ public class BankImpl implements Bank {
                         sDate = sDate.plusDays(1);
                     }
                     dateList.add(sDate);
-                    log.info( dateList.toString());
                     return  dateList;
                 }
                 case  week: {
@@ -72,7 +71,7 @@ public class BankImpl implements Bank {
                     }
                     return  dateList;
                 }
-                case  month:
+                case month:
                 {
                     log.info("Using the period formation for month with start day: " + sDate + " and finish day: " + fDate);
                     while (sDate.isBefore(fDate)){
@@ -85,7 +84,7 @@ public class BankImpl implements Bank {
         } else {
             for (int i=0; i<=10; i++){
                 dateList.add(fDate);
-                fDate = fDate.plusDays(1);
+                sDate = sDate.plusDays(1);
             }
         }
         return  dateList;

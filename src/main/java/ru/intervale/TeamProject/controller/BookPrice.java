@@ -33,9 +33,6 @@ public interface BookPrice {
             @RequestParam(value = "s", required=false) String sStr,
             @RequestParam(value = "f", required=false) String fStr,
             @RequestParam(value = "d", required=false) Period d
-
-
-
     );
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags={"public"})

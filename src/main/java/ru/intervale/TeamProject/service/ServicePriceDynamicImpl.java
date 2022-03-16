@@ -85,9 +85,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 .body(null);
     }
 
-
-    @Override
-    public List<BookEntity> get(String name, Currency currency, ParamRequest term) {
+    private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
         List<BookEntity> bookEntities = getBook(name);
@@ -101,7 +99,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
             book.setChangePrice(
                     sortByDate(
                             priceChangeCalculation(
-                                    sortByDate(book.getChangeBookPrice()),
+                                    sortByDate(book.getPreviousBookPrice()),
                                     sortByDate(changePrice),
                                     book.getPrice()
                             )
@@ -148,8 +146,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         BigDecimal price = entry.getValue();
 
         for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
-            if (prices.getKey().isAfter(entry.getKey().minusDays(1))) {
 
+            if (prices.getKey().isAfter(entry.getKey().minusDays(1))) {
                 if (entries.hasNext()) {
                     entry = entries.next();
                     price = entry.getValue();
@@ -158,8 +156,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                     price = priceNow;
                 }
             }
-            log.debug(prices.getKey() +  " -- "
-                    + entry.getValue() + " -- "
+            log.info(prices.getKey() +  " -- "
+                    + price + " -- "
                     + prices.getValue()
             );
             changePrice.put(prices.getKey(),prices.getValue().multiply(price));

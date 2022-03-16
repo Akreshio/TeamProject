@@ -35,9 +35,6 @@ public interface ServicePriceDynamic {
      * @param currency the currency
      * @return the list
      */
-
-    List<BookEntity> get (String name, Currency currency, ParamRequest term);
-
     ResponseEntity<?> getJson (String name, Currency currency, ParamRequest term);
     ResponseEntity<?> getSvg (String name, Currency currency, Map<String, String> term);
     ResponseEntity<?> getCsv (String name, Currency currency, Map<String, String> term);

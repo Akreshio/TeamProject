@@ -42,6 +42,4 @@ public class ScheduledRequest {
         System.out.println(" text ");
         log.info("The time is now ");
     }
-
-
 }
