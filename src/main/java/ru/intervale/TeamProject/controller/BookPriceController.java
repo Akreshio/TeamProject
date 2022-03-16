@@ -31,11 +31,11 @@ public class BookPriceController implements BookPrice {
     // http://localhost:8080/price/stat?name=The test book&currency=EUR
 
     @Override
-    public ResponseEntity<?> getJson(String name, Currency currency) {
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("sDate", "01.02.2022");
-        paramMap.put("fDate", "03.03.2022");
-        paramMap.put("per","day");
+    public ResponseEntity<?> getJson(String name, Currency currency, String sStr,String fStr, Period d) {
+        ParamRequest param = null;
+        if ((sStr!=null)||(fStr!=null)||(d!=null)){
+            param = new ParamRequest(sStr, fStr, d);
+        }
 
         return  service.getJson(name, currency, paramMap);
     }

@@ -24,12 +24,21 @@ public class DatabaseAccessMock1 implements DatabaseAccess {
 
     @Override
     public List<BookEntity> get(String name) {
+        Map<LocalDateTime, BigDecimal> price = new HashMap<>();
+        price.put(LocalDateTime.now(), new BigDecimal("10.50"));
+        price.put(LocalDateTime.now().minusDays(6), new BigDecimal("8.50"));
+        price.put(LocalDateTime.now().minusDays(20), new BigDecimal("4.50"));
 
         List<BookEntity> bookEntities = new ArrayList<>();
-        BookEntity book = new BookEntity(10, new BigDecimal("10.50"), 100, "10-1578-185", "name", "The test book", null);
+        BookEntity book = new BookEntity(
+                10,
+                new BigDecimal("10.90"),
+                100, "10-1578-185",
+                "name",
+                "The test book",
+                null,
+                price);
         bookEntities.add(book);
-        BookEntity book2 = new BookEntity(10, new BigDecimal("300.50"), 100, "00-0000-000", "name2", "The test BOOK2", null);
-        bookEntities.add(book2);
 
         return bookEntities;
     }
