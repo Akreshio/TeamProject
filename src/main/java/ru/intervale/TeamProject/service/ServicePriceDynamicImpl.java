@@ -8,11 +8,13 @@
 package ru.intervale.TeamProject.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
@@ -21,12 +23,14 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * The type Service change price.
  */
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ServicePriceDynamicImpl implements ServicePriceDynamic {
@@ -37,7 +41,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Виктор Дробышевский.
      */
-    public ResponseEntity<?> getJson (String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getJson (String name, Currency currency, ParamRequest term) {
          return  ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
@@ -83,30 +87,31 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
 
     @Override
-    public List<BookEntity> get(String name, Currency currency, Map<String, String> term) {
+    public List<BookEntity> get(String name, Currency currency, ParamRequest term) {
 
-        List<BookEntity> bookEntities = getBook(name); // достаём книги из бд
+        //Получение книг(и) из бд
+        List<BookEntity> bookEntities = getBook(name);
         checkOnNull(bookEntities);
-        Map<String, BigDecimal> changePrice = getChangePrice(currency, term); // получаем курс валют за период
 
-        for (BookEntity book: bookEntities) {
-            //задаём изменение цены на книгу
-            Map<String, BigDecimal> changePriceBook =  new HashMap<>(changePrice);
-            changePriceBook.replaceAll((k, v) -> book.getPrice().multiply(v));
+        //Получение курса валюты за период
+        Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
 
-            Map<String, BigDecimal> newMapSortedByKey =  changePriceBook.entrySet().stream()
-                    .sorted(Comparator.comparing(e -> strToDate(e.getKey())))
-                    .collect(
-                            Collectors.toMap(
-                                    Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new
+        //Расчёт изменение цены
+        for (BookEntity book: bookEntities){
+            book.setChangePrice(
+                    sortByDate(
+                            priceChangeCalculation(
+                                    sortByDate(book.getChangeBookPrice()),
+                                    sortByDate(changePrice),
+                                    book.getPrice()
                             )
-                    );
-            book.setChangePrice(newMapSortedByKey);
+                    )
+            );
         }
         return bookEntities;
     }
 
-    private Map<String, BigDecimal> getChangePrice(Currency currency, Map<String, String> term) {
+    private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
         return   bank.getExchangeRate(currency,term);
     }
 
@@ -114,13 +119,51 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         return  dto.get(name);
     }
 
-    private LocalDate strToDate (@NotNull String str) {
-        String [] strStd =str.split("\\.");
-        return LocalDate.of(Integer.parseInt(strStd[2]), Integer.parseInt(strStd[1]), Integer.parseInt(strStd[0]));
-    }
-
     //тут должен быть эксепшен
     private void checkOnNull(List<BookEntity> bookEntities) {
         if (bookEntities==null) throw new RuntimeException("Book not found");
+    }
+
+    private Map<LocalDateTime, BigDecimal> sortByDate(@NotNull Map<LocalDateTime, BigDecimal> map) {
+        return map.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                Map.Entry::getValue,
+                                (e1, e2) -> e1, LinkedHashMap::new
+                        )
+                );
+    }
+
+    private Map<LocalDateTime, BigDecimal> priceChangeCalculation (
+            @NotNull Map<LocalDateTime, BigDecimal> priseMap,
+            @NotNull Map<LocalDateTime, BigDecimal> currencyMap,
+            BigDecimal priceNow
+    ) {
+        Map<LocalDateTime, BigDecimal>  changePrice =  new HashMap<>();
+
+        Iterator<Map.Entry<LocalDateTime, BigDecimal>> entries = priseMap.entrySet().iterator();
+        Map.Entry<LocalDateTime, BigDecimal> entry = entries.next();
+        BigDecimal price = entry.getValue();
+
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
+            if (prices.getKey().isAfter(entry.getKey().minusDays(1))) {
+
+                if (entries.hasNext()) {
+                    entry = entries.next();
+                    price = entry.getValue();
+
+                } else {
+                    price = priceNow;
+                }
+            }
+            log.debug(prices.getKey() +  " -- "
+                    + entry.getValue() + " -- "
+                    + prices.getValue()
+            );
+            changePrice.put(prices.getKey(),prices.getValue().multiply(price));
+        }
+        return changePrice;
     }
 }

@@ -10,6 +10,7 @@ package ru.intervale.TeamProject.service.external.alfabank;
 import ru.intervale.TeamProject.service.bank.Currency;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,6 @@ public interface AlfabankService {
      * @param currency the currency
      * @return the map
      */
-    Map<String, BigDecimal> get(Currency currency,  List<String> date);
+    Map<LocalDateTime, BigDecimal> get(Currency currency,  List<LocalDateTime> dates);
     Map<Currency, BigDecimal> getNow();
 }

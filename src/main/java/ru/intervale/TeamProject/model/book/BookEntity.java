@@ -13,6 +13,7 @@ import lombok.Data;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
@@ -40,5 +41,7 @@ public class BookEntity {
 
     // дата , цена
     @XmlElement(name = "changePrice")
-    private Map<String, BigDecimal> changePrice;
+    private Map<LocalDateTime, BigDecimal> changePrice;
+
+    private Map<LocalDateTime, BigDecimal> changeBookPrice;
 }
