@@ -52,6 +52,7 @@ public interface BookPrice {
             @ApiParam(value = "код валюты")
             @RequestParam(value = "currency") Currency currency
     );
+
 }
 
 
