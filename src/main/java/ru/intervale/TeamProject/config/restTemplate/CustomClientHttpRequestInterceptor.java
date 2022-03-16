@@ -33,8 +33,7 @@ public class CustomClientHttpRequestInterceptor implements ClientHttpRequestInte
         return execution.execute(request, body);
     }
     private void logRequestDetails(HttpRequest request) {
-        log.info("Headers: {}", request.getHeaders());
-        log.info("Request Method: {}", request.getMethod());
+        log.info("Request Method: {} Headers: {}", request.getMethod(), request.getHeaders());
         log.info("Request URI: {}", request.getURI());
     }
 }

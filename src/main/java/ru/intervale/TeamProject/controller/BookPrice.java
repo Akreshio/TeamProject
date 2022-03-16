@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
 
 public interface BookPrice {
@@ -26,7 +27,12 @@ public interface BookPrice {
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @RequestParam(value = "currency") Currency currency
+            @RequestParam(value = "currency") Currency currency,
+
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "s", required=false) String sStr,
+            @RequestParam(value = "f", required=false) String fStr,
+            @RequestParam(value = "d", required=false) Period d
     );
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags={"public"})
