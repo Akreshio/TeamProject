@@ -24,7 +24,7 @@ import java.util.List;
 public interface DatabaseAccess {
 
     /**
-     * тут получаем лист книг из нашей базы данных.
+     * Тут получаем лист книг из базы данных.
      *
      * @param name имя книги
      * @return  возвращаем лист BookEntity

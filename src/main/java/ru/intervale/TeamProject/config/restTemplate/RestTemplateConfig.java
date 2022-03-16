@@ -8,7 +8,11 @@
 
 package ru.intervale.TeamProject.config.restTemplate;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +25,15 @@ import javax.annotation.Resource;
  */
 @Configuration
 @EnableAutoConfiguration
+@ConfigurationProperties
+@Getter
+@Setter
 public class RestTemplateConfig {
 
+    @Value("${rest.template.alfabank.url}")
+    private String url;
     /**
-     * RestTemplate with default URI "https://ibapi.alfabank.by:8273"
+     * RestTemplate with default URL "https://ibapi.alfabank.by:8273"
      *
      * @param builder the builder
      * @return the rest template
@@ -33,7 +42,7 @@ public class RestTemplateConfig {
     @Resource
     public RestTemplate restTemplateAlfaBank(RestTemplateBuilder builder) {
         return builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory("https://ibapi.alfabank.by:8273"))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(url))
                 .additionalInterceptors(new CustomClientHttpRequestInterceptor())
                 .build();
     }
