@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import ru.intervale.TeamProject.model.request.ParamRequest;
+import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
@@ -31,21 +33,21 @@ public class BookPriceController implements BookPrice {
     // http://localhost:8080/price/stat?name=The test book&currency=EUR
 
     @Override
-    public ResponseEntity<?> getJson(String name, Currency currency) {
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("std", "01.01.2021");
-        paramMap.put("find", "03.03.2022");
-        paramMap.put("per","month");
+    public ResponseEntity<?> getJson(String name, Currency currency, String sStr,String fStr, Period d) {
+        ParamRequest param = null;
+        if ((sStr!=null)||(fStr!=null)||(d!=null)){
+            param = new ParamRequest(sStr, fStr, d);
+        }
 
-        return  service.getJson(name, currency, paramMap);
+        return  service.getJson(name, currency, param);
     }
 
     @Override
     public ResponseEntity<?> getPdf(String name, Currency currency) {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("std", "01.01.2021");
-        paramMap.put("find", "03.03.2022");
-        paramMap.put("per","month");
+        paramMap.put("sDate", "01.01.2021");
+        paramMap.put("fDate", "03.03.2022");
+        paramMap.put("per","day");
 
         return  service.getPdf(name, currency, paramMap);
     }
