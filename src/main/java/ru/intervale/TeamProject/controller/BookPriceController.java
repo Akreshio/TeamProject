@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,5 +49,15 @@ public class BookPriceController implements BookPrice {
         paramMap.put("per","day");
 
         return  service.getPdf(name, currency, paramMap);
+    }
+
+    @Override
+    public ResponseEntity<?> getSvg(String name, Currency currency) throws IOException {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("sDate", "01.01.2021");
+        paramMap.put("fDate", "03.03.2022");
+        paramMap.put("per","day");
+
+        return  service.getSvg(name, currency, paramMap);
     }
 }

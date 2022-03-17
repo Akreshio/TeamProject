@@ -13,6 +13,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.jfree.graphics2d.svg.SVGUtils;
 import org.jfree.ui.RectangleInsets;
+import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.awt.*;
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
+@Service
 public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
 
     private XYDataset createDataset(List<BookEntity> bookEntityList) {

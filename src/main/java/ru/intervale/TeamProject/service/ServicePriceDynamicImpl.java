@@ -8,17 +8,21 @@
 package ru.intervale.TeamProject.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.apache.pdfbox.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.ServletContextResource;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
+import javax.servlet.ServletContext;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -36,6 +40,10 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private Bank bank;
     private DatabaseAccess dto;
+    @Autowired
+    private ServiceGenerateSvg serviceGenerateSvg;
+    @Autowired
+    private ServletContext servletContext;
 
     /**
      * Реализация: Виктор Дробышевский.
@@ -49,11 +57,11 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
-    public ResponseEntity<?> getSvg (String name, Currency currency, Map<String, String> term) {
-
-        return  ResponseEntity.badRequest()
-                .contentType(MediaType.IMAGE_PNG) // Временный найти свой
-                .body("Bad request");
+    public ResponseEntity<Resource> getSvg (String name, Currency currency, Map<String, String> term) throws IOException {
+        serviceGenerateSvg.generateSvg(get(name, currency, term));
+        HttpHeaders headers = new HttpHeaders();
+        Resource resource = new ServletContextResource(servletContext, "SVGChart.svg");
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
     /**
