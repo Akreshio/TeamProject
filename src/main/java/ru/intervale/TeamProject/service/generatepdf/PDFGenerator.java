@@ -3,6 +3,10 @@ package ru.intervale.TeamProject.service.generatepdf;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -25,6 +29,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
+
+
 @Service
 public class PDFGenerator implements PDFGeneratorService{
 
@@ -38,52 +44,49 @@ public class PDFGenerator implements PDFGeneratorService{
 
             PdfWriter.getInstance(document, out);
             document.open();
-
-            // Add Text to PDF file ->
-            Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
-            Paragraph para = new Paragraph( " Table", font);
-            para.setAlignment(Element.ALIGN_CENTER);
-            document.add(para);
-            document.add(Chunk.NEWLINE);
-
-            PdfPTable table = new PdfPTable(2);
-            // Add PDF Table Header ->
-            Stream.of("Title", "Price")
-                    .forEach(headerTitle -> {
-                        PdfPCell header = new PdfPCell();
-                        Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        header.setBorderWidth(2);
-                        header.setPhrase(new Phrase(headerTitle, headFont));
-                        table.addCell(header);
-                    });
-
             for (BookEntity book : bookEntities) {
-                PdfPCell titleCell = new PdfPCell(new Phrase(book.getTitle()));
-                titleCell.setPaddingLeft(4);
-                titleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(titleCell);
+                // ерстка документа ->
+                Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
+                Paragraph para = new Paragraph(" Book " +book.getTitle(), font);
+                para.setAlignment(Element.ALIGN_CENTER);
 
-                PdfPCell priceCell = new PdfPCell(new Phrase(String.valueOf(book.getPrice())));
-                priceCell.setPaddingLeft(4);
-                priceCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                priceCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                table.addCell(priceCell);
+                document.add(para);
+                document.add(Chunk.NEWLINE);
+
+                PdfPTable table = new PdfPTable(2);
+                // добавление заголовка таблицы с названием книги ->
+                Stream.of("Date", "Price in currency")
+                        .forEach(headerTitle -> {
+                            PdfPCell header = new PdfPCell();
+                            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+                            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            header.setBorderWidth(2);
+                            header.setPhrase(new Phrase(headerTitle, headFont));
+                            table.addCell(header);
+                        });
 
 
-//                    for (Map.Entry<String, BigDecimal> price : book.getChangePrice().entrySet()) {
-//                        priceCell = new PdfPCell(new Phrase(String.valueOf(price)));
-//                        priceCell.setPaddingLeft(4);
-//                        priceCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//                        priceCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                        table.addCell(priceCell);
-//
-//                }
+
+                // вывод значений изменения цены
+                if ((book.getChangePrice() != null) && (!book.getChangePrice().isEmpty())) {
+
+                    for (Map.Entry<LocalDateTime, BigDecimal> price : book.getChangePrice().entrySet()) {
+                        PdfPCell titleCell = new PdfPCell(new Phrase(String.valueOf(price.getKey())));
+                        titleCell.setPaddingLeft(4);
+                        titleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(titleCell);
+
+                        PdfPCell priceCell = new PdfPCell(new Phrase(String.valueOf(price.getValue())));
+                        priceCell.setPaddingLeft(4);
+                        priceCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                        priceCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                        table.addCell(priceCell);
+                    }
+                    document.add(table);
+                }
             }
-
-            document.add(table);
 
             document.close();
         }catch(DocumentException e) {
@@ -93,4 +96,9 @@ public class PDFGenerator implements PDFGeneratorService{
         return new ByteArrayInputStream(out.toByteArray());
     }
 
+    private String formatDate(LocalDateTime date){
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = format.format(date);
+        return dateString;
+    }
 }

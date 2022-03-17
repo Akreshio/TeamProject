@@ -7,6 +7,7 @@
 
 package ru.intervale.TeamProject.service;
 
+import com.itextpdf.text.DocumentException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +48,10 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Виктор Дробышевский.
      */
-    public ResponseEntity<?> getJson (String name, Currency currency, Map<String, String> term) {
-         return  ResponseEntity.badRequest()
+
+    @Override
+    public ResponseEntity<?> getJson(String name, Currency currency, ParamRequest term) {
+        return  ResponseEntity.badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
     }
@@ -77,14 +80,15 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Игорь Прохорченко.
      * @return
      */
-    public ResponseEntity getPdf (String name, Currency currency, Map<String, String> term) {
-        /**
-         * ???
-         *  ???
-         */
-        List<BookEntity> bookEntities = get(name, currency, term);
+    public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
 
-        ByteArrayInputStream book = pdfGenerator.getPdf(bookEntities);
+        List<BookEntity> bookEntities = get(name, currency, term);
+        ByteArrayInputStream book = null;
+        try {
+            book = pdfGenerator.getPdf(bookEntities);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
