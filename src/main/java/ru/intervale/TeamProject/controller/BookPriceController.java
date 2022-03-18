@@ -43,14 +43,26 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
-    public ResponseEntity<?> getPdf(String name, Currency currency) {
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("sDate", "01.01.2021");
-        paramMap.put("fDate", "03.03.2022");
-        paramMap.put("per","day");
+    public ResponseEntity<?> getPdf(String name, Currency currency, String sStr,String fStr, Period d) {
+        ParamRequest param = null;
+        if ((sStr!=null)||(fStr!=null)||(d!=null)){
+            param = new ParamRequest(sStr, fStr, d);
+        }
 
-        return  service.getPdf(name, currency, paramMap);
+        return  service.getPdf(name, currency, param);
     }
+
+    @Override
+    public ResponseEntity<?> getSvg(String name, Currency currency, String sStr,String fStr, Period d) {
+        ParamRequest param = null;
+        if ((sStr!=null)||(fStr!=null)||(d!=null)){
+            param = new ParamRequest(sStr, fStr, d);
+        }
+
+        return  service.getSvg(name, currency, param);
+    }
+
+
 
     @Override
     public ResponseEntity<?> getCsv(String name, Currency currency, String sStr, String fStr, Period d) {
