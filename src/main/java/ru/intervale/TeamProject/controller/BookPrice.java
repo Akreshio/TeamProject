@@ -59,7 +59,11 @@ public interface BookPrice {
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @RequestParam(value = "currency") Currency currency
+            @RequestParam(value = "currency") Currency currency,
+
+            @RequestParam(value = "s", required=false) String sStr,
+            @RequestParam(value = "f", required=false) String fStr,
+            @RequestParam(value = "d", required=false) Period d
     );
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getCsv", notes = "Возвращает запрошенный формат", tags={"public"})
@@ -70,7 +74,11 @@ public interface BookPrice {
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @RequestParam(value = "currency") Currency currency
+            @RequestParam(value = "currency") Currency currency,
+
+            @RequestParam(value = "s", required=false) String sStr,
+            @RequestParam(value = "f", required=false) String fStr,
+            @RequestParam(value = "d", required=false) Period d
     );
 
 }

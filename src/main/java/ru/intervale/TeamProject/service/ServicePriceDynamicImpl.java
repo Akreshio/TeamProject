@@ -9,6 +9,7 @@ package ru.intervale.TeamProject.service;
 
 import com.itextpdf.text.DocumentException;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.core.io.InputStreamResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
@@ -21,13 +22,11 @@ import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.generatepdf.PDFGenerator;
 import ru.intervale.TeamProject.service.generatepdf.PDFGeneratorService;
 
 import javax.validation.constraints.NotNull;
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,15 +79,12 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Игорь Прохорченко.
      * @return
      */
+    @SneakyThrows
     public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
 
         List<BookEntity> bookEntities = get(name, currency, term);
-        ByteArrayInputStream book = null;
-        try {
-            book = pdfGenerator.getPdf(bookEntities);
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+        ByteArrayInputStream book = pdfGenerator.getPdf(bookEntities);
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
