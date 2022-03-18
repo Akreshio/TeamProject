@@ -17,7 +17,6 @@ import java.util.Map;
 public interface Bank {
 
 
-
     public Map<LocalDateTime, BigDecimal> getExchangeRate (Currency currency, ParamRequest term);
 
 }
