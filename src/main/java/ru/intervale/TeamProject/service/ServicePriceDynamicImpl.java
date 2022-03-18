@@ -83,7 +83,6 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
 
         List<BookEntity> bookEntities = get(name, currency, term);
-        ByteArrayInputStream book = pdfGenerator.getPdf(bookEntities);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -98,7 +97,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 .ok()
                 .headers(httpHeaders)
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(book));
+                .body(pdfGenerator.getPdf(bookEntities));
     }
 
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {

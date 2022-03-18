@@ -1,6 +1,5 @@
 package ru.intervale.TeamProject.service.generatepdf;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +31,7 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 @Slf4j
 public class PDFGeneratorServiceImpl implements PDFGeneratorService{
 
-    public ByteArrayInputStream getPdf(List<BookEntity> bookEntities) {
+    public byte[] getPdf(List<BookEntity> bookEntities) {
 
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -54,7 +53,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService{
             document.close();
         }
 
-        return new ByteArrayInputStream(out.toByteArray());
+        return out.toByteArray();
     }
 
     private  void header(Document document, BookEntity book) throws DocumentException {
