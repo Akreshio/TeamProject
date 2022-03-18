@@ -54,21 +54,21 @@ public class BookPriceController implements BookPrice {
 
     @Override
     public ResponseEntity<?> getSvg(String name, Currency currency, String sStr,String fStr, Period d) {
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("std", "01.01.2021");
-        paramMap.put("find", "03.03.2022");
-        paramMap.put("per","month");
+        ParamRequest param = null;
+        if ((sStr!=null)||(fStr!=null)||(d!=null)){
+            param = new ParamRequest(sStr, fStr, d);
+        }
 
-        return  service.getSvg(name, currency, paramMap);
+        return  service.getSvg(name, currency, param);
     }
 
     @Override
     public ResponseEntity<?> getCsv(String name, Currency currency, String sStr,String fStr, Period d) {
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("std", "01.01.2021");
-        paramMap.put("find", "03.03.2022");
-        paramMap.put("per","month");
+        ParamRequest param = null;
+        if ((sStr!=null)||(fStr!=null)||(d!=null)){
+            param = new ParamRequest(sStr, fStr, d);
+        }
 
-        return  service.getCsv(name, currency, paramMap);
+        return  service.getCsv(name, currency, param);
     }
 }

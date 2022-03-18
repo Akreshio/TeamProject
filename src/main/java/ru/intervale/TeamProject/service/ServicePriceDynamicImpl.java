@@ -58,7 +58,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
-    public ResponseEntity<?> getSvg (String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term) {
 
         return  ResponseEntity.badRequest()
                 .contentType(MediaType.IMAGE_PNG) // Временный найти свой
@@ -68,7 +68,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Сергей Маевский.
      */
-    public ResponseEntity<?> getCsv (String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getCsv (String name, Currency currency, ParamRequest term) {
 
         return  ResponseEntity.badRequest()
                 .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
