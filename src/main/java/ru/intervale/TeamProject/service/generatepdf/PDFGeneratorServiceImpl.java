@@ -41,8 +41,9 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService{
             PdfWriter.getInstance(document, out);
             document.open();
 
+            // верстка документа ->
             for (BookEntity book : bookEntities) {
-                // верстка документа ->
+                // верстка таблиц
                 header(document, book);
 
                 body(document, book);
@@ -57,6 +58,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService{
     }
 
     private  void header(Document document, BookEntity book) throws DocumentException {
+        //создание заголовка над таблицей с названием книги
         Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
         Paragraph paragraph = new Paragraph(" Book " + book.getTitle(), font);
         paragraph.setAlignment(Element.ALIGN_CENTER);
@@ -66,9 +68,9 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService{
     }
 
     private  void  body(Document document, BookEntity book) throws DocumentException {
-        // создание таблицы
+        // создание таблицы ->
         PdfPTable table = new PdfPTable(2);
-        // добавление заголовка таблицы с названием книги ->
+        // добавление шапки таблицы  ->
         Stream.of("Date", "Price in currency")
                 .forEach(headerTitle -> {
                     PdfPCell header = new PdfPCell();
