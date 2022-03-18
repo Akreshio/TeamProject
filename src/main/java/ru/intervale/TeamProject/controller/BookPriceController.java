@@ -1,5 +1,5 @@
 /*
- * @author Виктор Дробышевский
+ * @author
  * E-mail: akreshios@gmail.com
  * @since "02.03.2022, 18:39"
  * @version V 1.0.0
@@ -16,13 +16,10 @@ import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 /**
  * The type Book price api controller.
  */
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -33,7 +30,7 @@ public class BookPriceController implements BookPrice {
     // http://localhost:8080/price/stat?name=The test book&currency=EUR
 
     @Override
-    public ResponseEntity<?> getJson(String name, Currency currency, String sStr,String fStr, Period d) {
+    public ResponseEntity<?> getJson(String name, Currency currency, String sStr, String fStr, Period d) {
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
@@ -66,7 +63,6 @@ public class BookPriceController implements BookPrice {
 
     @Override
     public ResponseEntity<?> getCsv(String name, Currency currency, String sStr, String fStr, Period d) {
-
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);

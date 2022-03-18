@@ -7,7 +7,6 @@
 
 package ru.intervale.TeamProject.service;
 
-
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +19,10 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
-import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 
-import ru.intervale.TeamProject.service.generatepdf.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 
 import javax.validation.constraints.NotNull;;
 import java.math.BigDecimal;
@@ -43,6 +42,10 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private Bank bank;
     private DatabaseAccess dto;
     private PDFGeneratorService pdfGenerator;
+    private CsvGeneratorService csvGenerator;
+
+    private static final String TEXT_CSV = "text/csv";
+
 
 
     /**
@@ -71,26 +74,35 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      */
     public ResponseEntity<String> getCsv(String name, Currency currency, ParamRequest term) {
 
-        List<BookEntity> bookEntities = get(name, currency, term);
+        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
 
-        return  ResponseEntity.badRequest()
-                .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
-                .body("Bad reques");
+        return ResponseEntity
+                .ok()
+                .headers(httpHeaders)
+                .body(
+                        csvGenerator.getCsv(
+                                get(name, currency, term)
+                        )
+                );
     }
+
 
     /**
      * Реализация: Игорь Прохорченко.
      */
     @SneakyThrows
-    public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
+    public ResponseEntity<?> getPdf (String name, Currency currency, ParamRequest term) {
 
-        List<BookEntity> bookEntities = get(name, currency, term);
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
 
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
-                .body(pdfGenerator.getPdf(bookEntities));
+                .body(
+                        pdfGenerator.getPdf(
+                                get(name, currency, term)
+                        )
+                );
     }
 
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
@@ -218,7 +230,6 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 .build()
                 .toString()
         );
-
         return httpHeaders;
     }
 

@@ -36,7 +36,7 @@ public class ScheduledRequest {
      //   exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
     }
     //каждый день с 8:00 до 18:00 с шагом в 10 минт
-    @Scheduled(cron = "0 0/1 8-23 * * *")
+    @Scheduled(cron = "0 0/10 8-23 * * *")
     public void reportCurrentTime2() {
         Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
         exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
