@@ -13,6 +13,8 @@ import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ import java.util.Map;
 @Slf4j
 @Service
 public class CsvGeneratorServiceImpl implements CsvGeneratorService {
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Override
     public String getCsv(List<BookEntity> bookEntities) {
@@ -58,9 +62,9 @@ public class CsvGeneratorServiceImpl implements CsvGeneratorService {
 
             booksString.append("Column: Date;" + "Column: Price in currency;\n");
 
-            for (Map.Entry<String, BigDecimal> price : book.getChangePrice().entrySet()) {
+            for (Map.Entry<LocalDateTime, BigDecimal> price : book.getChangePrice().entrySet()) {
 
-                booksString.append(price.getKey() + ";" +
+                booksString.append(DATE_TIME_FORMATTER.format(price.getKey()) + ";" +
                         price
                                 .getValue()
                                 .setScale(2, RoundingMode.HALF_UP)

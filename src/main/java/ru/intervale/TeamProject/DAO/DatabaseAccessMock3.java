@@ -24,6 +24,7 @@ public class DatabaseAccessMock3 implements DatabaseAccess {
 
     @Override
     public List<BookEntity> get(String name) {
-       return null;
+
+        return null;
     }
 }
