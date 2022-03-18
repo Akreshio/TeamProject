@@ -40,7 +40,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Виктор Дробышевский.
      */
-    public ResponseEntity<?> getJson (String name, ru.intervale.TeamProject.service.bank.Currency currency, ParamRequest term) {
+    public ResponseEntity<?> getJson (String name, Currency currency, ParamRequest term) {
          return  ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
@@ -49,7 +49,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
-    public ResponseEntity<?> getSvg (String name, ru.intervale.TeamProject.service.bank.Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getSvg (String name, Currency currency, Map<String, String> term) {
 
         return  ResponseEntity.badRequest()
                 .contentType(MediaType.IMAGE_PNG) // Временный найти свой
@@ -59,7 +59,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Сергей Маевский.
      */
-    public ResponseEntity<?> getCsv (String name, ru.intervale.TeamProject.service.bank.Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getCsv (String name, Currency currency, Map<String, String> term) {
 
         return  ResponseEntity.badRequest()
                 .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
@@ -69,7 +69,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Игорь Прохорченко.
      */
-    public ResponseEntity<?> getPdf (String name, ru.intervale.TeamProject.service.bank.Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getPdf (String name, Currency currency, Map<String, String> term) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
@@ -84,7 +84,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 .body(null);
     }
 
-    private List<BookEntity> get(String name, ru.intervale.TeamProject.service.bank.Currency currency, ParamRequest term) {
+    private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
         List<BookEntity> bookEntities = getBook(name);
@@ -161,7 +161,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
         // цикл по дням изменения курса валют
         for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
-            // Если дата цены книги равна или больше даты курса
+            // Если дата изменения цены книги равна или больше даты курса
             if (prices.getKey().isAfter(changePrice.getKey().minusDays(1))) {
                 // Есть ли следующее изменение цены
                 if (iteratorPrise.hasNext()) {
