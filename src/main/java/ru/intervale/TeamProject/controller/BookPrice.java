@@ -9,12 +9,16 @@ package ru.intervale.TeamProject.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Value;
+import org.intellij.lang.annotations.Pattern;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
+
+import javax.validation.Valid;
 
 public interface BookPrice {
 
@@ -30,8 +34,11 @@ public interface BookPrice {
             @RequestParam(value = "currency") Currency currency,
 
             @ApiParam(value = "Наименование книги")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "s", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "f", required=false) String fStr,
+
             @RequestParam(value = "d", required=false) Period d
     );
 
@@ -46,8 +53,11 @@ public interface BookPrice {
             @RequestParam(value = "currency") Currency currency,
 
 
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "s", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "f", required=false) String fStr,
+
             @RequestParam(value = "d", required=false) Period d
     );
 
@@ -61,8 +71,11 @@ public interface BookPrice {
             @ApiParam(value = "код валюты")
             @RequestParam(value = "currency") Currency currency,
 
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "s", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "f", required=false) String fStr,
+
             @RequestParam(value = "d", required=false) Period d
     );
 
@@ -76,8 +89,11 @@ public interface BookPrice {
             @ApiParam(value = "код валюты")
             @RequestParam(value = "currency") Currency currency,
 
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "s", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
             @RequestParam(value = "f", required=false) String fStr,
+
             @RequestParam(value = "d", required=false) Period d
     );
 
