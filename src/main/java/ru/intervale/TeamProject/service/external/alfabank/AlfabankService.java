@@ -29,5 +29,5 @@ public interface AlfabankService {
      * @return the map
      */
     Map<LocalDateTime, BigDecimal> get(Currency currency, List<LocalDateTime> dates);
-    Map<Currency, BigDecimal> getNow();
+    Map<String , BigDecimal> getNow();
 }

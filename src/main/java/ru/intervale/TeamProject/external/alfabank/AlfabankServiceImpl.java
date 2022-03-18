@@ -63,14 +63,14 @@ public class AlfabankServiceImpl implements AlfabankService {
         return changePrice;
     }
     @Override
-    public Map<Currency, BigDecimal> getNow() {
-        Map<Currency, BigDecimal> exchangeRateChange = new HashMap<>();
+    public Map<String, BigDecimal> getNow() {
+        Map<String, BigDecimal> exchangeRateChange = new HashMap<>();
         RateListResponse rateList = restTemplate.getForEntity(urnNow, RateListResponse.class).getBody();
 
         if (rateList != null){
             for (Rate rate:rateList.getRates()) {
                 if (rate.getName() != null) {
-                    Currency currency = Currency.valueOf(rate.getSellIso());
+                    String currency = rate.getSellIso().toLowerCase();
                     exchangeRateChange.put(currency, rate.getSellRate());
                 }
             }
