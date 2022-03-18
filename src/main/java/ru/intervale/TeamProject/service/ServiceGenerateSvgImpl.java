@@ -29,16 +29,14 @@ public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
 
     private XYDataset createDataset(List<BookEntity> bookEntityList) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         for (BookEntity bookEntity : bookEntityList) {
         TimeSeries timeSeries = new TimeSeries("Автор: " + bookEntity.getWriter());
         bookEntity.getChangePrice().forEach((k, v) -> {
-            LocalDate localDate = LocalDate.parse(k, formatter);
-            timeSeries.add(new Day(
-                    localDate.getDayOfMonth(),
-                    localDate.getMonthValue(),
-                    localDate.getYear()),
+                timeSeries.add(new Day(
+                    k.getDayOfMonth(),
+                    k.getMonthValue(),
+                    k.getYear()),
                     v.doubleValue());
         });
         dataset.addSeries(timeSeries);

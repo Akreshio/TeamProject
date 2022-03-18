@@ -7,7 +7,10 @@
 
 package ru.intervale.TeamProject.service.bank;
 
+import ru.intervale.TeamProject.model.request.ParamRequest;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +18,6 @@ public interface Bank {
 
 
 
-    public Map<String, BigDecimal> getExchangeRate (Currency currency, Map<String, String> term);
+    public Map<LocalDateTime, BigDecimal> getExchangeRate (Currency currency, ParamRequest term);
 
-    public void  requestCurrentRate ();
-
-     Map<String, BigDecimal> hour (Currency currency, List<String> time);
-
-    Map<String, BigDecimal> day (Currency currency, List<String> time);
-
-    Map<String, BigDecimal> month (Currency currency, List<String> time);
 }

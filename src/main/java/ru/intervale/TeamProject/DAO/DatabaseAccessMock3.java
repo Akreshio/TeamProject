@@ -19,8 +19,10 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
+
 @Profile("mock3")
 public class DatabaseAccessMock3 implements DatabaseAccess {
+
 
     @Override
     public List<BookEntity> get(String name) {

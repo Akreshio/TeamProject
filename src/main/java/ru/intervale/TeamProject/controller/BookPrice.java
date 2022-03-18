@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public interface BookPrice {
 
 
-    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getJson", notes = "Возвращает запрошенный формат", tags={"public"})
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getJson", notes = "Возвращает запрошенный формат", tags = {"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = {"application/json;charset=UTF-8"},
             method = RequestMethod.GET)
@@ -28,10 +29,15 @@ public interface BookPrice {
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @RequestParam(value = "currency") Currency currency
+            @RequestParam(value = "currency") Currency currency,
+
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "s", required = false) String sStr,
+            @RequestParam(value = "f", required = false) String fStr,
+            @RequestParam(value = "d", required = false) Period d
     );
 
-    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags={"public"})
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags = {"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = {"application/pdf"},
             method = RequestMethod.GET)
@@ -42,7 +48,7 @@ public interface BookPrice {
             @RequestParam(value = "currency") Currency currency
     );
 
-    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getSvg", notes = "Возвращает запрошенный формат", tags={"public"})
+    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getSvg", notes = "Возвращает запрошенный формат", tags = {"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = {"image/svg+xml"},
             method = RequestMethod.GET)
@@ -50,9 +56,12 @@ public interface BookPrice {
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
-            @RequestParam(value = "currency") Currency currency
+            @RequestParam(value = "currency") Currency currency,
+
+            @ApiParam(value = "Наименование книги")
+            @RequestParam(value = "s", required = false) String sStr,
+            @RequestParam(value = "f", required = false) String fStr,
+            @RequestParam(value = "d", required = false) Period d
     ) throws IOException;
 
 }
-
-
