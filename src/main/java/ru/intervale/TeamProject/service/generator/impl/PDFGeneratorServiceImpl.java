@@ -1,24 +1,3 @@
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "18.03.2022, 23:58"
- * @version V 1.0.0
- */
-
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "18.03.2022, 23:56"
- * @version V 1.0.0
- */
-
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "18.03.2022, 23:39"
- * @version V 1.0.0
- */
-
 package ru.intervale.TeamProject.service.generator.impl;
 
 import java.io.ByteArrayOutputStream;
