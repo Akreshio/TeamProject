@@ -7,7 +7,9 @@
 
 package ru.intervale.TeamProject.service;
 
+
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -20,9 +22,10 @@ import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
-import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 
-import javax.validation.constraints.NotNull;
+import ru.intervale.TeamProject.service.generatepdf.PDFGeneratorService;
+
+import javax.validation.constraints.NotNull;;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,14 +42,16 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private Bank bank;
     private DatabaseAccess dto;
-    private CsvGeneratorService csvGenerator;
-    private static final String TEXT_CSV = "text/csv";
+    private PDFGeneratorService pdfGenerator;
+
 
     /**
      * Реализация: Виктор Дробышевский.
      */
+
+    @Override
     public ResponseEntity<?> getJson(String name, Currency currency, ParamRequest term) {
-        return ResponseEntity.ok()
+        return  ResponseEntity.badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
     }
@@ -54,9 +59,9 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
-    public ResponseEntity<?> getSvg(String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term) {
 
-        return ResponseEntity.badRequest()
+        return  ResponseEntity.badRequest()
                 .contentType(MediaType.IMAGE_PNG) // Временный найти свой
                 .body("Bad reques");
     }
@@ -68,27 +73,24 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
         List<BookEntity> bookEntities = get(name, currency, term);
 
-        String bookEntitiesString = csvGenerator.getCsv(bookEntities);
-
-        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
-
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(bookEntitiesString);
+        return  ResponseEntity.badRequest()
+                .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
+                .body("Bad reques");
     }
 
     /**
      * Реализация: Игорь Прохорченко.
      */
-    public ResponseEntity<?> getPdf(String name, Currency currency, Map<String, String> term) {
+    @SneakyThrows
+    public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
 
+        List<BookEntity> bookEntities = get(name, currency, term);
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
 
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
-                .body(null);
+                .body(pdfGenerator.getPdf(bookEntities));
     }
 
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
