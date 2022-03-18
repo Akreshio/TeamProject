@@ -15,18 +15,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
-
 import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 
-import javax.validation.constraints.NotNull;;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 /**
  * The type Service change price.
  */
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -51,10 +51,10 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Виктор Дробышевский.
      */
-
     @Override
-    public ResponseEntity<?> getJson(String name, Currency currency, ParamRequest term) {
-        return  ResponseEntity.badRequest()
+    public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, ParamRequest term) {
+        return  ResponseEntity
+                .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
     }
@@ -64,7 +64,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      */
     public ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term) {
 
-        return  ResponseEntity.badRequest()
+        return  ResponseEntity
+                .badRequest()
                 .contentType(MediaType.IMAGE_PNG) // Временный найти свой
                 .body("Bad reques");
     }
@@ -226,7 +227,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, mediaType);
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
                 .attachment()
-                .filename("price_change_report_" + LocalDate.now() + format)
+                .filename("price_change_report_" + LocalDateTime.now() + format)
                 .build()
                 .toString()
         );
