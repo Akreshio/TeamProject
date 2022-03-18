@@ -5,27 +5,6 @@
  * @version V 1.0.0
  */
 
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "04.03.2022, 22:38"
- * @version V 1.0.0
- */
-
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "04.03.2022, 0:46"
- * @version V 1.0.0
- */
-
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "03.03.2022, 23:41"
- * @version V 1.0.0
- */
-
 package ru.intervale.TeamProject.service.bank;
 
 import lombok.Getter;
