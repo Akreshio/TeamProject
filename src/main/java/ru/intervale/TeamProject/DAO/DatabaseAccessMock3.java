@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

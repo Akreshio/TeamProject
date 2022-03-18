@@ -44,7 +44,6 @@ public class AlfabankServiceImpl implements AlfabankService {
     public Map<LocalDateTime, BigDecimal> get(Currency currency,  List <LocalDateTime> dates) {
 
         Map<LocalDateTime, BigDecimal> changePrice = new HashMap<>();
-        currency.name();
         for (LocalDateTime date: dates) {
             String d = formatDate(date);
             NationalRateListResponse rateList = restTemplate.getForEntity(
@@ -68,15 +67,14 @@ public class AlfabankServiceImpl implements AlfabankService {
         Map<Currency, BigDecimal> exchangeRateChange = new HashMap<>();
         RateListResponse rateList = restTemplate.getForEntity(urnNow, RateListResponse.class).getBody();
 
-        for (Rate rate:rateList.getRates()) {
-            if (rate.getName()!=null) {
-                Currency currency = Currency.valueOf(rate.getSellIso());
-                exchangeRateChange.put(currency,rate.getSellRate());
+        if (rateList != null){
+            for (Rate rate:rateList.getRates()) {
+                if (rate.getName() != null) {
+                    Currency currency = Currency.valueOf(rate.getSellIso());
+                    exchangeRateChange.put(currency, rate.getSellRate());
+                }
             }
-
         }
-
-
         return exchangeRateChange;
     }
     private String formatDate (@NotNull LocalDateTime date) {

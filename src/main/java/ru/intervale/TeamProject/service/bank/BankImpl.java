@@ -10,8 +10,8 @@ package ru.intervale.TeamProject.service.bank;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
+import ru.intervale.TeamProject.model.request.ParamRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -71,8 +71,7 @@ public class BankImpl implements Bank {
                     }
                     return  dateList;
                 }
-                case month:
-                {
+                case month: {
                     log.info("Using the period formation for month with start day: " + sDate + " and finish day: " + fDate);
                     while (sDate.isBefore(fDate)){
                         dateList.add(sDate);
