@@ -62,15 +62,7 @@ public class BookPriceController implements BookPrice {
         return  service.getSvg(name, currency, param);
     }
 
-    @Override
-    public ResponseEntity<?> getCsv(String name, Currency currency, String sStr,String fStr, Period d) {
-        ParamRequest param = null;
-        if ((sStr!=null)||(fStr!=null)||(d!=null)){
-            param = new ParamRequest(sStr, fStr, d);
-        }
 
-        return  service.getCsv(name, currency, param);
-    }
 
     @Override
     public ResponseEntity<?> getCsv(String name, Currency currency, String sStr, String fStr, Period d) {
