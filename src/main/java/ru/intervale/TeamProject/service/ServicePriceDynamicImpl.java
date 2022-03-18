@@ -7,14 +7,16 @@
 
 package ru.intervale.TeamProject.service;
 
+
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ImageBanner;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
@@ -41,13 +43,17 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private Bank bank;
     private DatabaseAccess dto;
+    private PDFGeneratorService pdfGenerator;
+
     private ServiceGenerateSvg serviceGenerateSvg;
 
     /**
      * Реализация: Виктор Дробышевский.
      */
-    public ResponseEntity<?> getJson (String name, Currency currency, ParamRequest term) {
-         return  ResponseEntity.ok()
+
+    @Override
+    public ResponseEntity<?> getJson(String name, Currency currency, ParamRequest term) {
+        return  ResponseEntity.badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
     }
@@ -65,7 +71,9 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Сергей Маевский.
      */
-    public ResponseEntity<?> getCsv (String name, Currency currency, Map<String, String> term) {
+    public ResponseEntity<String> getCsv(String name, Currency currency, ParamRequest term) {
+
+        List<BookEntity> bookEntities = get(name, currency, term);
 
         return  ResponseEntity.badRequest()
                 .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
@@ -75,19 +83,16 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Игорь Прохорченко.
      */
-    public ResponseEntity<?> getPdf (String name, Currency currency, Map<String, String> term) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
-                .attachment()
-                .filename("demo-file.pdf")
-                .build()
-                .toString()
-        );
+    @SneakyThrows
+    public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
+
+        List<BookEntity> bookEntities = get(name, currency, term);
+        HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
+
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
-                .body(null);
+                .body(pdfGenerator.getPdf(bookEntities));
     }
 
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
@@ -100,7 +105,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
 
         //Расчёт изменение цены
-        for (BookEntity book: bookEntities){
+        for (BookEntity book : bookEntities) {
             book.setChangePrice(
                     sortByDate(
                             priceChangeCalculation(
@@ -115,7 +120,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     }
 
     private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
-        return   bank.getExchangeRate(currency,term);
+
+        return bank.getExchangeRate(currency, term);
     }
 
     private List<BookEntity> getBook(String name) {
@@ -124,7 +130,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     //тут должен быть эксепшен
     private void checkOnNull(List<BookEntity> bookEntities) {
-        if (bookEntities==null) throw new RuntimeException("Book not found");
+        if (bookEntities == null) throw new RuntimeException("Book not found");
     }
 
     private Map<LocalDateTime, BigDecimal> sortByDate(@NotNull Map<LocalDateTime, BigDecimal> map) {
@@ -139,18 +145,18 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 );
     }
 
-    private Map<LocalDateTime, BigDecimal> priceChangeCalculation (
+    private Map<LocalDateTime, BigDecimal> priceChangeCalculation(
             @NotNull Map<LocalDateTime, BigDecimal> priseMap,
             @NotNull Map<LocalDateTime, BigDecimal> currencyMap,
             BigDecimal priceNow
     ) {
-        Map<LocalDateTime, BigDecimal>  changePrice =  new HashMap<>();
+        Map<LocalDateTime, BigDecimal> changePrice = new HashMap<>();
 
         Iterator<Map.Entry<LocalDateTime, BigDecimal>> entries = priseMap.entrySet().iterator();
         Map.Entry<LocalDateTime, BigDecimal> entry = entries.next();
         BigDecimal price = entry.getValue();
 
-        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()) {
 
             if (prices.getKey().isAfter(entry.getKey().minusDays(1))) {
                 if (entries.hasNext()) {
@@ -161,12 +167,27 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                     price = priceNow;
                 }
             }
-            log.info(prices.getKey() +  " -- "
+            log.info(prices.getKey() + " -- "
                     + price + " -- "
                     + prices.getValue()
             );
-            changePrice.put(prices.getKey(),prices.getValue().multiply(price));
+            changePrice.put(prices.getKey(), prices.getValue().multiply(price));
         }
         return changePrice;
     }
+
+    private HttpHeaders getHttpHeaders(String mediaType, String format) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, mediaType);
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
+                .attachment()
+                .filename("price_change_report_" + LocalDate.now() + format)
+                .build()
+                .toString()
+        );
+
+        return httpHeaders;
+    }
+
 }

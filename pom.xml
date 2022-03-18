@@ -15,6 +15,7 @@
 	<description>Team Project</description>
 	<properties>
 		<java.version>11</java.version>
+		<liquibase-maven-plugin.version>3.4.1</liquibase-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -71,6 +72,28 @@
 			<artifactId>annotations</artifactId>
 			<version>RELEASE</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-maven-plugin</artifactId>
+			<version>${liquibase-maven-plugin.version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
