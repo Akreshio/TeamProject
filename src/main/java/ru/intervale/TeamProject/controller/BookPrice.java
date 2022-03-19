@@ -9,7 +9,6 @@ package ru.intervale.TeamProject.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.Value;
 import org.intellij.lang.annotations.Pattern;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
-
-import java.io.IOException;
 
 import javax.validation.Valid;
 
@@ -100,20 +97,7 @@ public interface BookPrice {
     );
 
 
-    @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getSvg", notes = "Возвращает запрошенный формат", tags = {"public"})
-    @RequestMapping(value = "/1.0.0/price/stat",
-            produces = {"image/svg+xml"},
-            method = RequestMethod.GET)
-    ResponseEntity<?> getSvg(
-            @ApiParam(value = "Наименование книги")
-            @RequestParam(value = "name") String name,
-            @ApiParam(value = "код валюты")
-            @RequestParam(value = "currency") Currency currency,
-
-            @ApiParam(value = "Наименование книги")
-            @RequestParam(value = "s", required = false) String sStr,
-            @RequestParam(value = "f", required = false) String fStr,
-            @RequestParam(value = "d", required = false) Period d
-    ) throws IOException;
 
 }
+
+

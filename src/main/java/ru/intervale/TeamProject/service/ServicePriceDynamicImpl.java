@@ -21,21 +21,20 @@ import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
-import ru.intervale.TeamProject.model.book.BookEntity;
 
-import javax.validation.constraints.NotNull;
-import java.awt.*;
-import java.io.IOException;
+import ru.intervale.TeamProject.service.generatepdf.PDFGeneratorService;
+
+import javax.validation.constraints.NotNull;;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * The type Service change price.
  */
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -44,16 +43,20 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private Bank bank;
     private DatabaseAccess dto;
     private PDFGeneratorService pdfGenerator;
+    private CsvGeneratorService csvGenerator;
+
+    private static final String TEXT_CSV = "text/csv";
+
 
     private ServiceGenerateSvg serviceGenerateSvg;
 
     /**
      * Реализация: Виктор Дробышевский.
      */
-
     @Override
-    public ResponseEntity<?> getJson(String name, Currency currency, ParamRequest term) {
-        return  ResponseEntity.badRequest()
+    public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, ParamRequest term) {
+        return  ResponseEntity
+                .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
     }
@@ -73,26 +76,34 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      */
     public ResponseEntity<String> getCsv(String name, Currency currency, ParamRequest term) {
 
-        List<BookEntity> bookEntities = get(name, currency, term);
+        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
 
-        return  ResponseEntity.badRequest()
-                .contentType(MediaType.TEXT_EVENT_STREAM) // Временный найти свой
-                .body("Bad reques");
+        return ResponseEntity
+                .ok()
+                .headers(httpHeaders)
+                .body(
+                        csvGenerator.getCsv(
+                                get(name, currency, term)
+                        )
+                );
     }
 
     /**
      * Реализация: Игорь Прохорченко.
      */
     @SneakyThrows
-    public ResponseEntity getPdf (String name, Currency currency, ParamRequest term) {
+    public ResponseEntity<?> getPdf (String name, Currency currency, ParamRequest term) {
 
-        List<BookEntity> bookEntities = get(name, currency, term);
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
 
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
-                .body(pdfGenerator.getPdf(bookEntities));
+                .body(
+                        pdfGenerator.getPdf(
+                                get(name, currency, term)
+                        )
+                );
     }
 
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
@@ -105,23 +116,33 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
 
         //Расчёт изменение цены
-        for (BookEntity book : bookEntities) {
-            book.setChangePrice(
-                    sortByDate(
-                            priceChangeCalculation(
-                                    sortByDate(book.getPreviousBookPrice()),
-                                    sortByDate(changePrice),
-                                    book.getPrice()
-                            )
-                    )
-            );
+        for (BookEntity book: bookEntities){
+            if(book.getPreviousBookPrice()!=null) {
+                book.setChangePrice(
+                        sortByDate(
+                                priceChangeCalculation(
+                                        sortByDate(book.getPreviousBookPrice()),
+                                        sortByDate(changePrice),
+                                        book.getPrice()
+                                )
+                        )
+                );
+            } else {
+                book.setChangePrice(
+                        sortByDate(
+                                priceChangeCalculation(
+                                        sortByDate(changePrice),
+                                        book.getPrice()
+                                )
+                        )
+                );
+            }
         }
         return bookEntities;
     }
 
     private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
-
-        return bank.getExchangeRate(currency, term);
+        return   bank.getExchangeRate(currency,term);
     }
 
     private List<BookEntity> getBook(String name) {
@@ -150,30 +171,54 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
             @NotNull Map<LocalDateTime, BigDecimal> currencyMap,
             BigDecimal priceNow
     ) {
-        Map<LocalDateTime, BigDecimal> changePrice = new HashMap<>();
+        // Создаём Мар для результата обработки
+        Map<LocalDateTime, BigDecimal>  changePriceBook =  new HashMap<>();
 
-        Iterator<Map.Entry<LocalDateTime, BigDecimal>> entries = priseMap.entrySet().iterator();
-        Map.Entry<LocalDateTime, BigDecimal> entry = entries.next();
-        BigDecimal price = entry.getValue();
+        // Итератор по динамике изменения цены книги
+        Iterator<Map.Entry<LocalDateTime, BigDecimal>> iteratorPrise = priseMap.entrySet().iterator();
+        // Получение даты,цены книги на определённый момент
+        Map.Entry<LocalDateTime, BigDecimal> changePrice = iteratorPrise.next();
+        // Установка цены книги на начало выборки
+        BigDecimal price = changePrice.getValue();
 
-        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()) {
-
-            if (prices.getKey().isAfter(entry.getKey().minusDays(1))) {
-                if (entries.hasNext()) {
-                    entry = entries.next();
-                    price = entry.getValue();
-
-                } else {
+        // цикл по дням изменения курса валют
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
+            // Если дата изменения цены книги равна или больше даты курса
+            if (prices.getKey().isAfter(changePrice.getKey().minusDays(1))) {
+                // Есть ли следующее изменение цены
+                if (iteratorPrise.hasNext()) {
+                    changePrice = iteratorPrise.next();
+                    price = changePrice.getValue();
+                }
+                // Иначе установить актуальную цену книги
+                else {
                     price = priceNow;
                 }
             }
-            log.info(prices.getKey() + " -- "
+            // логирование: дата курса -- цена книги -- курс
+            log.debug(prices.getKey() +  " -- "
                     + price + " -- "
                     + prices.getValue()
             );
-            changePrice.put(prices.getKey(), prices.getValue().multiply(price));
+            //расчёт и запись данных в результирующую Мар
+            changePriceBook.put(prices.getKey(),prices.getValue().multiply(price));
         }
-        return changePrice;
+        return changePriceBook;
+    }
+
+    private Map<LocalDateTime, BigDecimal> priceChangeCalculation (
+            @NotNull Map<LocalDateTime, BigDecimal> currencyMap,
+            BigDecimal priceNow
+    ) {
+        // Создаём Мар для результата обработки
+        Map<LocalDateTime, BigDecimal>  changePriceBook =  new HashMap<>();
+
+        // цикл по дням изменения курса валют
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
+            //расчёт и запись данных в результирующую Мар по актуальной цене книги
+            changePriceBook.put(prices.getKey(),prices.getValue().multiply(priceNow));
+        }
+        return changePriceBook;
     }
 
     private HttpHeaders getHttpHeaders(String mediaType, String format) {
@@ -182,11 +227,10 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, mediaType);
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
                 .attachment()
-                .filename("price_change_report_" + LocalDate.now() + format)
+                .filename("price_change_report_" + LocalDateTime.now() + format)
                 .build()
                 .toString()
         );
-
         return httpHeaders;
     }
 

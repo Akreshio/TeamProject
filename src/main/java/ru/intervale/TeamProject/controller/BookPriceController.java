@@ -16,7 +16,6 @@ import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,15 +73,5 @@ public class BookPriceController implements BookPrice {
         }
 
         return  service.getCsv(name, currency, param);
-    }
-
-    @Override
-    public ResponseEntity<?> getSvg(String name, Currency currency, String sStr,String fStr, Period d) throws IOException {
-        ParamRequest param = null;
-        if ((sStr!=null)||(fStr!=null)||(d!=null)){
-            param = new ParamRequest(sStr, fStr, d);
-        }
-
-        return  service.getSvg(name, currency, param);
     }
 }
