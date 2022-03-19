@@ -1,3 +1,10 @@
+/*
+ * @author Игорь Прохорченко
+ * E-mail: akreshios@gmail.com
+ * @since "19.03.2022, 11:55"
+ * @version V 1.0.0
+ */
+
 package ru.intervale.TeamProject.service.generator.impl;
 
 import java.io.ByteArrayOutputStream;

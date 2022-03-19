@@ -7,7 +7,7 @@
 
 package ru.intervale.TeamProject.service.external.alfabank;
 
-import ru.intervale.TeamProject.service.bank.Currency;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * The interface Alfabank service.
  */
-public interface AlfabankService {
+public interface AlfaBankService {
 
     /**
      * Передаём код валюты в банк и получаем значения (дата, множитель валютного перевода)

@@ -5,12 +5,12 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.bank;
+package ru.intervale.TeamProject.service.RateCurrencyChanging;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
+import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 
 import java.math.BigDecimal;
@@ -22,20 +22,20 @@ import java.util.Map;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class BankImpl implements Bank {
+public class RateCurrencyChangingImpl implements RateCurrencyChanging {
 
-    private AlfabankService alfabank;
+    private AlfaBankService alfabank;
 
     @Override
     public Map<LocalDateTime, BigDecimal> getExchangeRate(Currency currency, ParamRequest paramMap) {
 
         if (paramMap!=null) {
-            return alfabank.get(currency,get(paramMap));
+            return alfabank.get(currency,getTimePeriod(paramMap));
         }
-            return alfabank.get(currency,get());
+            return alfabank.get(currency,getTimePeriod());
         }
 
-    private List<LocalDateTime> get(ParamRequest param){
+    private List<LocalDateTime> getTimePeriod(ParamRequest param){
         List<LocalDateTime> dateList = new ArrayList<>();
 
         // Дата окончания выборки
@@ -82,20 +82,21 @@ public class BankImpl implements Bank {
             }
         } else {
             for (int i=0; i<=10; i++){
-                dateList.add(fDate);
+                dateList.add(sDate);
                 sDate = sDate.plusDays(1);
             }
         }
         return  dateList;
     }
 
-    private List<LocalDateTime> get(){
+    private List<LocalDateTime> getTimePeriod(){
         log.debug("Using the period formation without param");
 
         List<LocalDateTime> dateList = new ArrayList<>();
         LocalDateTime std = LocalDateTime.now();
 
         for (int i=0; i<=10; i++){
+            dateList.add(std);
             std = std.minusDays(1);
         }
         return  dateList;

@@ -8,12 +8,13 @@
 package ru.intervale.TeamProject.service;
 
 import org.springframework.http.ResponseEntity;
-import ru.intervale.TeamProject.service.bank.Currency;
-import ru.intervale.TeamProject.model.request.ParamRequest;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
-import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
+import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
+import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.model.request.ParamRequest;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * The interface Service change price.
@@ -27,14 +28,14 @@ public interface ServicePriceDynamic {
      * Получаем список книг
      * @see DatabaseAccess
      * Получаем изменение валют за период
-     * @see AlfabankService
+     * @see AlfaBankService
      *
      * @param name     the name
      * @param currency the currency
      * @return the list
      */
-    ResponseEntity<?> getJson (String name, Currency currency, ParamRequest term);
-    ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term);
-    ResponseEntity<?> getCsv (String name, Currency currency, ParamRequest term);
-    ResponseEntity<?> getPdf (String name, Currency currency, ParamRequest term);
+    ResponseEntity<List<BookEntity>> getJson (String name, Currency currency, ParamRequest term);
+    ResponseEntity<byte[]> getSvg (String name, Currency currency, ParamRequest term);
+    ResponseEntity<String> getCsv (String name, Currency currency, ParamRequest term);
+    ResponseEntity<byte[]> getPdf (String name, Currency currency, ParamRequest term);
 }

@@ -11,10 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.bank.Currency;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
+
+import java.util.List;
 
 /**
  * The type Book price api controller.
@@ -30,7 +33,7 @@ public class BookPriceController implements BookPrice {
     // http://localhost:8080/price/stat?name=The test book&currency=EUR
 
     @Override
-    public ResponseEntity<?> getJson(String name, Currency currency, String sStr, String fStr, Period d) {
+    public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, String sStr, String fStr, Period d) {
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
@@ -40,7 +43,7 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
-    public ResponseEntity<?> getPdf(String name, Currency currency, String sStr,String fStr, Period d) {
+    public ResponseEntity<byte[]> getPdf(String name, Currency currency, String sStr,String fStr, Period d) {
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
@@ -50,7 +53,7 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
-    public ResponseEntity<?> getSvg(String name, Currency currency, String sStr,String fStr, Period d) {
+    public ResponseEntity<byte[]> getSvg(String name, Currency currency, String sStr,String fStr, Period d) {
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
@@ -62,7 +65,7 @@ public class BookPriceController implements BookPrice {
 
 
     @Override
-    public ResponseEntity<?> getCsv(String name, Currency currency, String sStr, String fStr, Period d) {
+    public ResponseEntity<String> getCsv(String name, Currency currency, String sStr, String fStr, Period d) {
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
