@@ -1,4 +1,4 @@
-package ru.intervale.TeamProject.service.generatepdf;
+package ru.intervale.TeamProject.service.generator;
 
 import com.itextpdf.text.DocumentException;
 import ru.intervale.TeamProject.model.book.BookEntity;

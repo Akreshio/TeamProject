@@ -1,4 +1,4 @@
-package ru.intervale.TeamProject.service.generatepdf;
+package ru.intervale.TeamProject.service.generator.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -24,12 +24,12 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.model.book.BookEntity;
-
+import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
 
 
 @Service
 @Slf4j
-public class PDFGeneratorServiceImpl implements PDFGeneratorService{
+public class PDFGeneratorServiceImpl implements PDFGeneratorService {
 
     public byte[] getPdf(List<BookEntity> bookEntities) {
 
@@ -84,26 +84,23 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService{
         if ((book.getChangePrice() != null) && (!book.getChangePrice().isEmpty())) {
 
             for (Map.Entry<LocalDateTime, BigDecimal> price : book.getChangePrice().entrySet()) {
-
-                PdfPCell titleCell = new PdfPCell(new Phrase(formatDate(price.getKey())));
-                titleCell.setPaddingLeft(4);
-                titleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(titleCell);
-
-                PdfPCell priceCell = new PdfPCell(new Phrase(String.valueOf(price.getValue())));
-                priceCell.setPaddingLeft(4);
-                priceCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                priceCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                table.addCell(priceCell);
-
+                createCell(table, formatDate(price.getKey()));
+                createCell(table, String.valueOf(price.getValue()));
             }
             document.add(table);
         }
     }
 
-    private  String formatDate(LocalDateTime date){
+    private  String formatDate (LocalDateTime date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return  formatter.format(date);
+    }
+
+    private void createCell (PdfPTable table, String str){
+        PdfPCell cell = new PdfPCell(new Phrase(str));
+        cell.setPaddingLeft(4);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
     }
 }

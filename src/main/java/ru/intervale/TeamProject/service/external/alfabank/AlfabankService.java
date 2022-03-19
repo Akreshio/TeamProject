@@ -28,6 +28,6 @@ public interface AlfabankService {
      * @param currency the currency
      * @return the map
      */
-    Map<LocalDateTime, BigDecimal> get(Currency currency,  List<LocalDateTime> dates);
-    Map<Currency, BigDecimal> getNow();
+    Map<LocalDateTime, BigDecimal> get(Currency currency, List<LocalDateTime> dates);
+    Map<String , BigDecimal> getNow();
 }

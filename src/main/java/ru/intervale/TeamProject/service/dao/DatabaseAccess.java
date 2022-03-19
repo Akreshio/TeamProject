@@ -5,13 +5,6 @@
  * @version V 1.0.0
  */
 
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "02.03.2022, 19:07"
- * @version V 1.0.0
- */
-
 package ru.intervale.TeamProject.service.dao;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
