@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Data
 public class ParamRequest {
 
-    private LocalDateTime start;
-    private LocalDateTime finish;
-    private Period period;
+    private LocalDateTime start = null;
+    private LocalDateTime finish = null;
+    private Period period = null;
 
     public ParamRequest(String start, String finish, Period period) {
         if (start!=null) this.start = strToDate(start);

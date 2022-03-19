@@ -8,8 +8,8 @@ package ru.intervale.TeamProject.service.generator.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
+import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

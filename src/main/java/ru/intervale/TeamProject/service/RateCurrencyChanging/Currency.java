@@ -5,7 +5,7 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.bank;
+package ru.intervale.TeamProject.service.RateCurrencyChanging;
 
 import lombok.Getter;
 
