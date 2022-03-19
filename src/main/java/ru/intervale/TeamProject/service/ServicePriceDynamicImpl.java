@@ -9,22 +9,19 @@ package ru.intervale.TeamProject.service;
 
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-import ru.intervale.TeamProject.exception.BookNotFoundException;
+
+
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.RateCurrencyChanging;
+import ru.intervale.TeamProject.service.dao.DatabaseAccess;
+import ru.intervale.TeamProject.service.generator.ResponseGenerator;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
-import ru.intervale.TeamProject.service.bank.Bank;
-import ru.intervale.TeamProject.service.bank.Currency;
-import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 
-import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
-import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
-import ru.intervale.TeamProject.service.generator.ServiceGenerateSvg;
 
 import javax.validation.constraints.NotNull;;
 import java.io.File;
@@ -45,11 +42,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
-    private Bank bank;
+    private RateCurrencyChanging changing;
     private DatabaseAccess dto;
-    private PDFGeneratorService pdfGenerator;
-    private CsvGeneratorService csvGenerator;
-    private ServiceGenerateSvg serviceGenerateSvg;
+
+    private ResponseGenerator generator;
 
     private static final String TEXT_CSV = "text/csv";
 
@@ -58,16 +54,18 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Виктор Дробышевский.
      */
     @Override
-    public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, ParamRequest term) {
-        return ResponseEntity
+
+    public ResponseEntity<List<BookEntity>> getJson(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+        return  ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(get(name, currency, term));
+                .body(getBookInfo(name, currency, term));
     }
 
     /**
      * Реализация: Дмитрий Самусев.
      */
+
     public ResponseEntity<?> getSvg(String name, Currency currency, ParamRequest term) throws IOException {
         serviceGenerateSvg.generateSvg(get(name, currency, term), currency);
         byte[] response = null;
@@ -79,21 +77,21 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
             e.printStackTrace();
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     /**
      * Реализация: Сергей Маевский.
      */
-    public ResponseEntity<String> getCsv(String name, Currency currency, ParamRequest term) {
+    public ResponseEntity<String> getCsv(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
-
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
                 .body(
-                        csvGenerator.getCsv(
-                                get(name, currency, term)
+                        generator.generationCsv(
+                                getBookInfo(name, currency, term)
                         )
                 );
     }
@@ -101,34 +99,41 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Игорь Прохорченко.
      */
-    @SneakyThrows
-    public ResponseEntity<?> getPdf(String name, Currency currency, ParamRequest term) {
+
+    public ResponseEntity<byte[]> getPdf (String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+
 
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
-
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
                 .body(
-                        pdfGenerator.getPdf(
-                                get(name, currency, term)
+                        generator.generationPdf(
+                                getBookInfo(name, currency, term)
                         )
                 );
     }
 
+
     @SneakyThrows
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
 
+
         //Получение книг(и) из бд
+        log.info("Получение книг(и) из бд");
         List<BookEntity> bookEntities = getBook(name);
         checkOnNull(bookEntities);
 
         //Получение курса валюты за период
+        log.info("Получение курса валюты за период {" + currency + "} {" + term +"}");
         Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
+        log.info(changePrice.toString());
 
         //Расчёт изменение цены
-        for (BookEntity book : bookEntities) {
-            if (book.getPreviousBookPrice() != null) {
+
+        log.info("Расчёт изменение цены");
+        for (BookEntity book: bookEntities){
+            if(book.getPreviousBookPrice()!=null) {
                 book.setChangePrice(
                         sortByDate(
                                 priceChangeCalculation(
@@ -152,12 +157,15 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         return bookEntities;
     }
 
+
     private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
-        return bank.getExchangeRate(currency, term);
+
+        return changing.getExchangeRate(currency,term);
     }
 
-    private List<BookEntity> getBook(String name) {
-        return dto.get(name);
+    private List<BookEntity> getBook(String title) {
+        return dto.get(title);
+
     }
 
     //Проверка на наличие книг по запросу

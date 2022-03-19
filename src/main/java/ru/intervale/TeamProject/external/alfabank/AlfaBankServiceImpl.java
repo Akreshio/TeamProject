@@ -16,8 +16,8 @@ import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
 import ru.intervale.TeamProject.external.alfabank.model.Rate;
 import ru.intervale.TeamProject.external.alfabank.model.RateListResponse;
-import ru.intervale.TeamProject.service.bank.Currency;
-import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class AlfabankServiceImpl implements AlfabankService {
+public class AlfaBankServiceImpl implements AlfaBankService {
 
     /**
      * The Rest template .

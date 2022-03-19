@@ -14,8 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.bank.Currency;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+
+import java.util.List;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -27,7 +31,7 @@ public interface BookPrice {
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = { "application/json;charset=UTF-8"},
             method = RequestMethod.GET)
-    ResponseEntity<?> getJson(
+    ResponseEntity<List<BookEntity>> getJson(
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
@@ -46,7 +50,7 @@ public interface BookPrice {
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = { "application/pdf;charset=UTF-8"},
             method = RequestMethod.GET)
-    ResponseEntity<?> getPdf(
+    ResponseEntity<byte[]> getPdf(
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
@@ -65,7 +69,7 @@ public interface BookPrice {
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = { "image/svg+xml;charset=UTF-8"},
             method = RequestMethod.GET)
-    ResponseEntity<?> getSvg(
+    ResponseEntity<byte[]> getSvg(
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
@@ -83,7 +87,7 @@ public interface BookPrice {
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = { "text/csv;charset=UTF-8"},
             method = RequestMethod.GET)
-    ResponseEntity<?> getCsv(
+    ResponseEntity<String> getCsv(
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")
