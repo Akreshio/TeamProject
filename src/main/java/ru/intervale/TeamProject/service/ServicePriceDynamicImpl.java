@@ -15,8 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.RateCurrencyChanging;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.RateCurrencyChanging;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.generator.ResponseGenerator;
 import ru.intervale.TeamProject.model.book.BookEntity;
@@ -47,7 +47,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Виктор Дробышевский.
      */
     @Override
-    public ResponseEntity<List<BookEntity>> getJson(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+    public ResponseEntity<List<BookEntity>> getJson(String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
         return  ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
-    public ResponseEntity<byte[]> getSvg (String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+    public ResponseEntity<byte[]> getSvg (String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".svg");
         return ResponseEntity
@@ -73,7 +73,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Сергей Маевский.
      */
-    public ResponseEntity<String> getCsv(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+    public ResponseEntity<String> getCsv(String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
         return ResponseEntity
@@ -90,7 +90,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Игорь Прохорченко.
      */
-    public ResponseEntity<byte[]> getPdf (String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+    public ResponseEntity<byte[]> getPdf (String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
         return ResponseEntity
@@ -103,7 +103,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 );
     }
 
-    private List<BookEntity> getBookInfo(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
+    private List<BookEntity> getBookInfo(String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
         log.info("Получение книг(и) из бд");

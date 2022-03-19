@@ -5,7 +5,7 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.RateCurrencyChanging;
+package ru.intervale.TeamProject.service.rateCurrencyChanging;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

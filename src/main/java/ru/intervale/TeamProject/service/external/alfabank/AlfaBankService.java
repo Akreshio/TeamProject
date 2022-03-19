@@ -7,7 +7,7 @@
 
 package ru.intervale.TeamProject.service.external.alfabank;
 
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

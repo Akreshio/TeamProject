@@ -16,7 +16,7 @@ import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
 import ru.intervale.TeamProject.external.alfabank.model.Rate;
 import ru.intervale.TeamProject.external.alfabank.model.RateListResponse;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
 
 import javax.validation.constraints.NotNull;
