@@ -11,22 +11,27 @@ package ru.intervale.TeamProject.service;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import ru.intervale.TeamProject.exception.BookNotFoundException;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.bank.Bank;
 import ru.intervale.TeamProject.service.bank.Currency;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 
-import ru.intervale.TeamProject.service.generatepdf.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
+import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.ServiceGenerateSvg;
 
 import javax.validation.constraints.NotNull;;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,18 +49,17 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private DatabaseAccess dto;
     private PDFGeneratorService pdfGenerator;
     private CsvGeneratorService csvGenerator;
+    private ServiceGenerateSvg serviceGenerateSvg;
 
     private static final String TEXT_CSV = "text/csv";
 
-
-    private ServiceGenerateSvg serviceGenerateSvg;
 
     /**
      * Реализация: Виктор Дробышевский.
      */
     @Override
     public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, ParamRequest term) {
-        return  ResponseEntity
+        return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(get(name, currency, term));
@@ -64,11 +68,17 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
-    public ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term) throws IOException {
-    serviceGenerateSvg.generateSvg(get(name, currency, term));
-        return  ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body("SVGChart.svg");
+    public ResponseEntity<?> getSvg(String name, Currency currency, ParamRequest term) throws IOException {
+        serviceGenerateSvg.generateSvg(get(name, currency, term), currency);
+        byte[] response = null;
+        try {
+            File file = new File("SVGChart.svg");
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            response = FileCopyUtils.copyToByteArray(resource.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -92,7 +102,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Игорь Прохорченко.
      */
     @SneakyThrows
-    public ResponseEntity<?> getPdf (String name, Currency currency, ParamRequest term) {
+    public ResponseEntity<?> getPdf(String name, Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
 
@@ -106,6 +116,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 );
     }
 
+    @SneakyThrows
     private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
@@ -116,8 +127,8 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
 
         //Расчёт изменение цены
-        for (BookEntity book: bookEntities){
-            if(book.getPreviousBookPrice()!=null) {
+        for (BookEntity book : bookEntities) {
+            if (book.getPreviousBookPrice() != null) {
                 book.setChangePrice(
                         sortByDate(
                                 priceChangeCalculation(
@@ -142,16 +153,18 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     }
 
     private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
-        return   bank.getExchangeRate(currency,term);
+        return bank.getExchangeRate(currency, term);
     }
 
     private List<BookEntity> getBook(String name) {
-        return  dto.get(name);
+        return dto.get(name);
     }
 
-    //тут должен быть эксепшен
-    private void checkOnNull(List<BookEntity> bookEntities) {
-        if (bookEntities == null) throw new RuntimeException("Book not found");
+    //Проверка на наличие книг по запросу
+    private void checkOnNull(List<BookEntity> bookEntities) throws BookNotFoundException {
+        if (bookEntities == null) {
+            throw new BookNotFoundException("Book not found");
+        }
     }
 
     private Map<LocalDateTime, BigDecimal> sortByDate(@NotNull Map<LocalDateTime, BigDecimal> map) {
@@ -172,7 +185,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
             BigDecimal priceNow
     ) {
         // Создаём Мар для результата обработки
-        Map<LocalDateTime, BigDecimal>  changePriceBook =  new HashMap<>();
+        Map<LocalDateTime, BigDecimal> changePriceBook = new HashMap<>();
 
         // Итератор по динамике изменения цены книги
         Iterator<Map.Entry<LocalDateTime, BigDecimal>> iteratorPrise = priseMap.entrySet().iterator();
@@ -182,7 +195,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         BigDecimal price = changePrice.getValue();
 
         // цикл по дням изменения курса валют
-        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()) {
             // Если дата изменения цены книги равна или больше даты курса
             if (prices.getKey().isAfter(changePrice.getKey().minusDays(1))) {
                 // Есть ли следующее изменение цены
@@ -196,27 +209,27 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 }
             }
             // логирование: дата курса -- цена книги -- курс
-            log.debug(prices.getKey() +  " -- "
+            log.debug(prices.getKey() + " -- "
                     + price + " -- "
                     + prices.getValue()
             );
             //расчёт и запись данных в результирующую Мар
-            changePriceBook.put(prices.getKey(),prices.getValue().multiply(price));
+            changePriceBook.put(prices.getKey(), prices.getValue().multiply(price));
         }
         return changePriceBook;
     }
 
-    private Map<LocalDateTime, BigDecimal> priceChangeCalculation (
+    private Map<LocalDateTime, BigDecimal> priceChangeCalculation(
             @NotNull Map<LocalDateTime, BigDecimal> currencyMap,
             BigDecimal priceNow
     ) {
         // Создаём Мар для результата обработки
-        Map<LocalDateTime, BigDecimal>  changePriceBook =  new HashMap<>();
+        Map<LocalDateTime, BigDecimal> changePriceBook = new HashMap<>();
 
         // цикл по дням изменения курса валют
-        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()) {
             //расчёт и запись данных в результирующую Мар по актуальной цене книги
-            changePriceBook.put(prices.getKey(),prices.getValue().multiply(priceNow));
+            changePriceBook.put(prices.getKey(), prices.getValue().multiply(priceNow));
         }
         return changePriceBook;
     }

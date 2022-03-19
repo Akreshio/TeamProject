@@ -13,6 +13,7 @@ import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.external.alfabank.AlfabankService;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ public interface ServicePriceDynamic {
      * @return the list
      */
     ResponseEntity<?> getJson (String name, Currency currency, ParamRequest term);
-    ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term);
+    ResponseEntity<?> getSvg (String name, Currency currency, ParamRequest term) throws IOException;
     ResponseEntity<?> getCsv (String name, Currency currency, ParamRequest term);
     ResponseEntity<?> getPdf (String name, Currency currency, ParamRequest term);
 }

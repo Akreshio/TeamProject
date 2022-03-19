@@ -1,4 +1,4 @@
-package ru.intervale.TeamProject.service;
+package ru.intervale.TeamProject.service.generator.impl;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -15,20 +15,21 @@ import org.jfree.graphics2d.svg.SVGUtils;
 import org.jfree.ui.RectangleInsets;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.bank.Currency;
+import ru.intervale.TeamProject.service.generator.ServiceGenerateSvg;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
+public class ServiceGenerateSvgImpl implements ServiceGenerateSvg {
 
     private XYDataset createDataset(List<BookEntity> bookEntityList) {
 
+        // Создаем коллекцию значений для каждой книги
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         for (BookEntity bookEntity : bookEntityList) {
         TimeSeries timeSeries = new TimeSeries("Автор: " + bookEntity.getWriter());
@@ -44,17 +45,20 @@ public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
         return dataset;
     }
 
-    private JFreeChart createChart(List<BookEntity> bookEntityList) {
+    private JFreeChart createChart(List<BookEntity> bookEntityList, Currency currency) {
+
+        //Создаем общий график и добавляем коллекции значений
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 "Изменение стоимости книги \"" + bookEntityList.get(0).getTitle() + "\"" ,      // title
                 "",                                                                             // x-axis label
-                "Стоимость",                                                                    // y-axis label
+                "Стоимость в " + currency,                                                      // y-axis label
                 createDataset(bookEntityList),                                                  // data
                 true,                                                                           // create legend
                 true,                                                                           // generate tooltips
                 false                                                                           // generate URLs
         );
 
+        // Настройки отрисовки (цвета фона, линий; размеры точек)
         chart.setBackgroundPaint(Color.white);
 
         XYPlot plot = (XYPlot) chart.getPlot();
@@ -72,18 +76,19 @@ public class ServiceGenerateSvgImpl implements ServiceGenerateSvg{
             renderer.setBaseShapesFilled    (true);
             renderer.setDrawSeriesLineAsPath(true);
         }
-
+        // Указываем формат даты
         DateAxis axis = (DateAxis) plot.getDomainAxis();
         axis.setDateFormatOverride(new SimpleDateFormat("dd.MM.yyyy"));
 
         return chart;
     }
 
-    public void generateSvg (List<BookEntity> bookEntityList) throws IOException {
+    public void generateSvg (List<BookEntity> bookEntityList, Currency currency) throws IOException {
 
+        //Создаем график с заданными размерами и записываем в файл
         SVGGraphics2D graphics2D = new SVGGraphics2D(600, 400);
         Rectangle rectangle = new Rectangle(0, 0, 600, 400);
-        createChart(bookEntityList).draw(graphics2D, rectangle);
+        createChart(bookEntityList, currency).draw(graphics2D, rectangle);
         File file = new File("SVGChart.svg");
         SVGUtils.writeToSVG(file, graphics2D.getSVGElement());
     }

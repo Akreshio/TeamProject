@@ -1,6 +1,7 @@
-package ru.intervale.TeamProject.service;
+package ru.intervale.TeamProject.service.generator;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.bank.Currency;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,5 +20,5 @@ public interface ServiceGenerateSvg {
      * @param currency the currency
      */
 
-    void generateSvg (List<BookEntity> bookEntityList) throws IOException;
+    void generateSvg (List<BookEntity> bookEntityList, Currency currency) throws IOException;
 }
