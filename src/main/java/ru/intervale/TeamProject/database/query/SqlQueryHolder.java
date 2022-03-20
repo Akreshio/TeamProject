@@ -44,6 +44,8 @@ public interface SqlQueryHolder {
      */
     String getByPeriodSql(List<LocalDateTime> period, Currency currency);
 
+    String getByStartFinishDateSql(Currency currency);
+
     /**
      * Sql запрос: сохранение курсов валют.
      *
