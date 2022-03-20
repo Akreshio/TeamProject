@@ -35,9 +35,9 @@ public interface BookPrice {
             @RequestParam(value = "currency") Currency currency,
 
             @ApiParam(value = "Наименование книги")
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "s", required=false) String sStr,
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
 
             @RequestParam(value = "d", required=false) Period d
@@ -54,9 +54,9 @@ public interface BookPrice {
             @RequestParam(value = "currency") Currency currency,
 
 
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "s", required=false) String sStr,
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
 
             @RequestParam(value = "d", required=false) Period d
@@ -72,9 +72,9 @@ public interface BookPrice {
             @ApiParam(value = "код валюты")
             @RequestParam(value = "currency") Currency currency,
 
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "s", required=false) String sStr,
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
 
             @RequestParam(value = "d", required=false) Period d
@@ -90,9 +90,9 @@ public interface BookPrice {
             @ApiParam(value = "код валюты")
             @RequestParam(value = "currency") Currency currency,
 
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "s", required=false) String sStr,
-            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).[0-9]{4}$")
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
 
             @RequestParam(value = "d", required=false) Period d
