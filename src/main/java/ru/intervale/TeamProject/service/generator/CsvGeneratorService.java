@@ -11,7 +11,6 @@ import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
 import java.util.List;
 
-
 /**
  * The interface Csv generator service.
  */

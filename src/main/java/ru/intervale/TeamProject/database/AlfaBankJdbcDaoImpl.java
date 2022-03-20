@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import ru.intervale.TeamProject.database.query.SqlQueryHolder;
 import ru.intervale.TeamProject.mapper.RateRowMapper;
 import ru.intervale.TeamProject.model.rate.RateEntity;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.dao.AlfaBankDao;
 
 import java.math.BigDecimal;

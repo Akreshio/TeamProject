@@ -1,7 +1,6 @@
 package ru.intervale.TeamProject.config;
 
 import lombok.Data;
-import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "teamproject")
 public class ApplicationConfig {
-
-
 
     private String name;
 

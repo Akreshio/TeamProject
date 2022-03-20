@@ -8,6 +8,7 @@ package ru.intervale.TeamProject.service.generator.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 /**
  * The type Csv generator service.
  */
+
 @Slf4j
 @Service
 public class CsvGeneratorServiceImpl implements CsvGeneratorService {
@@ -64,13 +66,14 @@ public class CsvGeneratorServiceImpl implements CsvGeneratorService {
 
             for (Map.Entry<LocalDateTime, BigDecimal> price : book.getChangePrice().entrySet()) {
 
-                booksString.append(DATE_TIME_FORMATTER.format(price.getKey()) + ";" +
-                        price
+                booksString.append(DATE_TIME_FORMATTER.format(price.getKey()))
+                        .append(";")
+                        .append(price
                                 .getValue()
                                 .setScale(2, RoundingMode.HALF_UP)
                                 .toString()
-                                .replace('.', ',') +
-                        ";\n");
+                                .replace('.', ','))
+                        .append(";\n");
             }
         }
     }

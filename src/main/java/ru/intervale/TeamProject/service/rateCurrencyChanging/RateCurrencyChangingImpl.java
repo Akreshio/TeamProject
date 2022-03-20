@@ -5,11 +5,13 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.RateCurrencyChanging;
+package ru.intervale.TeamProject.service.rateCurrencyChanging;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.model.request.Period;
+import ru.intervale.TeamProject.service.dao.AlfaBankDao;
 import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 
@@ -25,13 +27,20 @@ import java.util.Map;
 public class RateCurrencyChangingImpl implements RateCurrencyChanging {
 
     private AlfaBankService alfabank;
+    private AlfaBankDao alfaBankDao;
 
     @Override
-    public Map<LocalDateTime, BigDecimal> getExchangeRate(Currency currency, ParamRequest paramMap) {
+    public Map<LocalDateTime, BigDecimal> getExchangeRate(Currency currency, ParamRequest param) {
 
-        if (paramMap!=null) {
-            return alfabank.get(currency,getTimePeriod(paramMap));
+        if (param!=null) {
+            List<LocalDateTime> date = getTimePeriod(param);
+            if ((param.getPeriod()!=null) && (param.getPeriod()== Period.hour)){
+                alfaBankDao.getByPeriod(date.get(0), date.get(1), currency);
+            }
+            alfaBankDao.getByPeriod(date, currency);
+            return alfabank.get(currency,date);
         }
+            alfaBankDao.getByPeriod(getTimePeriod(), currency);
             return alfabank.get(currency,getTimePeriod());
         }
 
@@ -52,8 +61,11 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
         // Период выборки
         if (param.getPeriod()!=null){
             switch (param.getPeriod()) {
-                case hour:
-                    break;
+                case hour:{
+                    dateList.add(sDate);
+                    dateList.add(fDate);
+                    return  dateList;
+                }
                 case day:{
                     log.info("Using the period formation for day with start day: " + sDate + " and finish day: " + fDate);
                     while (sDate.isBefore(fDate)) {

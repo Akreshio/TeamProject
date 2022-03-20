@@ -11,9 +11,16 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 
 import java.util.List;
 
-
-
+/**
+ * The interface Pdf generator service.
+ */
 public interface PDFGeneratorService {
 
-    byte[] getPdf(List<BookEntity> bookEntities) throws DocumentException;
+    /**
+     * Get pdf byte [ ].
+     *
+     * @param bookEntities the book entities
+     * @return the byte [ ]
+     */
+    byte[] getPdf(List<BookEntity> bookEntities);
 }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
+import com.itextpdf.text.*;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -30,15 +31,15 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
+
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
 
-
-@Service
 @Slf4j
+@Service
 public class PDFGeneratorServiceImpl implements PDFGeneratorService {
 
-    public byte[] getPdf(List<BookEntity> bookEntities) {
+    public byte[] getPdf(List<BookEntity> bookEntities){
 
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -51,19 +52,18 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
             for (BookEntity book : bookEntities) {
                 // верстка таблиц
                 header(document, book);
-
                 body(document, book);
             }
-        }catch(DocumentException e) {
-            log.error(e.toString());
-        }finally {
+        } catch(DocumentException e) {
+            log.error("Ошибка генерации PDF файла");
+        } finally {
             document.close();
         }
 
         return out.toByteArray();
     }
 
-    private  void header(Document document, BookEntity book) throws DocumentException {
+    private void header(Document document, BookEntity book) throws DocumentException {
         //создание заголовка над таблицей с названием книги
         Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
         Paragraph paragraph = new Paragraph(" Book " + book.getTitle(), font);
@@ -73,7 +73,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
         document.add(Chunk.NEWLINE);
     }
 
-    private  void  body(Document document, BookEntity book) throws DocumentException {
+    private void body(Document document, BookEntity book) throws DocumentException {
         // создание таблицы ->
         PdfPTable table = new PdfPTable(2);
         // добавление шапки таблицы  ->
@@ -88,7 +88,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
                     table.addCell(header);
                 });
         // вывод значений изменения цены
-        if ((book.getChangePrice() != null) && (!book.getChangePrice().isEmpty())) {
+        if ((book.getChangePrice() != null) && (!book.getChangePrice().isEmpty())){
 
             for (Map.Entry<LocalDateTime, BigDecimal> price : book.getChangePrice().entrySet()) {
                 createCell(table, formatDate(price.getKey()));
@@ -98,7 +98,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
         }
     }
 
-    private  String formatDate (LocalDateTime date){
+    private String formatDate (LocalDateTime date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return  formatter.format(date);
     }
