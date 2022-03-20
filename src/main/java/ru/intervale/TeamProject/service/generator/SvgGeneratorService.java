@@ -1,17 +1,14 @@
 package ru.intervale.TeamProject.service.generator;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.bank.Currency;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The interface Service generate SVG.
  */
-public interface ServiceGenerateSvg {
+public interface SvgGeneratorService {
 
     /**
      * Генерирует SVG файл с графиком изменения цены
@@ -20,5 +17,5 @@ public interface ServiceGenerateSvg {
      * @param currency the currency
      */
 
-    void generateSvg (List<BookEntity> bookEntityList, Currency currency) throws IOException;
+    byte[] generateSvg (List<BookEntity> bookEntityList, Currency currency);
 }

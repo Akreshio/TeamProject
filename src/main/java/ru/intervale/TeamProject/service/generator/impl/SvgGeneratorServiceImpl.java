@@ -11,21 +11,23 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
-import org.jfree.graphics2d.svg.SVGUtils;
 import org.jfree.ui.RectangleInsets;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.bank.Currency;
-import ru.intervale.TeamProject.service.generator.ServiceGenerateSvg;
+import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
-public class ServiceGenerateSvgImpl implements ServiceGenerateSvg {
+public class SvgGeneratorServiceImpl implements SvgGeneratorService {
 
     private XYDataset createDataset(List<BookEntity> bookEntityList) {
 
@@ -83,13 +85,20 @@ public class ServiceGenerateSvgImpl implements ServiceGenerateSvg {
         return chart;
     }
 
-    public void generateSvg (List<BookEntity> bookEntityList, Currency currency) throws IOException {
+    public byte[] generateSvg (List<BookEntity> bookEntityList, Currency currency) {
 
         //Создаем график с заданными размерами и записываем в файл
         SVGGraphics2D graphics2D = new SVGGraphics2D(600, 400);
         Rectangle rectangle = new Rectangle(0, 0, 600, 400);
         createChart(bookEntityList, currency).draw(graphics2D, rectangle);
-        File file = new File("SVGChart.svg");
-        SVGUtils.writeToSVG(file, graphics2D.getSVGElement());
+        File file = new File(".svg");
+        byte[] response = null;
+        try {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            response = FileCopyUtils.copyToByteArray(resource.getInputStream());
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        return response;
     }
 }
