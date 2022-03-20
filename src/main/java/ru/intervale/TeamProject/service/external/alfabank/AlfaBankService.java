@@ -21,13 +21,19 @@ public interface AlfaBankService {
 
     /**
      * Передаём код валюты в банк и получаем значения (дата, множитель валютного перевода)
-     *
-     *  множитель валютного перевода = кол-во за единицу валюты / курс
-     *  Пример: RUB	643  28.5714=100/3.5
+     * множитель валютного перевода = кол-во за единицу валюты / курс
+     * Пример: RUB	643  28.5714=100/3.5
      *
      * @param currency the currency
+     * @param dates    the dates
      * @return the map
      */
     Map<LocalDateTime, BigDecimal> get(Currency currency, List<LocalDateTime> dates);
+
+    /**
+     * Gets now.
+     *
+     * @return the now
+     */
     Map<String , BigDecimal> getNow();
 }

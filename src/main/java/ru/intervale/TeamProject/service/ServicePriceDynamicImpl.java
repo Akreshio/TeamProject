@@ -57,6 +57,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
+    @Override
     public ResponseEntity<byte[]> getSvg (String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".svg");
@@ -73,6 +74,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Сергей Маевский.
      */
+    @Override
     public ResponseEntity<String> getCsv(String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
@@ -90,6 +92,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Игорь Прохорченко.
      */
+    @Override
     public ResponseEntity<byte[]> getPdf (String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_PDF_VALUE, ".pdf");
@@ -106,17 +109,16 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private List<BookEntity> getBookInfo(String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
-        log.info("Получение книг(и) из бд");
+        log.debug("Получение книг(и) из бд");
         List<BookEntity> bookEntities = getBook(name);
         checkOnNull(bookEntities);
 
         //Получение курса валюты за период
-        log.info("Получение курса валюты за период {" + currency + "} {" + term +"}");
+        log.debug("Получение курса валюты за период {" + currency + "} {" + term.toString() +"}");
         Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
-        log.info(changePrice.toString());
 
         //Расчёт изменение цены
-        log.info("Расчёт изменение цены");
+        log.debug("Расчёт изменение цены");
         for (BookEntity book: bookEntities){
             if(book.getPreviousBookPrice()!=null) {
                 book.setChangePrice(
