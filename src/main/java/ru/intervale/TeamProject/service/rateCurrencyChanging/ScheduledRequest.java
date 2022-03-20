@@ -27,15 +27,8 @@ public class ScheduledRequest {
     private AlfaBankDao alfaBankDao;
     private AlfaBankService alfaBank;
 
-//    каждый рабочий день (понедельник-пятница) с 8:00 до 18:00 с шагом в 15 минт
-//    @Scheduled(cron = "0 0/15 8-18 * * MON-FRI")
-//    public void reportCurrentTime() {
-//        Map<Currency, BigDecimal> exchangeRateChange = alfaBank.getNow();
-//        exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
-//    }
-
     //каждый день с 8:00 до 18:00 с шагом в 10 минт
-    @Scheduled(cron = "0 0/1 8-18 * * *")
+    @Scheduled(cron = "0 0/10 8-18 * * *")
     public void requestToAlfaBank() {
         Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
         exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));

@@ -35,11 +35,12 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
         if (param!=null) {
             List<LocalDateTime> date = getTimePeriod(param);
             if ((param.getPeriod()!=null) && (param.getPeriod()== Period.hour)){
-
+                alfaBankDao.getByPeriod(date.get(0), date.get(1), currency);
             }
             alfaBankDao.getByPeriod(date, currency);
             return alfabank.get(currency,date);
         }
+            alfaBankDao.getByPeriod(getTimePeriod(), currency);
             return alfabank.get(currency,getTimePeriod());
         }
 
@@ -63,7 +64,8 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
                 case hour:{
                     dateList.add(sDate);
                     dateList.add(fDate);
-                    break;}
+                    return  dateList;
+                }
                 case day:{
                     log.info("Using the period formation for day with start day: " + sDate + " and finish day: " + fDate);
                     while (sDate.isBefore(fDate)) {
