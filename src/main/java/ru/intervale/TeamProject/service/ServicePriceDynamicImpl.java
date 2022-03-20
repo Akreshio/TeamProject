@@ -92,7 +92,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      */
     public ResponseEntity<byte[]> getPdf (String name, ru.intervale.TeamProject.service.rateCurrencyChanging.Currency currency, ParamRequest term) {
 
-        HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
+        HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_PDF_VALUE, ".pdf");
         return ResponseEntity
                 .ok()
                 .headers(httpHeaders)
