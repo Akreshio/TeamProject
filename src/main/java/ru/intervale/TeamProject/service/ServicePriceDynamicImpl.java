@@ -7,13 +7,13 @@
 
 package ru.intervale.TeamProject.service;
 
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.*;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.RateCurrencyChanging.RateCurrencyChanging;
@@ -22,13 +22,8 @@ import ru.intervale.TeamProject.service.generator.ResponseGenerator;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 
-
-import javax.validation.constraints.NotNull;;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,17 +39,14 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
     private RateCurrencyChanging changing;
     private DatabaseAccess dto;
-
     private ResponseGenerator generator;
 
     private static final String TEXT_CSV = "text/csv";
-
 
     /**
      * Реализация: Виктор Дробышевский.
      */
     @Override
-
     public ResponseEntity<List<BookEntity>> getJson(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
         return  ResponseEntity
                 .ok()
@@ -65,19 +57,17 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     /**
      * Реализация: Дмитрий Самусев.
      */
+    public ResponseEntity<byte[]> getSvg (String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
 
-    public ResponseEntity<?> getSvg(String name, Currency currency, ParamRequest term) throws IOException {
-        serviceGenerateSvg.generateSvg(get(name, currency, term), currency);
-        byte[] response = null;
-        try {
-            File file = new File("SVGChart.svg");
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            response = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
-
+        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".svg");
+        return ResponseEntity
+                .ok()
+                .headers(httpHeaders)
+                .body(
+                        generator.generationSvg(
+                                getBookInfo(name, currency, term)
+                        )
+                );
     }
 
     /**
@@ -96,12 +86,11 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 );
     }
 
+
     /**
      * Реализация: Игорь Прохорченко.
      */
-
     public ResponseEntity<byte[]> getPdf (String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
-
 
         HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_OCTET_STREAM_VALUE, ".pdf");
         return ResponseEntity
@@ -114,10 +103,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 );
     }
 
-
-    @SneakyThrows
-    private List<BookEntity> get(String name, Currency currency, ParamRequest term) {
-
+    private List<BookEntity> getBookInfo(String name, ru.intervale.TeamProject.service.RateCurrencyChanging.Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
         log.info("Получение книг(и) из бд");
@@ -130,7 +116,6 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         log.info(changePrice.toString());
 
         //Расчёт изменение цены
-
         log.info("Расчёт изменение цены");
         for (BookEntity book: bookEntities){
             if(book.getPreviousBookPrice()!=null) {
@@ -159,20 +144,16 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
 
 
     private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
-
         return changing.getExchangeRate(currency,term);
     }
 
     private List<BookEntity> getBook(String title) {
         return dto.get(title);
-
     }
 
-    //Проверка на наличие книг по запросу
-    private void checkOnNull(List<BookEntity> bookEntities) throws BookNotFoundException {
-        if (bookEntities == null) {
-            throw new BookNotFoundException("Book not found");
-        }
+    //тут должен быть эксепшен
+    private void checkOnNull(List<BookEntity> bookEntities) {
+        if (bookEntities == null) throw new RuntimeException("Book not found");
     }
 
     private Map<LocalDateTime, BigDecimal> sortByDate(@NotNull Map<LocalDateTime, BigDecimal> map) {
@@ -193,7 +174,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
             BigDecimal priceNow
     ) {
         // Создаём Мар для результата обработки
-        Map<LocalDateTime, BigDecimal> changePriceBook = new HashMap<>();
+        Map<LocalDateTime, BigDecimal>  changePriceBook =  new HashMap<>();
 
         // Итератор по динамике изменения цены книги
         Iterator<Map.Entry<LocalDateTime, BigDecimal>> iteratorPrise = priseMap.entrySet().iterator();
@@ -203,7 +184,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         BigDecimal price = changePrice.getValue();
 
         // цикл по дням изменения курса валют
-        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()) {
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
             // Если дата изменения цены книги равна или больше даты курса
             if (prices.getKey().isAfter(changePrice.getKey().minusDays(1))) {
                 // Есть ли следующее изменение цены
@@ -217,27 +198,27 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                 }
             }
             // логирование: дата курса -- цена книги -- курс
-            log.debug(prices.getKey() + " -- "
+            log.debug(prices.getKey() +  " -- "
                     + price + " -- "
                     + prices.getValue()
             );
             //расчёт и запись данных в результирующую Мар
-            changePriceBook.put(prices.getKey(), prices.getValue().multiply(price));
+            changePriceBook.put(prices.getKey(),prices.getValue().multiply(price));
         }
         return changePriceBook;
     }
 
-    private Map<LocalDateTime, BigDecimal> priceChangeCalculation(
+    private Map<LocalDateTime, BigDecimal> priceChangeCalculation (
             @NotNull Map<LocalDateTime, BigDecimal> currencyMap,
             BigDecimal priceNow
     ) {
         // Создаём Мар для результата обработки
-        Map<LocalDateTime, BigDecimal> changePriceBook = new HashMap<>();
+        Map<LocalDateTime, BigDecimal>  changePriceBook =  new HashMap<>();
 
         // цикл по дням изменения курса валют
-        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()) {
+        for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
             //расчёт и запись данных в результирующую Мар по актуальной цене книги
-            changePriceBook.put(prices.getKey(), prices.getValue().multiply(priceNow));
+            changePriceBook.put(prices.getKey(),prices.getValue().multiply(priceNow));
         }
         return changePriceBook;
     }
