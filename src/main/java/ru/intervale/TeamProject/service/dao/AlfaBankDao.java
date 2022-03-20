@@ -48,6 +48,9 @@ public interface AlfaBankDao {
     Map<LocalDateTime, BigDecimal> getByPeriod(List<LocalDateTime> period, Currency currency)
             throws DataAccessException;
 
+
+    Map<LocalDateTime, BigDecimal> getByPeriod(LocalDateTime dateStart, LocalDateTime dateFinish,
+                                               Currency currency);
     /**
      * Сохранение курсов валют.
      *
@@ -76,6 +79,6 @@ public interface AlfaBankDao {
      * @return the boolean
      * @throws DataAccessException the data access exception
      */
-    boolean delete(LocalDateTime startDate, LocalDateTime endDate) throws DataAccessException;
+    boolean delete(LocalDateTime dateStart, LocalDateTime dateFinish) throws DataAccessException;
 
 }
