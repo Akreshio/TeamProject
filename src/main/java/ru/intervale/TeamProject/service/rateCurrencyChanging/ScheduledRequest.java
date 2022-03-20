@@ -35,12 +35,19 @@ public class ScheduledRequest {
 //    }
 
     //каждый день с 8:00 до 18:00 с шагом в 10 минт
-    @Scheduled(cron = "0 0/10 8-18 * * *")
+    @Scheduled(cron = "0 0/1 8-18 * * *")
     public void requestToAlfaBank() {
         Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
         exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
-        LocalDateTime date = LocalDateTime.now();
-        alfaBankDao.save(date,exchangeRateChange);
+        LocalDateTime dateNow = LocalDateTime.now();
+        LocalDateTime dateDB = LocalDateTime.of(
+                dateNow.getYear(),
+                dateNow.getMonth(),
+                dateNow.getDayOfMonth(),
+                dateNow.getHour(),
+                dateNow.getMinute()
+        );
+        alfaBankDao.save(dateDB,exchangeRateChange);
     }
 
     //каждый день в 12 ночи
@@ -48,7 +55,14 @@ public class ScheduledRequest {
     public void requestCloseDayAlfaBank () {
         Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
         exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
-        LocalDateTime date = LocalDateTime.now();
-        alfaBankDao.save(date,exchangeRateChange);
+        LocalDateTime dateNow = LocalDateTime.now();
+        LocalDateTime dateDB = LocalDateTime.of(
+                dateNow.getDayOfMonth(),
+                dateNow.getMonth(),
+                dateNow.getYear(),
+                dateNow.getHour(),
+                dateNow.getMinute()
+        );
+        alfaBankDao.save(dateDB,exchangeRateChange);
     }
 }

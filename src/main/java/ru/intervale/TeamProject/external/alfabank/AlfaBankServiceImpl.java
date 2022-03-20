@@ -71,7 +71,11 @@ public class AlfaBankServiceImpl implements AlfaBankService {
             for (Rate rate:rateList.getRates()) {
                 if (rate.getName() != null) {
                     String currency = rate.getSellIso().toLowerCase();
-                    exchangeRateChange.put(currency, rate.getSellRate());
+                    exchangeRateChange.put(currency, rate.getSellRate().divide(
+                            BigDecimal.valueOf(rate.getQuantity()),
+                            5,
+                            RoundingMode.DOWN)
+                    );
                 }
             }
         }
