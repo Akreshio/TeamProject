@@ -17,8 +17,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.awt.*;
 import java.io.File;

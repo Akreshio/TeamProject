@@ -1,7 +1,8 @@
 package ru.intervale.TeamProject.service.generator;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
+
 
 import java.util.List;
 

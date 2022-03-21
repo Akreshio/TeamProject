@@ -9,7 +9,7 @@ package ru.intervale.TeamProject.service.bank.model;
 
 
 
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
