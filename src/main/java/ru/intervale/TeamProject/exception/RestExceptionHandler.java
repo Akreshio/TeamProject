@@ -8,35 +8,43 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.IOException;
+import java.time.DateTimeException;
 
 @ControllerAdvice
 @Slf4j
 public class RestExceptionHandler {
 
     @ExceptionHandler(value = {BookNotFoundException.class})
-    public ResponseEntity<Object> handlerBookNotFoundException(BookNotFoundException bookNotFoundException) {
+    public ResponseEntity<Object> handlerBookNotFoundException(BookNotFoundException ex) {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        log.debug("Book not found", bookNotFoundException);
-        return new ResponseEntity<>(bookNotFoundException.getMessage(), status);
+        log.debug("Book not found" + ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), status);
     }
 
     @ExceptionHandler(IOException.class)
-    public ResponseEntity<Object> handleIOException(IOException exception) {
-        log.error("IOException: ",exception.getMessage());
-        return new ResponseEntity<>("Ошибка",HttpStatus.NOT_FOUND);
+    public ResponseEntity<Object> handleIOException(IOException ex) {
+        log.error("IOException: " + ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Object> handleDataAccessException(DataAccessException exception) {
-        log.error("DataAccessException: ",exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleDataAccessException(DataAccessException ex) {
+        log.error("DataAccessException: " + ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {
-        log.error("Exception: ",ex.getMessage());
-        return new ResponseEntity<>("Произошла ошибка, сервер не доступен",HttpStatus.INTERNAL_SERVER_ERROR);
+        log.error("Exception: " + ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DateTimeException.class)
+    public ResponseEntity<Object> handleDateTimeException(DateTimeException ex) {
+
+        log.error("DateTimeException: " + ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
