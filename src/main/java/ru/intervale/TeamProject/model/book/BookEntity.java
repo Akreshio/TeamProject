@@ -8,6 +8,7 @@
 package ru.intervale.TeamProject.model.book;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
+@Builder
 @AllArgsConstructor
 @XmlRootElement(name = "Book")
 public class BookEntity {

@@ -44,6 +44,7 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
     private ResponseGenerator generator;
 
     private static final String TEXT_CSV = "text/csv";
+    private static final String IMAGE_SVG = "image/svg";
 
     /**
      * Реализация: Виктор Дробышевский.
@@ -61,11 +62,16 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      */
     @Override
     public ResponseEntity<byte[]> getSvg(String name, Currency currency, ParamRequest term) {
-        byte[] response = generator.generationSvg(getBookInfo(name, currency, term), currency);
+
+        HttpHeaders httpHeaders = getHttpHeaders(IMAGE_SVG, ".svg");
         return ResponseEntity
                 .ok()
-                .body(response);
-
+                .headers(httpHeaders)
+                .body(
+                        generator.generationSvg(
+                                getBookInfo(name, currency, term),currency
+                        )
+                );
     }
 
     /**
