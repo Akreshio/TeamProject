@@ -72,10 +72,6 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
                                 getBookInfo(name, currency, term),currency
                         )
                 );
-//        byte[] response = generator.generationSvg(getBookInfo(name, currency, term), currency);
-//        return ResponseEntity
-//                .ok()
-//                .body(response);
     }
 
     /**
