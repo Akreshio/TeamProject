@@ -55,17 +55,11 @@
 			<version>3.0.0</version>
 		</dependency>
 
-
 		<!--PDF-https://www.baeldung.com/java-pdf-creation-->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.13.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>2.0.24</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains</groupId>
@@ -85,16 +79,16 @@
 			<version>42.3.3</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.liquibase</groupId>-->
-<!--			<artifactId>liquibase-core</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.liquibase</groupId>-->
-<!--			<artifactId>liquibase-maven-plugin</artifactId>-->
-<!--			<version>${liquibase-maven-plugin.version}</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-maven-plugin</artifactId>
+			<version>${liquibase-maven-plugin.version}</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
 		<dependency>
@@ -113,7 +107,6 @@
 			<version>RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
-
     </dependencies>
 
 	<build>

@@ -38,11 +38,7 @@ public class ResponseGeneratorImpl implements ResponseGenerator{
 
     @Override
     public byte[] generationPdf(List<BookEntity> books) {
-        try {
             return pdfGenerator.getPdf(books);
-        } catch (DocumentException e) {
-            log.error("No generation pdf file");
-        }
-        return new byte[0];
+
     }
 }

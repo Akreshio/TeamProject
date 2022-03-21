@@ -16,7 +16,7 @@ import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
 import ru.intervale.TeamProject.external.alfabank.model.Rate;
 import ru.intervale.TeamProject.external.alfabank.model.RateListResponse;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
 
 import javax.validation.constraints.NotNull;
@@ -71,7 +71,11 @@ public class AlfaBankServiceImpl implements AlfaBankService {
             for (Rate rate:rateList.getRates()) {
                 if (rate.getName() != null) {
                     String currency = rate.getSellIso().toLowerCase();
-                    exchangeRateChange.put(currency, rate.getSellRate());
+                    exchangeRateChange.put(currency, rate.getSellRate().divide(
+                            BigDecimal.valueOf(rate.getQuantity()),
+                            5,
+                            RoundingMode.DOWN)
+                    );
                 }
             }
         }

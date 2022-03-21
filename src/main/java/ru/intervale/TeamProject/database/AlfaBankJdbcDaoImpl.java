@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import ru.intervale.TeamProject.database.query.SqlQueryHolder;
 import ru.intervale.TeamProject.mapper.RateRowMapper;
 import ru.intervale.TeamProject.model.rate.RateEntity;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.dao.AlfaBankDao;
 
 import java.math.BigDecimal;
@@ -49,7 +49,10 @@ public class AlfaBankJdbcDaoImpl implements AlfaBankDao {
 
         log.debug("Get all rates from database");
 
-        List<RateEntity> rateEntityList = jdbcTemplate.query(sqlQueryHolder.getAllSql(), rateRowMapper);
+        List<RateEntity> rateEntityList = jdbcTemplate.query(
+                sqlQueryHolder.getAllSql(),
+                rateRowMapper
+        );
 
         log.debug("Get all rates from database result {}", rateEntityList);
 
@@ -62,9 +65,11 @@ public class AlfaBankJdbcDaoImpl implements AlfaBankDao {
         log.debug("Get rate by id {}", id);
 
         SqlParameterSource param = new MapSqlParameterSource("id", id);
-        RateEntity rateEntity = jdbcTemplate.queryForObject(sqlQueryHolder.getById(),
+        RateEntity rateEntity = jdbcTemplate.queryForObject(
+                sqlQueryHolder.getById(),
                 param,
-                rateRowMapper);
+                rateRowMapper
+        );
 
         log.debug("Get rate by id = {}, result = {}", id, rateEntity);
 
@@ -81,22 +86,10 @@ public class AlfaBankJdbcDaoImpl implements AlfaBankDao {
 
         if (period != null && currency != null) {
 
-            rateByPeriodMap = jdbcTemplate.query(sqlQueryHolder.getByPeriodSql(period, currency),
-                    new ResultSetExtractor<>() {
-                        @Override
-                        public Map extractData(ResultSet rs) throws SQLException, DataAccessException {
-
-                            HashMap<LocalDateTime, BigDecimal> mapReturn = new HashMap<>();
-
-                            while (rs.next()) {
-
-                                mapReturn.put(rs.getTimestamp("date").toLocalDateTime(),
-                                        rs.getBigDecimal(currency.name().toLowerCase()));
-                            }
-
-                            return mapReturn;
-                        }
-                    });
+            rateByPeriodMap = jdbcTemplate.query(
+                    sqlQueryHolder.getByPeriodSql(period, currency),
+                    extractDataToMap(currency)
+            );
 
             log.debug("Get rate currency = {}, by period  = {}, result = {}", currency, period, rateByPeriodMap);
 
@@ -104,6 +97,54 @@ public class AlfaBankJdbcDaoImpl implements AlfaBankDao {
         }
 
         return Collections.emptyMap();
+    }
+
+    public Map<LocalDateTime, BigDecimal> getByPeriod(LocalDateTime dateStart, LocalDateTime dateFinish,
+                                                      Currency currency)
+            throws DataAccessException {
+
+        log.debug("Get rate currency = {}, by period {}-{}", currency, dateStart, dateFinish);
+
+        Map<LocalDateTime, BigDecimal> rateByPeriodMap;
+
+        if (dateStart != null && dateFinish != null && currency != null) {
+
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("dateStart", dateStart);
+            params.addValue("dateFinish", dateFinish);
+
+            rateByPeriodMap = jdbcTemplate.query(
+                    sqlQueryHolder.getByStartFinishDateSql(currency),
+                    params,
+                    extractDataToMap(currency)
+            );
+
+            log.debug("Get rate currency = {}, by period  = {}-{}, result = {}", currency, dateStart,
+                    dateFinish, rateByPeriodMap);
+
+            return rateByPeriodMap;
+        }
+
+        return Collections.emptyMap();
+    }
+
+    @NotNull
+    private ResultSetExtractor<Map<LocalDateTime, BigDecimal>> extractDataToMap(Currency currency) {
+        return new ResultSetExtractor<>() {
+            @Override
+            public Map extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+                HashMap<LocalDateTime, BigDecimal> mapReturn = new HashMap<>();
+
+                while (rs.next()) {
+
+                    mapReturn.put(rs.getTimestamp("date").toLocalDateTime(),
+                            rs.getBigDecimal(currency.name().toLowerCase()));
+                }
+
+                return mapReturn;
+            }
+        };
     }
 
     @Override
@@ -150,16 +191,17 @@ public class AlfaBankJdbcDaoImpl implements AlfaBankDao {
     }
 
     @Override
-    public boolean delete(LocalDateTime startDate, LocalDateTime endDate) throws DataAccessException {
+    public boolean delete(LocalDateTime dateStart, LocalDateTime dateFinish) throws DataAccessException {
 
-        log.debug("Delete exchange rate by start date = {}, end date = {}", startDate, endDate);
+        log.debug("Delete exchange rate by start date = {}, end date = {}", dateStart, dateFinish);
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("startDate", startDate);
-        params.addValue("endDate", endDate);
+        params.addValue("dateStart", dateStart);
+        params.addValue("dateFinish", dateFinish);
         jdbcTemplate.update(sqlQueryHolder.deleteSql(), params);
 
-        log.debug("Delete exchange rate by start date = {}, end date = {} completed successfully.", startDate, endDate);
+        log.debug("Delete exchange rate by start date = {}, end date = {} completed successfully.",
+                dateStart, dateFinish);
 
         return true;
     }

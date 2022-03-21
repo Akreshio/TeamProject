@@ -12,12 +12,33 @@ import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
 
 import java.util.List;
 
+/**
+ * The interface Response generator.
+ */
 public interface ResponseGenerator {
 
+    /**
+     * Generation csv string.
+     *
+     * @param books the books
+     * @return the string
+     */
     String generationCsv(List<BookEntity> books);
 
+    /**
+     * Generation svg byte [ ].
+     *
+     * @param books the books
+     * @return the byte [ ]
+     */
     byte[] generationSvg(List<BookEntity> books, Currency currency);
 
+    /**
+     * Generation pdf byte [ ].
+     *
+     * @param books the books
+     * @return the byte [ ]
+     */
     byte[] generationPdf(List<BookEntity> books);
 
 }

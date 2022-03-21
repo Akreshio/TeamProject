@@ -7,7 +7,7 @@
 package ru.intervale.TeamProject.database.query;
 
 
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -43,6 +43,8 @@ public interface SqlQueryHolder {
      * @return the by period sql
      */
     String getByPeriodSql(List<LocalDateTime> period, Currency currency);
+
+    String getByStartFinishDateSql(Currency currency);
 
     /**
      * Sql запрос: сохранение курсов валют.

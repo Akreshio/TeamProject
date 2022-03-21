@@ -9,7 +9,7 @@ package ru.intervale.TeamProject.database.query.impl;
 
 import org.springframework.stereotype.Component;
 import ru.intervale.TeamProject.database.query.SqlQueryHolder;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,11 +32,15 @@ public class SqlQueryHolderImpl implements SqlQueryHolder {
 
     private static final String SELECT_RATES_BY_PERIOD_SQL_QUERY = "SELECT date, %s FROM rates WHERE ";
 
+    private static final String SELECT_RATES_BY_START_AND_FINISH_DATE_SQL_QUERY =
+            "SELECT date, %s FROM rates WHERE date >= :dateStart AND date <= :dateFinish " +
+                    "AND to_char(date, 'HH24:MI:SS') > '08:00:00' AND to_char(date, 'HH24:MI:SS') < '18:00:00'";
+
     private static final String INSERT_RATE_SQL_QUERY =
             "INSERT INTO rates (date, usd, eur, rub) VALUES (:date, :usd, :eur, :rub)";
 
     private static final String DELETE_RATES_BY_START_END_DATE_SQL_QUERY =
-            "DELETE FROM rates WHERE date >= :startDate AND date <= :endDate";
+            "DELETE FROM rates WHERE date >= :dateStart AND date <= :dateFinish";
 
     @Override
     public String getAllSql() {
@@ -64,6 +68,12 @@ public class SqlQueryHolderImpl implements SqlQueryHolder {
         strBuilder.delete(strBuilder.length() - 4, strBuilder.length());
 
         return strBuilder.toString();
+    }
+
+    @Override
+    public String getByStartFinishDateSql(Currency currency) {
+
+        return String.format(SELECT_RATES_BY_START_AND_FINISH_DATE_SQL_QUERY, currency.name().toLowerCase());
     }
 
     @Override

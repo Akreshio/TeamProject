@@ -18,29 +18,48 @@ import java.io.IOException;
 
 import java.util.List;
 
-
 /**
  * The interface Service change price.
  */
 public interface ServicePriceDynamic {
 
+    /**
+     * Gets json.
+     *
+     * @param name     the title book
+     * @param currency the currency
+     * @param term     the term
+     * @return the json
+     */
+    ResponseEntity<List<BookEntity>> getJson (String name, Currency currency, ParamRequest term);
 
     /**
-     * Принемаем параметры из контроллера
+     * Gets svg.
      *
-     * Получаем список книг
-     * @see DatabaseAccess
-     * Получаем изменение валют за период
-     * @see AlfaBankService
-     *
-     * @param name     the name
+     * @param name     the title book
      * @param currency the currency
-     * @return the list
+     * @param term     the term
+     * @return the svg
      */
+    ResponseEntity<byte[]> getSvg (String name, Currency currency, ParamRequest term);
 
-    ResponseEntity<List<BookEntity>> getJson (String name, Currency currency, ParamRequest term);
-    ResponseEntity<byte[]> getSvg (String name, Currency currency, ParamRequest term) throws IOException;
+    /**
+     * Gets csv.
+     *
+     * @param name     the title book
+     * @param currency the currency
+     * @param term     the term
+     * @return the csv
+     */
     ResponseEntity<String> getCsv (String name, Currency currency, ParamRequest term);
-    ResponseEntity<byte[]> getPdf (String name, Currency currency, ParamRequest term);
 
+    /**
+     * Gets pdf.
+     *
+     * @param name     the title book
+     * @param currency the currency
+     * @param term     the term
+     * @return the pdf
+     */
+    ResponseEntity<byte[]> getPdf (String name, Currency currency, ParamRequest term);
 }

@@ -11,10 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
 import java.io.IOException;
@@ -31,8 +32,6 @@ public class BookPriceController implements BookPrice {
 
     private ServicePriceDynamic service;
 
-    // http://localhost:8080/price/stat?name=The test book&currency=EUR
-
     @Override
 
     public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, String sStr, String fStr, Period d) {
@@ -41,7 +40,7 @@ public class BookPriceController implements BookPrice {
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
         }
-
+        log.debug("Get book: " + name + " in json");
         return  service.getJson(name, currency, param);
     }
 
@@ -51,7 +50,7 @@ public class BookPriceController implements BookPrice {
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
         }
-
+        log.debug("Get book: " + name + " in pdf");
         return  service.getPdf(name, currency, param);
     }
 
@@ -62,11 +61,9 @@ public class BookPriceController implements BookPrice {
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
         }
-
+        log.debug("Get book: " + name + " in svg");
         return  service.getSvg(name, currency, param);
     }
-
-
 
     @Override
 
@@ -76,7 +73,7 @@ public class BookPriceController implements BookPrice {
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
         }
-
+        log.debug("Get book: " + name + " in csv");
         return  service.getCsv(name, currency, param);
     }
 }

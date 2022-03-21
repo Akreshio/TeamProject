@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.RateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.util.List;
 
