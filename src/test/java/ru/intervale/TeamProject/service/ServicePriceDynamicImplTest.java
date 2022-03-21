@@ -1,8 +1,3 @@
-/*
- * @author S.Maevsky
- * @since 21.03.2022, 16:23
- * @version V 1.0.0
- */
 
 /*
  * @author S.Maevsky

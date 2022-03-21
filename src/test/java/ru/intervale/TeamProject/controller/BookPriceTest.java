@@ -1,8 +1,3 @@
-/*
- * @author S.Maevsky
- * @since 21.03.2022, 16:23
- * @version V 1.0.0
- */
 
 /*
  * @author S.Maevsky
@@ -12,11 +7,8 @@
 
 package ru.intervale.TeamProject.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
@@ -103,35 +94,7 @@ public class BookPriceTest {
         verify(service).getJson(anyString(), any(Currency.class), any(ParamRequest.class));
     }
 
-    @Ignore
-    public void testGetCsv() throws Exception {
 
-        List<BookEntity> bookEntitiesTest = getBooksForTest();
-        ResponseEntity<List<BookEntity>> responseTest =
-                new ResponseEntity<>(bookEntitiesTest, HttpStatus.OK);
-
-        when(service.getJson(anyString(), any(Currency.class), any(ParamRequest.class)))
-                .thenReturn(responseTest);
-
-        MvcResult result = mockMvc.perform(get("/1.0.0/price/stat")
-                .accept("text/csv;charset=UTF-8")
-                .param("name", "test")
-                .param("currency", "USD")
-                .param("sStr", "01.03.2022")
-                .param("fStr", "02.03.2022")
-                .param("d", "day")
-        )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String bookEntitiesActual = mapper.readValue(result.getResponse().getContentAsString(),
-                new TypeReference<String>() {});
-
-        Assert.assertEquals(bookEntitiesTest, bookEntitiesActual);
-
-        verify(service).getJson(anyString(), any(Currency.class), any(ParamRequest.class));
-    }
 
     private List<BookEntity> getBooksForTest() {
 
@@ -195,31 +158,5 @@ public class BookPriceTest {
 
         return priceMap;
     }
-
-
-//    String booksString = "Isbn:;978-5-389-07123-0;\n" +
-//            "Title:;Война и мир;\n" +
-//            "Writer:;Лев Николаевич Толстой;\n" +
-//            "Page:;1408;\n" +
-//            "Weight:;1020;\n" +
-//            "Price in BYN:20;00;\n" +
-//            "Column: Date;Column: Price in currency;\n"+
-//
-//
-//            book.getPrice()
-//            .setScale(2,RoundingMode.HALF_UP)
-//                        .toString()
-//                        .replace('.', ',') +
-//            ";\n");
-//
-//    Isbn:	10-1578-185
-//    Title:	The test book
-//    Writer:	name
-//    Page:	10
-//    Weight:	100
-//    Price in BYN:	10,99
-//    Column: Date	Column: Price in currency
-//03.01.2022 0:00	1,77
-//        04.01.2022 0:00	1,76
 
 }
