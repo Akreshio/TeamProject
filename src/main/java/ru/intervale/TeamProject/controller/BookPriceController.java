@@ -56,7 +56,7 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
-    public ResponseEntity<?> getSvg(String name, Currency currency, String sStr,String fStr, Period d) throws IOException {
+    public ResponseEntity<byte[]> getSvg(String name, Currency currency, String sStr,String fStr, Period d) throws IOException {
 
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){

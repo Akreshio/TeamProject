@@ -24,7 +24,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Object> handleIOException(IOException exception) {
         log.error("IOException: ",exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Ошибка",HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)
@@ -36,7 +36,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {
         log.error("Exception: ",ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Произошла ошибка, сервер не доступен",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

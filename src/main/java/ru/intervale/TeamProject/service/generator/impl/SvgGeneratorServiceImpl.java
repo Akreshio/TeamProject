@@ -11,6 +11,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.jfree.graphics2d.svg.SVGUtils;
 import org.jfree.ui.RectangleInsets;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -94,10 +95,11 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
         File file = new File(".svg");
         byte[] response = null;
         try {
+            SVGUtils.writeToSVG(file, graphics2D.getSVGElement());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             response = FileCopyUtils.copyToByteArray(resource.getInputStream());
         } catch (IOException exception) {
-            exception.printStackTrace();
+            exception.getMessage();
         }
         return response;
     }
