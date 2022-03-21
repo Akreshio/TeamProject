@@ -48,7 +48,7 @@ public interface BookPrice {
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getPdf", notes = "Возвращает запрошенный формат", tags={"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
-            produces = { "application/pdf;charset=UTF-8"},
+            produces = { "application/pdf"},
             method = RequestMethod.GET)
     ResponseEntity<byte[]> getPdf(
             @ApiParam(value = "Наименование книги")
@@ -67,7 +67,7 @@ public interface BookPrice {
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getSvg", notes = "Возвращает запрошенный формат", tags={"public"})
     @RequestMapping(value = "/1.0.0/price/stat",
-            produces = { "image/svg+xml;charset=UTF-8"},
+            produces = { "image/svg+xml"},
             method = RequestMethod.GET)
     ResponseEntity<byte[]> getSvg(
             @ApiParam(value = "Наименование книги")
