@@ -37,6 +37,7 @@ public class DatabaseAccessMock2 implements DatabaseAccess {
         price2.put(LocalDateTime.now().minusDays(3), new BigDecimal("125.00"));
         price2.put(LocalDateTime.now().minusDays(7), new BigDecimal("24.50"));
 
+
         List<BookEntity> bookEntities = new ArrayList<>();
         BookEntity book1 = new BookEntity(10, new BigDecimal("10.99"),100, "10-1578-185", "name", "The test book", null, price1);
         BookEntity book2 = new BookEntity(747, new BigDecimal("50.99"),700, "10-1578-186", "no name", "The test book", null, price2);

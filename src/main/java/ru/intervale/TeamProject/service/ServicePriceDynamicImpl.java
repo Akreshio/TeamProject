@@ -14,7 +14,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import ru.intervale.TeamProject.exception.BookNotFoundException;
+import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.rateCurrencyChanging.RateCurrencyChanging;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
@@ -58,17 +60,12 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Дмитрий Самусев.
      */
     @Override
-    public ResponseEntity<byte[]> getSvg (String name, Currency currency, ParamRequest term) {
-
-        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".svg");
+    public ResponseEntity<byte[]> getSvg(String name, Currency currency, ParamRequest term) {
+        byte[] response = generator.generationSvg(getBookInfo(name, currency, term), currency);
         return ResponseEntity
                 .ok()
-                .headers(httpHeaders)
-                .body(
-                        generator.generationSvg(
-                                getBookInfo(name, currency, term)
-                        )
-                );
+                .body(response);
+
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * @author
+ * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
  * @since "02.03.2022, 18:40"
  * @version V 1.0.0
@@ -20,6 +20,9 @@ import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.util.List;
+
+import javax.validation.Valid;
+import java.io.IOException;
 
 public interface BookPrice {
 
@@ -78,7 +81,7 @@ public interface BookPrice {
             @RequestParam(value = "f", required=false) String fStr,
 
             @RequestParam(value = "d", required=false) Period d
-    );
+    ) throws IOException;
 
     @ApiOperation(value = "Получение изменения цены на книгу", nickname = "getCsv", notes = "Возвращает запрошенный формат", tags={"public"})
     @RequestMapping(value = "/1.0.0/price/stat",

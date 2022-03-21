@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class ResponseGeneratorImpl implements ResponseGenerator{
 
     private PDFGeneratorService pdfGenerator;
     private CsvGeneratorService csvGenerator;
+    private SvgGeneratorService serviceGenerateSvg;
 
 
     @Override
@@ -30,8 +32,8 @@ public class ResponseGeneratorImpl implements ResponseGenerator{
     }
 
     @Override
-    public byte[] generationSvg(List<BookEntity> books) {
-        return new byte[0];
+    public byte[] generationSvg(List<BookEntity> books, Currency currency) {
+        return serviceGenerateSvg.generateSvg(books, currency);
     }
 
     @Override

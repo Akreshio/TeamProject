@@ -8,6 +8,7 @@
 package ru.intervale.TeamProject.service.generator;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface ResponseGenerator {
      * @param books the books
      * @return the byte [ ]
      */
-    byte[] generationSvg(List<BookEntity> books);
+    byte[] generationSvg(List<BookEntity> books, Currency currency);
 
     /**
      * Generation pdf byte [ ].

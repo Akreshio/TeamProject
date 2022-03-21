@@ -1,5 +1,5 @@
 /*
- * @author
+ * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
  * @since "02.03.2022, 18:39"
  * @version V 1.0.0
@@ -18,12 +18,13 @@ import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
 import ru.intervale.TeamProject.service.ServicePriceDynamic;
 
+import java.io.IOException;
 import java.util.List;
+
 
 /**
  * The type Book price api controller.
  */
-
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -32,7 +33,9 @@ public class BookPriceController implements BookPrice {
     private ServicePriceDynamic service;
 
     @Override
+
     public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, String sStr, String fStr, Period d) {
+
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
@@ -52,7 +55,8 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
-    public ResponseEntity<byte[]> getSvg(String name, Currency currency, String sStr,String fStr, Period d) {
+    public ResponseEntity<byte[]> getSvg(String name, Currency currency, String sStr,String fStr, Period d) throws IOException {
+
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
@@ -62,7 +66,9 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
+
     public ResponseEntity<String> getCsv(String name, Currency currency, String sStr, String fStr, Period d) {
+
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
             param = new ParamRequest(sStr, fStr, d);
