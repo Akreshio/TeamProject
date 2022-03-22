@@ -6,13 +6,14 @@ import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.graphics2d.svg.SVGGraphics2D;
-import org.jfree.graphics2d.svg.SVGUtils;
-import org.jfree.ui.RectangleInsets;
+
+import org.jfree.svg.SVGGraphics2D;
+import org.jfree.svg.SVGUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -75,8 +76,8 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
         XYItemRenderer itemRenderer = plot.getRenderer();
         if (itemRenderer instanceof XYLineAndShapeRenderer) {
             XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) itemRenderer;
-            renderer.setBaseShapesVisible   (true);
-            renderer.setBaseShapesFilled    (true);
+            renderer.setDefaultShapesVisible   (true);
+            renderer.setDefaultShapesFilled    (true);
             renderer.setDrawSeriesLineAsPath(true);
         }
         // Указываем формат даты
