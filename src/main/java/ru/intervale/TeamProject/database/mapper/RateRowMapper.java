@@ -1,11 +1,4 @@
 /*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "22.03.2022, 20:58"
- * @version V 1.0.0
- */
-
-/*
  * @author S.Maevsky
  * @since 15.03.2022, 0:14
  * @version V 1.0.0
