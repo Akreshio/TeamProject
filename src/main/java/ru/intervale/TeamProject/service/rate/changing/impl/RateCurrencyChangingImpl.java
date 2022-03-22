@@ -1,11 +1,12 @@
 /*
  * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
- * @since "09.03.2022, 19:42"
+ * @since "22.03.2022, 20:47"
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.rateCurrencyChanging;
+
+package ru.intervale.TeamProject.service.rate.changing.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,8 @@ import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.dao.AlfaBankDao;
 import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
 import ru.intervale.TeamProject.model.request.ParamRequest;
+import ru.intervale.TeamProject.service.rate.Currency;
+import ru.intervale.TeamProject.service.rate.changing.RateCurrencyChanging;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

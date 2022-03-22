@@ -1,28 +1,24 @@
 /*
  * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
- * @since "02.03.2022, 18:33"
+ * @since "22.03.2022, 20:43"
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service;
+package ru.intervale.TeamProject.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.intervale.TeamProject.exception.BookNotFoundException;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
-import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
-import ru.intervale.TeamProject.service.rateCurrencyChanging.RateCurrencyChanging;
+import ru.intervale.TeamProject.service.PriceDynamicService;
+import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
+import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
+import ru.intervale.TeamProject.service.rate.Currency;
+import ru.intervale.TeamProject.service.rate.changing.RateCurrencyChanging;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
-import ru.intervale.TeamProject.service.generator.ResponseGenerator;
-import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.model.request.ParamRequest;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -37,58 +33,39 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ServicePriceDynamicImpl implements ServicePriceDynamic {
+public class PriceDynamicServiceImpl implements PriceDynamicService {
 
     private RateCurrencyChanging changing;
     private DatabaseAccess dto;
-    private ResponseGenerator generator;
 
-    private static final String TEXT_CSV = "text/csv";
-    private static final String IMAGE_SVG = "image/svg";
+    private PDFGeneratorService pdfGenerator;
+    private CsvGeneratorService csvGenerator;
+    private SvgGeneratorService svgGenerator;
 
     /**
      * Реализация: Виктор Дробышевский.
      */
     @Override
-    public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, ParamRequest term) {
-        return  ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(getBookInfo(name, currency, term));
+    public List<BookEntity> getJson(String name, Currency currency, ParamRequest term) {
+        return  getBookInfo(name, currency, term);
     }
 
     /**
      * Реализация: Дмитрий Самусев.
      */
     @Override
-    public ResponseEntity<byte[]> getSvg(String name, Currency currency, ParamRequest term) {
-
-        HttpHeaders httpHeaders = getHttpHeaders(IMAGE_SVG, ".svg");
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(
-                        generator.generationSvg(
-                                getBookInfo(name, currency, term),currency
-                        )
-                );
+    public byte[] getSvg(String name, Currency currency, ParamRequest term) {
+        return svgGenerator.generateSvg(
+                getBookInfo(name, currency, term),currency
+        );
     }
 
     /**
      * Реализация: Сергей Маевский.
      */
     @Override
-    public ResponseEntity<String> getCsv(String name, Currency currency, ParamRequest term) {
-
-        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(
-                        generator.generationCsv(
-                                getBookInfo(name, currency, term)
-                        )
-                );
+    public String getCsv(String name, Currency currency, ParamRequest term) {
+        return csvGenerator.getCsv(getBookInfo(name, currency, term));
     }
 
 
@@ -96,29 +73,22 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
      * Реализация: Игорь Прохорченко.
      */
     @Override
-    public ResponseEntity<byte[]> getPdf (String name, Currency currency, ParamRequest term) {
-
-        HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_PDF_VALUE, ".pdf");
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(
-                        generator.generationPdf(
-                                getBookInfo(name, currency, term)
-                        )
-                );
+    public byte[] getPdf (String name, Currency currency, ParamRequest term) {
+        return pdfGenerator.getPdf(
+                getBookInfo(name, currency, term)
+        );
     }
 
-    private List<BookEntity> getBookInfo(String name, Currency currency, ParamRequest term) {
+    private List<BookEntity> getBookInfo(String title, Currency currency, ParamRequest term) {
 
         //Получение книг(и) из бд
         log.debug("Получение книг(и) из бд");
-        List<BookEntity> bookEntities = getBook(name);
+        List<BookEntity> bookEntities = dto.get(title);
         checkOnNull(bookEntities);
 
         //Получение курса валюты за период
         log.debug("Получение курса валюты за период {" + currency + "} {" + term +"}");
-        Map<LocalDateTime, BigDecimal> changePrice = getChangeCurrency(currency, term);
+        Map<LocalDateTime, BigDecimal> changePrice = changing.getExchangeRate(currency,term);
 
         //Расчёт изменение цены
         log.debug("Расчёт изменение цены");
@@ -145,15 +115,6 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
             }
         }
         return bookEntities;
-    }
-
-
-    private Map<LocalDateTime, BigDecimal> getChangeCurrency(Currency currency, ParamRequest term) {
-        return changing.getExchangeRate(currency,term);
-    }
-
-    private List<BookEntity> getBook(String title) {
-        return dto.get(title);
     }
 
     //тут должен быть эксепшен
@@ -227,18 +188,4 @@ public class ServicePriceDynamicImpl implements ServicePriceDynamic {
         }
         return changePriceBook;
     }
-
-    private HttpHeaders getHttpHeaders(String mediaType, String format) {
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, mediaType);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
-                .attachment()
-                .filename("price_change_report_" + LocalDateTime.now() + format)
-                .build()
-                .toString()
-        );
-        return httpHeaders;
-    }
-
 }

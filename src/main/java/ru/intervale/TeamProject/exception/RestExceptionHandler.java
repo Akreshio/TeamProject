@@ -18,7 +18,7 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handlerBookNotFoundException(BookNotFoundException ex) {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        log.debug("Book not found" + ex.getMessage());
+        log.error("Book not found" + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), status);
     }
 
@@ -40,11 +40,16 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
+    public ResponseEntity<Object> handleArrayDateTimeException(ArrayIndexOutOfBoundsException ex) {
+        log.error("DateTimeException: " + ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(DateTimeException.class)
     public ResponseEntity<Object> handleDateTimeException(DateTimeException ex) {
-
         log.error("DateTimeException: " + ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
 }

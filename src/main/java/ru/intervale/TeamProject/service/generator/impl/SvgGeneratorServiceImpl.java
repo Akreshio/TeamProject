@@ -6,29 +6,33 @@ import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.graphics2d.svg.SVGGraphics2D;
-import org.jfree.graphics2d.svg.SVGUtils;
-import org.jfree.ui.RectangleInsets;
-import org.springframework.core.io.InputStreamResource;
+import org.jfree.svg.SVGGraphics2D;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
-import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
 public class SvgGeneratorServiceImpl implements SvgGeneratorService {
+
+    @Override
+    public byte[] generateSvg (List<BookEntity> bookEntityList, Currency currency) {
+
+        //Создаем график с заданными размерами и записываем в файл
+        SVGGraphics2D graphics2D = new SVGGraphics2D(600, 400);
+        Rectangle rectangle = new Rectangle(0, 0, 600, 400);
+        createChart(bookEntityList, currency).draw(graphics2D, rectangle);
+        return graphics2D.getSVGElement().getBytes();
+    }
 
     private XYDataset createDataset(List<BookEntity> bookEntityList) {
 
@@ -75,8 +79,8 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
         XYItemRenderer itemRenderer = plot.getRenderer();
         if (itemRenderer instanceof XYLineAndShapeRenderer) {
             XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) itemRenderer;
-            renderer.setBaseShapesVisible   (true);
-            renderer.setBaseShapesFilled    (true);
+            renderer.setDefaultShapesVisible   (true);
+            renderer.setDefaultShapesFilled    (true);
             renderer.setDrawSeriesLineAsPath(true);
         }
         // Указываем формат даты
@@ -86,21 +90,4 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
         return chart;
     }
 
-    public byte[] generateSvg (List<BookEntity> bookEntityList, Currency currency) {
-
-        //Создаем график с заданными размерами и записываем в файл
-        SVGGraphics2D graphics2D = new SVGGraphics2D(600, 400);
-        Rectangle rectangle = new Rectangle(0, 0, 600, 400);
-        createChart(bookEntityList, currency).draw(graphics2D, rectangle);
-        File file = new File(".svg");
-        byte[] response = null;
-        try {
-            SVGUtils.writeToSVG(file, graphics2D.getSVGElement());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            response = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        } catch (IOException exception) {
-            exception.getMessage();
-        }
-        return response;
-    }
 }

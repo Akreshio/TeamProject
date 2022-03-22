@@ -1,11 +1,11 @@
 /*
  * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
- * @since "13.03.2022, 12:43"
+ * @since "22.03.2022, 20:47"
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.rateCurrencyChanging;
+package ru.intervale.TeamProject.service.rate.changing;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

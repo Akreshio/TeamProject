@@ -7,8 +7,8 @@
 package ru.intervale.TeamProject.service.dao;
 
 import org.springframework.dao.DataAccessException;
-import ru.intervale.TeamProject.model.rate.RateEntity;
-import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.database.entity.RateEntity;
+import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

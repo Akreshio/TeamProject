@@ -4,11 +4,11 @@
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.mapper;
+package ru.intervale.TeamProject.database.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.intervale.TeamProject.model.rate.RateEntity;
+import ru.intervale.TeamProject.database.entity.RateEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

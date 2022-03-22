@@ -7,12 +7,11 @@
 
 package ru.intervale.TeamProject.model.book;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -20,30 +19,31 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
-@XmlRootElement(name = "Book")
+
 public class BookEntity {
 
-    @XmlElement(name = "page")
+    @JsonProperty("page")
     private int page;
 
-    @XmlElement(name = "price")
+    @JsonProperty("price")
     private BigDecimal price;
 
-    @XmlElement(name = "weight")
+    @JsonProperty("weight")
     private int weight;
 
-    @XmlElement(name = "isbn")
+    @JsonProperty("isbn")
     private String isbn;
 
-    @XmlElement(name = "writer")
+    @JsonProperty("writer")
     private String writer;
 
-    @XmlElement(name = "title")
+    @JsonProperty("title")
     private String title;
 
     // дата , цена
-    @XmlElement(name = "changePrice")
+    @JsonProperty("changePrice")
     private Map<LocalDateTime, BigDecimal> changePrice;
 
+    @JsonProperty("previousBookPrice")
     private Map<LocalDateTime, BigDecimal> previousBookPrice;
 }
