@@ -18,32 +18,32 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handlerBookNotFoundException(BookNotFoundException ex) {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        log.debug("Book not found", ex.getMessage());
+        log.debug("Book not found" + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), status);
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Object> handleIOException(IOException ex) {
-        log.error("IOException: ",ex.getMessage());
+        log.error("IOException: " + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Object> handleDataAccessException(DataAccessException ex) {
-        log.error("DataAccessException: ",ex.getMessage());
+        log.error("DataAccessException: " + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {
-        log.error("Exception: ",ex.getMessage());
+        log.error("Exception: " + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(DateTimeException.class)
     public ResponseEntity<Object> handleDateTimeException(DateTimeException ex) {
 
-        log.error("DateTimeException: ",ex.getMessage());
+        log.error("DateTimeException: " + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
