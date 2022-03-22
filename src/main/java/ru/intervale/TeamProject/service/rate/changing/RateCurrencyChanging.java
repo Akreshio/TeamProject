@@ -1,13 +1,14 @@
 /*
  * @author Виктор Дробышевский
  * E-mail: akreshios@gmail.com
- * @since "09.03.2022, 19:31"
+ * @since "22.03.2022, 20:47"
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service.rateCurrencyChanging;
+package ru.intervale.TeamProject.service.rate.changing;
 
 import ru.intervale.TeamProject.model.request.ParamRequest;
+import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

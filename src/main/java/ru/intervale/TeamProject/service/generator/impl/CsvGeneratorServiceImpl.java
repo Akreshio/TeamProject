@@ -39,7 +39,7 @@ public class CsvGeneratorServiceImpl implements CsvGeneratorService {
             addBookToString(booksString, book);
         }
 
-        log.debug("Get Csv by list of bookEntities = {}, result = {}", bookEntities, booksString.toString());
+        log.debug("Get Csv by list of bookEntities = {}, result = {}", bookEntities, booksString);
 
         return booksString.toString();
     }

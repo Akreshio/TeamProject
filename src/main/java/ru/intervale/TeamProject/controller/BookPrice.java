@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.rateCurrencyChanging.Currency;
+import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.util.List;
 
-import javax.validation.Valid;
 import java.io.IOException;
 
 public interface BookPrice {
@@ -56,12 +55,10 @@ public interface BookPrice {
             @ApiParam(value = "код валюты")
             @RequestParam(value = "currency") Currency currency,
 
-
             @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "s", required=false) String sStr,
             @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
-
             @RequestParam(value = "d", required=false) Period d
     );
 
@@ -79,7 +76,6 @@ public interface BookPrice {
             @RequestParam(value = "s", required=false) String sStr,
             @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
-
             @RequestParam(value = "d", required=false) Period d
     ) throws IOException;
 
@@ -97,7 +93,6 @@ public interface BookPrice {
             @RequestParam(value = "s", required=false) String sStr,
             @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
             @RequestParam(value = "f", required=false) String fStr,
-
             @RequestParam(value = "d", required=false) Period d
     );
 

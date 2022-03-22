@@ -1,14 +1,21 @@
 /*
+ * @author Виктор Дробышевский
+ * E-mail: akreshios@gmail.com
+ * @since "22.03.2022, 20:58"
+ * @version V 1.0.0
+ */
+
+/*
  * @author S.Maevsky
  * @since 15.03.2022, 0:14
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.mapper;
+package ru.intervale.TeamProject.database.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.intervale.TeamProject.model.rate.RateEntity;
+import ru.intervale.TeamProject.database.entity.RateEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
