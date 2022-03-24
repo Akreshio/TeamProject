@@ -29,12 +29,5 @@ public class DailyExRates {
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "Currency")
     List<RateBelApb> rateBelApbList;
-//    @JacksonXmlElementWrapper(useWrapping = false)
-//    @JacksonXmlProperty(localName = "Currency")
-//    public List<Currency> currencyList;
-//
-////    @JacksonXmlElementWrapper(useWrapping = false)
-//    @JacksonXmlProperty(localName = "Date")
-//    public String date;
 
 }
