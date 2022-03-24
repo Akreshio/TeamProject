@@ -46,17 +46,15 @@ public class CsvGeneratorServiceImpl implements CsvGeneratorService {
 
     private void addBookToString(StringBuilder booksString, BookEntity book) {
 
-        booksString.append("Isbn:;" + book.getIsbn() + ";\n" +
-                "Title:;" + book.getTitle() + ";\n" +
-                "Writer:;" + book.getWriter() + ";\n" +
-                "Page:;" + book.getPage() + ";\n" +
-                "Weight:;" + book.getWeight() + ";\n" +
-                "Price in BYN:;" +
-                book.getPrice()
-                        .setScale(2, RoundingMode.HALF_UP)
-                        .toString()
-                        .replace('.', ',') +
-                ";\n");
+        booksString.append("Isbn:;").append(book.getIsbn()).append(";\n")
+                .append("Title:;").append(book.getTitle()).append(";\n")
+                .append("Writer:;").append(book.getWriter()).append(";\n")
+                .append("Page:;").append(book.getPage()).append(";\n")
+                .append("Weight:;").append(book.getWeight()).append(";\n")
+                .append("Price in BYN:;").append(book.getPrice()
+                .setScale(2, RoundingMode.HALF_UP)
+                .toString()
+                .replace('.', ',')).append(";\n");
 
         if ((book.getChangePrice() != null) && (!book.getChangePrice().isEmpty())) {
 
