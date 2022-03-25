@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
-import com.itextpdf.text.*;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -59,7 +58,6 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
         } finally {
             document.close();
         }
-
         return out.toByteArray();
     }
 

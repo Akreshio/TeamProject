@@ -19,6 +19,9 @@ target/
 *.iml
 *.ipr
 
+### SVG ###
+.svg
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

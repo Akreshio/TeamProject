@@ -8,7 +8,6 @@ package ru.intervale.TeamProject.service.generator.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 import ru.intervale.TeamProject.model.book.BookEntity;
 
@@ -22,7 +21,6 @@ import java.util.Map;
 /**
  * The type Csv generator service.
  */
-
 @Slf4j
 @Service
 public class CsvGeneratorServiceImpl implements CsvGeneratorService {
@@ -41,7 +39,7 @@ public class CsvGeneratorServiceImpl implements CsvGeneratorService {
             addBookToString(booksString, book);
         }
 
-        log.debug("Get Csv by list of bookEntities = {}, result = {}", bookEntities, booksString.toString());
+        log.debug("Get Csv by list of bookEntities = {}, result = {}", bookEntities, booksString);
 
         return booksString.toString();
     }

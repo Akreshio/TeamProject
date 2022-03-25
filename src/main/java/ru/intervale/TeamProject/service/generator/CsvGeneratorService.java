@@ -7,7 +7,7 @@
 package ru.intervale.TeamProject.service.generator;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.ServicePriceDynamic;
+import ru.intervale.TeamProject.service.PriceDynamicService;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface CsvGeneratorService {
      * Gets csv.
      *
      * Принимаем параметр списка книг из сервиса
-     * @see ServicePriceDynamic
+     * @see PriceDynamicService
      *
      * Конвертируем и возвращаем текст c типом String для формата csv, разделитель - ";"
      *

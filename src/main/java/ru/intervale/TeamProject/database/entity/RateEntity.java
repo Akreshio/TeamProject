@@ -1,10 +1,17 @@
 /*
+ * @author Виктор Дробышевский
+ * E-mail: akreshios@gmail.com
+ * @since "22.03.2022, 21:00"
+ * @version V 1.0.0
+ */
+
+/*
  * @author S.Maevsky
  * @since 16.03.2022, 0:11
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.model.rate;
+package ru.intervale.TeamProject.database.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
