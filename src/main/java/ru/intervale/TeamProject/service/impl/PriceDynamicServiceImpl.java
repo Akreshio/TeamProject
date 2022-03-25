@@ -14,7 +14,7 @@ import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
-import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.PdfGeneratorService;
 import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
 import ru.intervale.TeamProject.service.rate.Currency;
 import ru.intervale.TeamProject.service.rate.changing.RateCurrencyChanging;
@@ -38,7 +38,7 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
     private RateCurrencyChanging changing;
     private DatabaseAccess dto;
 
-    private PDFGeneratorService pdfGenerator;
+    private PdfGeneratorService pdfGenerator;
     private CsvGeneratorService csvGenerator;
     private SvgGeneratorService svgGenerator;
 

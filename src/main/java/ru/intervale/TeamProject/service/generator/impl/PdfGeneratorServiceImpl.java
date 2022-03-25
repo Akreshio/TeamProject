@@ -32,13 +32,15 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 
 import ru.intervale.TeamProject.model.book.BookEntity;
-import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
+import ru.intervale.TeamProject.service.generator.PdfGeneratorService;
 
 @Slf4j
 @Service
-public class PDFGeneratorServiceImpl implements PDFGeneratorService {
+public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 
     public byte[] getPdf(List<BookEntity> bookEntities){
+
+        log.debug("Get Pdf by list of bookEntities = {}", bookEntities);
 
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -54,7 +56,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
                 body(document, book);
             }
         } catch(DocumentException e) {
-            log.error("Ошибка генерации PDF файла");
+            log.error("DocumentException: PDF file generation error");
         } finally {
             document.close();
         }
@@ -97,7 +99,7 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorService {
     }
 
     private String formatDate (LocalDateTime date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         return  formatter.format(date);
     }
 
