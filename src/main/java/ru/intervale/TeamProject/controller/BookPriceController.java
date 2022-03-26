@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.rate.Currency;
 import ru.intervale.TeamProject.service.PriceDynamicService;
+import ru.intervale.TeamProject.service.rate.Currency;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +33,7 @@ public class BookPriceController implements BookPrice {
     private static final String IMAGE_SVG = "image/svg";
 
     @Override
-    public ResponseEntity<byte[]> getPdf(String name, Currency currency, String sStr,String fStr, Period d){
+    public ResponseEntity<byte[]> getPdf(String name, Currency currency, String sStr, String fStr, Period d){
 
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
