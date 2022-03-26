@@ -112,7 +112,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 
             for (Map.Entry<LocalDateTime, BigDecimal> price : book.getChangePrice().entrySet()) {
                 createCell(table, formatDate(price.getKey()));
-                createCell(table, formatPrice(price.getValue()));
+                createCell(table, String.valueOf(price.getValue()));
             }
             document.add(table);
         }
