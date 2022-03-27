@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 
+/**
+ * The type Scheduled request.
+ */
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -27,11 +30,14 @@ public class ScheduledRequest {
     private AlfaBankDao alfaBankDao;
     private AlfaBankService alfaBank;
 
-    //каждый день с 8:00 до 18:00 с шагом в 10 минт
+    /**
+     * Request to alfa bank every day from 8am to 6pm with an interval of 10 minutes.
+     */
+//каждый день с 8:00 до 18:00 с шагом в 10 минт
     @Scheduled(cron = "0 0/10 8-18 * * *")
-    public void requestToAlfaBank() {
+    public void requestEveryTenMinutes () {
         Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
-        exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
+        exchangeRateChange.forEach((key, value) -> log.debug(key + " " + value));
         LocalDateTime dateNow = LocalDateTime.now();
         LocalDateTime dateDB = LocalDateTime.of(
                 dateNow.getYear(),
@@ -43,11 +49,14 @@ public class ScheduledRequest {
         alfaBankDao.save(dateDB,exchangeRateChange);
     }
 
-    //каждый день в 12 ночи
+    /**
+     * Request every day at 12 o'clock.
+     */
+//каждый день в 12 ночи
     @Scheduled(cron = "0 0 0 * * *")
-    public void requestCloseDayAlfaBank () {
+    public void requestCloseDay () {
         Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
-        exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
+        exchangeRateChange.forEach((key, value) -> log.debug(key + " " + value));
         LocalDateTime dateNow = LocalDateTime.now();
         LocalDateTime dateDB = LocalDateTime.of(
                 dateNow.getDayOfMonth(),

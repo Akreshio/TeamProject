@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.dto.BookDto;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.PriceDynamicService;
@@ -87,7 +87,7 @@ public class BookPriceController implements BookPrice {
     }
 
     @Override
-    public ResponseEntity<List<BookEntity>> getJson(String name, Currency currency, String sStr, String fStr, Period d){
+    public ResponseEntity<List<BookDto>> getJson(String name, Currency currency, String sStr, String fStr, Period d){
 
         ParamRequest param = null;
         if ((sStr!=null)||(fStr!=null)||(d!=null)){
