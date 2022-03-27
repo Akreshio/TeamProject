@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * The interface Pdf generator service.
  */
-public interface PDFGeneratorService {
+public interface PdfGeneratorService {
 
     /**
      * Get pdf byte [ ].

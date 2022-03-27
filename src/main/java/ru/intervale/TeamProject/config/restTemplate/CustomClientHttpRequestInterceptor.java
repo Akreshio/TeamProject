@@ -1,9 +1,3 @@
-/*
- * @author Виктор Дробышевский
- * E-mail: akreshios@gmail.com
- * @since "02.03.2022, 18:46"
- * @version V 1.0.0
- */
 
 package ru.intervale.TeamProject.config.restTemplate;
 
