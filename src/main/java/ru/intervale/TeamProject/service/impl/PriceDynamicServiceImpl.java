@@ -16,7 +16,6 @@ import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
 import ru.intervale.TeamProject.service.generator.JsonGeneratorService;
-import ru.intervale.TeamProject.service.generator.PDFGeneratorService;
 import ru.intervale.TeamProject.service.generator.PdfGeneratorService;
 import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
 import ru.intervale.TeamProject.service.rate.Currency;

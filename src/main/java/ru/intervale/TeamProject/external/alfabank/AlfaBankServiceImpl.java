@@ -43,6 +43,9 @@ public class AlfaBankServiceImpl implements AlfaBankService {
     @Value("${rest.template.alfabank.urn.now}")
     private String urnNow;
 
+    public AlfaBankServiceImpl() {
+    }
+
     @Override
     public Map<LocalDateTime, BigDecimal> get(Currency currency,  List <LocalDateTime> dates) {
 
@@ -78,21 +81,27 @@ public class AlfaBankServiceImpl implements AlfaBankService {
     public Map<String, BigDecimal> getNow() {
         Map<String, BigDecimal> exchangeRateChange = new HashMap<>();
         RateListResponse rateList = restTemplate.getForEntity(urnNow, RateListResponse.class).getBody();
-
-        if (rateList != null){
-            for (Rate rate:rateList.getRates()) {
-                if (rate.getName() != null) {
-                    String currency = rate.getSellIso().toLowerCase();
-                    exchangeRateChange.put(currency, rate.getSellRate().divide(
+        try {
+            if (rateList != null){
+                for (Rate rate:rateList.getRates()) {
+                    if (rate.getName() != null) {
+                        String currency = rate.getSellIso().toLowerCase();
+                        exchangeRateChange.put(currency, rate.getSellRate().divide(
                             BigDecimal.valueOf(rate.getQuantity()),
                             5,
                             RoundingMode.DOWN)
-                    );
+                        );
+                    }
                 }
             }
+        } catch (RestClientException ex) {
+            log.error("RestTemplate Exception when get rates from Alfa-Bank.");
+            log.info("Exception: {}", ex.getStackTrace());
+            throw new RestClientException("Exception when handling get rates from Alfa-Bank.");
         }
         return exchangeRateChange;
     }
+
     private String formatDate (@NotNull LocalDateTime date) {
         return String.format("%02d.%02d.%04d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
     }

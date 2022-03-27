@@ -9,7 +9,6 @@ package ru.intervale.TeamProject.service;
 
 import ru.intervale.TeamProject.dto.BookDto;
 import ru.intervale.TeamProject.service.rate.Currency;
-import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 
 import java.util.List;

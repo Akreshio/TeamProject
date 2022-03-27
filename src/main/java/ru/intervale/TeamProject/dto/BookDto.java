@@ -9,6 +9,7 @@ package ru.intervale.TeamProject.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @AllArgsConstructor
+@Data
 public class BookDto {
 
     @JsonProperty("isbn")
@@ -33,11 +35,11 @@ public class BookDto {
     @JsonProperty("weight")
     private int weight;
 
-    @JsonProperty("price")
+    @JsonProperty("price in BYN")
     private BigDecimal price;
 
     // дата , цена
-    @JsonProperty("priceBook")
+    @JsonProperty("price book in select period")
     private Map<LocalDateTime, BigDecimal> priceBook;
 
 }
