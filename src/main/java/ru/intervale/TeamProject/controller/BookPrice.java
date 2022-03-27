@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.dto.BookDto;
 import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.rate.Currency;
 
@@ -30,7 +30,7 @@ public interface BookPrice {
     @RequestMapping(value = "/1.0.0/price/stat",
             produces = { "application/json;charset=UTF-8"},
             method = RequestMethod.GET)
-    ResponseEntity<List<BookEntity>> getJson(
+    ResponseEntity<List<BookDto>> getJson(
             @ApiParam(value = "Наименование книги")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "код валюты")

@@ -7,6 +7,7 @@
 
 package ru.intervale.TeamProject.service;
 
+import ru.intervale.TeamProject.dto.BookDto;
 import ru.intervale.TeamProject.service.rate.Currency;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
@@ -26,7 +27,7 @@ public interface PriceDynamicService {
      * @param term     the term
      * @return the json
      */
-    List<BookEntity> getJson (String name, Currency currency, ParamRequest term);
+    List<BookDto> getJson (String name, Currency currency, ParamRequest term);
 
     /**
      * Gets svg.
