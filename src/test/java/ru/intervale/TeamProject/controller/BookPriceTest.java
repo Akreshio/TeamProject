@@ -1,4 +1,3 @@
-
 /*
  * @author S.Maevsky
  * @since 19.03.2022, 23:05
@@ -18,19 +17,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
+import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
@@ -48,13 +49,11 @@ public class BookPriceTest {
 
     @Test
     public void testGetJson() throws Exception {
-/*
-        List<BookEntity> bookEntitiesTest = getBooksForTest();
-        ResponseEntity<List<BookEntity>> responseTest =
-                new ResponseEntity<>(bookEntitiesTest, HttpStatus.OK);
+
+        List<BookEntity> booksTest = getBooksForTest();
 
         when(service.getJson(anyString(), any(Currency.class), any(ParamRequest.class)))
-                .thenReturn(responseTest);
+                .thenReturn(booksTest);
 
         mockMvc.perform(get("/1.0.0/price/stat")
                 .accept("application/json;charset=UTF-8")
@@ -64,7 +63,7 @@ public class BookPriceTest {
                 .param("fStr", "02.03.2022")
                 .param("d", "day")
         )
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.[0].isbn").value("978-5-389-07123-0"))
                 .andExpect(jsonPath("$.[0].title").value("test"))
                 .andExpect(jsonPath("$.[0].writer").value("Лев Николаевич Толстой"))
@@ -84,10 +83,8 @@ public class BookPriceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(service).getJson(anyString(), any(Currency.class), any(ParamRequest.class));*/
+        verify(service).getJson(anyString(), any(Currency.class), any(ParamRequest.class));
     }
-
-
 
     private List<BookEntity> getBooksForTest() {
 
@@ -151,5 +148,4 @@ public class BookPriceTest {
 
         return priceMap;
     }
-
 }
