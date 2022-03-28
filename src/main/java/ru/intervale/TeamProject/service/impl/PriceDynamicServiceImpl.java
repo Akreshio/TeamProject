@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.dto.BookDto;
+import ru.intervale.TeamProject.exception.BookNotFoundException;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
@@ -122,9 +123,9 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
         return bookEntities;
     }
 
-    //тут должен быть эксепшен
+
     private void checkOnNull(List<BookEntity> bookEntities) {
-        if (bookEntities == null) throw new RuntimeException("Book not found");
+        if (bookEntities == null) throw new BookNotFoundException(", nothing found for your request");
     }
 
     private Map<LocalDateTime, BigDecimal> sortByDate(@NotNull Map<LocalDateTime, BigDecimal> map) {

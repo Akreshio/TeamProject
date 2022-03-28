@@ -1,5 +1,6 @@
 package ru.intervale.TeamProject.service.generator.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -22,11 +23,13 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
+@Slf4j
 public class SvgGeneratorServiceImpl implements SvgGeneratorService {
 
     @Override
     public byte[] generateSvg (List<BookEntity> bookEntityList, Currency currency) {
 
+        log.debug("Get Svg by list of bookEntities = {}, currency = {}", bookEntityList, currency);
         //Создаем график с заданными размерами и записываем в файл
         SVGGraphics2D graphics2D = new SVGGraphics2D(600, 400);
         Rectangle rectangle = new Rectangle(0, 0, 600, 400);
@@ -48,6 +51,7 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
                     v.doubleValue());
         });
         dataset.addSeries(timeSeries);
+            log.debug("Get dataset = {}", dataset);
     }
         return dataset;
     }
@@ -76,6 +80,7 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
         plot.setDomainCrosshairVisible(true);
         plot.setRangeCrosshairVisible(true);
 
+        //Настройки отображения
         XYItemRenderer itemRenderer = plot.getRenderer();
         if (itemRenderer instanceof XYLineAndShapeRenderer) {
             XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) itemRenderer;
