@@ -37,17 +37,17 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
 
         if (param!=null) {
             List<LocalDateTime> date = getTimePeriod(param);
-            if ((param.getPeriod()!=null) && (param.getPeriod()== Period.hour)){
+            if ((param.getPeriod() != null) && (param.getPeriod() == Period.hour)) {
                 alfaBankDao.getByPeriod(date.get(0), date.get(1), currency);
             }
             alfaBankDao.getByPeriod(date, currency);
             return alfabank.get(currency,date);
         }
-            alfaBankDao.getByPeriod(getTimePeriod(), currency);
-            return alfabank.get(currency,getTimePeriod());
-        }
+        alfaBankDao.getByPeriod(getTimePeriod(), currency);
+        return alfabank.get(currency,getTimePeriod());
+    }
 
-    private List<LocalDateTime> getTimePeriod(ParamRequest param){
+    private List<LocalDateTime> getTimePeriod(ParamRequest param) {
         List<LocalDateTime> dateList = new ArrayList<>();
 
         // Дата окончания выборки
@@ -64,13 +64,16 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
         // Период выборки
         if (param.getPeriod()!=null){
             switch (param.getPeriod()) {
-                case hour:{
+                case hour: {
                     dateList.add(sDate);
                     dateList.add(fDate);
                     return  dateList;
                 }
-                case day:{
-                    log.info("Using the period formation for day with start day: " + sDate + " and finish day: " + fDate);
+                case day: {
+                    log.debug(
+                            "Using the period formation for day with start day: " + sDate
+                                    + " and finish day: " + fDate
+                    );
                     while (sDate.isBefore(fDate)) {
                         dateList.add(sDate);
                         sDate = sDate.plusDays(1);
@@ -79,7 +82,10 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
                     return  dateList;
                 }
                 case  week: {
-                    log.info("Using the period formation for week with start day: " + sDate + " and finish day: " + fDate);
+                    log.debug(
+                            "Using the period formation for week with start day: " + sDate
+                                    + " and finish day: " + fDate
+                    );
                     while (sDate.isBefore(fDate)) {
                         dateList.add(sDate);
                         sDate = sDate.plusDays(7);
@@ -87,7 +93,10 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
                     return  dateList;
                 }
                 case month: {
-                    log.info("Using the period formation for month with start day: " + sDate + " and finish day: " + fDate);
+                    log.debug(
+                            "Using the period formation for month with start day: " + sDate
+                                    + " and finish day: " + fDate
+                    );
                     while (sDate.isBefore(fDate)){
                         dateList.add(sDate);
                         sDate = sDate.plusMonths(1);

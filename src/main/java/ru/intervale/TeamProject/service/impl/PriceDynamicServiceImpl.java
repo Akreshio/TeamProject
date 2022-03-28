@@ -10,11 +10,13 @@ package ru.intervale.TeamProject.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.dto.BookDto;
 import ru.intervale.TeamProject.exception.BookNotFoundException;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
 import ru.intervale.TeamProject.service.generator.CsvGeneratorService;
+import ru.intervale.TeamProject.service.generator.JsonGeneratorService;
 import ru.intervale.TeamProject.service.generator.PdfGeneratorService;
 import ru.intervale.TeamProject.service.generator.SvgGeneratorService;
 import ru.intervale.TeamProject.service.rate.Currency;
@@ -23,6 +25,7 @@ import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,13 +45,15 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
     private PdfGeneratorService pdfGenerator;
     private CsvGeneratorService csvGenerator;
     private SvgGeneratorService svgGenerator;
-
+    private JsonGeneratorService jsonGenerator;
     /**
      * Реализация: Виктор Дробышевский.
      */
     @Override
-    public List<BookEntity> getJson(String name, Currency currency, ParamRequest term) {
-        return  getBookInfo(name, currency, term);
+    public List<BookDto> getJson(String name, Currency currency, ParamRequest term) {
+        return jsonGenerator.getJson(
+                getBookInfo(name, currency, term)
+        );
     }
 
     /**
@@ -170,7 +175,10 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
                     + prices.getValue()
             );
             //расчёт и запись данных в результирующую Мар
-            changePriceBook.put(prices.getKey(),prices.getValue().multiply(price));
+            changePriceBook.put(
+                    prices.getKey(),
+                    price.divide(prices.getValue(), 2, RoundingMode.HALF_UP)
+            );
         }
         return changePriceBook;
     }
@@ -185,7 +193,10 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
         // цикл по дням изменения курса валют
         for (Map.Entry<LocalDateTime, BigDecimal> prices : currencyMap.entrySet()){
             //расчёт и запись данных в результирующую Мар по актуальной цене книги
-            changePriceBook.put(prices.getKey(),prices.getValue().multiply(priceNow));
+            changePriceBook.put(
+                    prices.getKey(),
+                    priceNow.divide(prices.getValue(),2, RoundingMode.HALF_UP)
+            );
         }
         return changePriceBook;
     }

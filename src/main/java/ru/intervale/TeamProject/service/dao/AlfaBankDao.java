@@ -74,8 +74,8 @@ public interface AlfaBankDao {
      * Удаление курсов валют с даты и времени начала периода включительно
      * и по дату и время окончания периода включительно.
      *
-     * @param startDate the start date
-     * @param endDate   the end date
+     * @param dateStart the start date
+     * @param dateFinish   the end date
      * @return the boolean
      * @throws DataAccessException the data access exception
      */

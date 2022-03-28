@@ -17,7 +17,7 @@ import java.util.List;
 public interface DatabaseAccess {
 
     /**
-     * Тут получаем лист книг из базы данных.
+     * Тут получаем лист книг из личного проекта илии же пользуемся mock классами.
      *
      * @param name имя книги
      * @return  возвращаем лист BookEntity

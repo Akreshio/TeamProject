@@ -12,7 +12,7 @@ import java.util.List;
 public interface SvgGeneratorService {
 
     /**
-     * Генерирует SVG файл с графиком изменения цены
+     * Генерирует байт код SVG файла содержащий график изменения цены
      *
      * @param bookEntityList the list book
      * @param currency the currency
