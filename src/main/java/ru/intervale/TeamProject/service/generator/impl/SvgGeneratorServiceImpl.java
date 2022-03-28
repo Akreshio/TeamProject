@@ -80,6 +80,7 @@ public class SvgGeneratorServiceImpl implements SvgGeneratorService {
         plot.setDomainCrosshairVisible(true);
         plot.setRangeCrosshairVisible(true);
 
+        //Настройки отображения
         XYItemRenderer itemRenderer = plot.getRenderer();
         if (itemRenderer instanceof XYLineAndShapeRenderer) {
             XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) itemRenderer;
