@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.intervale.TeamProject.config.restTemplate.CustomClientHttpRequestInterceptor;
+import ru.intervale.TeamProject.config.restTemplate.RequestLoggerInterceptor;
 
 import javax.annotation.Resource;
 
@@ -41,7 +41,7 @@ public class BelApbRestTemplateConfig {
 
         return builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(url))
-                .additionalInterceptors(new CustomClientHttpRequestInterceptor())
+                .additionalInterceptors(new RequestLoggerInterceptor())
                 .build();
     }
 }

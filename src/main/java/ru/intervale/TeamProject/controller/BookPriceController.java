@@ -1,115 +1,120 @@
 package ru.intervale.TeamProject.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.models.Response;
+import org.intellij.lang.annotations.Pattern;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.intervale.TeamProject.dto.BookDto;
-import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
-import ru.intervale.TeamProject.service.PriceDynamicService;
 import ru.intervale.TeamProject.service.rate.Currency;
 
-
-import java.time.LocalDateTime;
 import java.util.List;
 
+public interface BookPriceController {
 
-/**
- * The type Book price api controller.
- */
-@Slf4j
-@RestController
-@AllArgsConstructor
-public class BookPriceController implements BookPrice {
 
-    private PriceDynamicService service;
+    @ApiOperation(value = "Getting a price change for a book", nickname = "getJson", notes = "Returns the requested format", tags={"public"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful execution of the request", response = Response.class),
+            @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+            @ApiResponse(code = 500, message = "Request execution error", response = Error.class)
+    })
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "application/json;charset=UTF-8"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<BookDto>> getJson(
+            @ApiParam(value = "Book title")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "currency code")
+            @RequestParam(value = "currency") Currency currency,
 
-    private static final String TEXT_CSV = "text/csv";
-    private static final String IMAGE_SVG = "image/svg";
 
-    @Override
-    public ResponseEntity<byte[]> getPdf(String name, Currency currency, String sStr, String fStr, Period d){
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "beginning of period (01.01.2022)", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "end of period (01.01.2022)", required=false) String fStr,
 
-        ParamRequest param = null;
-        if ((sStr!=null)||(fStr!=null)||(d!=null)){
-            param = new ParamRequest(sStr, fStr, d);
-        }
-        log.debug("Get book: " + name + " in pdf");
+            @RequestParam(value = "period", required=false) Period d
+    );
 
-        HttpHeaders httpHeaders = getHttpHeaders(MediaType.APPLICATION_PDF_VALUE, ".pdf");
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(
-                        service.getPdf(name, currency, param)
-                );
-    }
+    @ApiOperation(value = "Getting a price change for a book", nickname = "getPdf", notes = "Returns the requested format", tags={"public"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful execution of the request", response = Response.class),
+            @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+            @ApiResponse(code = 500, message = "Request execution error", response = Error.class)
+    })
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "application/pdf"},
+            method = RequestMethod.GET)
+    ResponseEntity<byte[]> getPdf(
+            @ApiParam(value = "Book title")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "currency code")
+            @RequestParam(value = "currency") Currency currency,
 
-    @Override
-    public ResponseEntity<String> getCsv(String name, Currency currency, String sStr, String fStr, Period d){
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "beginning of period (01.01.2022)", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "end of period (01.01.2022)", required=false) String fStr,
 
-        ParamRequest param = null;
-        if ((sStr!=null)||(fStr!=null)||(d!=null)){
-            param = new ParamRequest(sStr, fStr, d);
-        }
-        log.debug("Get book: " + name + " in csv");
+            @RequestParam(value = "period", required=false) Period d
+    );
 
-        HttpHeaders httpHeaders = getHttpHeaders(TEXT_CSV, ".csv");
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(
-                        service.getCsv(name, currency, param)
-                );
-    }
+    @ApiOperation(value = "Getting a price change for a book", nickname = "getSvg", notes = "Returns the requested format", tags={"public"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful execution of the request", response = Response.class),
+            @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+            @ApiResponse(code = 500, message = "Request execution error", response = Error.class)
+    })
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "image/svg+xml"},
+            method = RequestMethod.GET)
+    ResponseEntity<byte[]> getSvg(
+            @ApiParam(value = "Book title")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "currency code")
+            @RequestParam(value = "currency") Currency currency,
 
-    @Override
-    public ResponseEntity<byte[]> getSvg(String name, Currency currency, String sStr,String fStr, Period d){
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "beginning of period (01.01.2022)", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "end of period (01.01.2022)", required=false) String fStr,
 
-        ParamRequest param = null;
-        if ((sStr!=null)||(fStr!=null)||(d!=null)){
-            param = new ParamRequest(sStr, fStr, d);
-        }
-        log.debug("Get book: " + name + " in svg");
+            @RequestParam(value = "period", required=false) Period d
+    );
 
-        HttpHeaders httpHeaders = getHttpHeaders(IMAGE_SVG, ".svg");
-        return ResponseEntity
-                .ok()
-                .headers(httpHeaders)
-                .body(
-                        service.getSvg(name, currency, param)
-                );
-    }
+    @ApiOperation(value = "Getting a price change for a book", nickname = "getCsv", notes = "Returns the requested format", tags={"public"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful execution of the request", response = Response.class),
+            @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+            @ApiResponse(code = 500, message = "Request execution error", response = Error.class)
+    })
+    @RequestMapping(value = "/1.0.0/price/stat",
+            produces = { "text/csv;charset=UTF-8"},
+            method = RequestMethod.GET)
+    ResponseEntity<String> getCsv(
+            @ApiParam(value = "Book title")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "currency code")
+            @RequestParam(value = "currency") Currency currency,
 
-    @Override
-    public ResponseEntity<List<BookDto>> getJson(String name, Currency currency, String sStr, String fStr, Period d){
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "beginning of period (01.01.2022)", required=false) String sStr,
+            @Pattern(value = "^(3[01]|[12][0-9]|0[1-9]).(1[0-2]|0[1-9]).((20)[0-9]{2})$")
+            @RequestParam(value = "end of period (01.01.2022)", required=false) String fStr,
 
-        ParamRequest param = null;
-        if ((sStr!=null)||(fStr!=null)||(d!=null)){
-            param = new ParamRequest(sStr, fStr, d);
-        }
-        log.debug("Get book: " + name + " in json");
-        return  ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(service.getJson(name, currency, param));
-    }
+            @RequestParam(value = "period", required=false) Period d
+    );
 
-    private HttpHeaders getHttpHeaders(String mediaType, String format) {
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, mediaType);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
-                .attachment()
-                .filename("price_change_report_" + LocalDateTime.now() + format)
-                .build()
-                .toString()
-        );
-        return httpHeaders;
-    }
+
 }
+
+

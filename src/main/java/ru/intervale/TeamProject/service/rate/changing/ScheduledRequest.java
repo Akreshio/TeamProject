@@ -32,11 +32,13 @@ public class ScheduledRequest {
     private AlfaBankService alfaBank;
     private BelApbExchangeClient belApbBank;
 
+    private static Map<String, BigDecimal> rateChange;
+
 
     /**
      * Request to alfa bank every day from 8am to 6pm with an interval of 10 minutes.
      */
-//каждый день с 8:00 до 18:00 с шагом в 10 минт
+//каждый день с 8:00 до 18:00 с шагом в 10 минут
     @Scheduled(cron = "0 0/10 8-18 * * *")
     public void requestEveryTenMinutes () {
         LocalDateTime dateNow = LocalDateTime.now();
@@ -48,11 +50,13 @@ public class ScheduledRequest {
                 dateNow.getMinute()
         );
 
-        Map<String, BigDecimal> exchangeRateChange = belApbBank.getRatesByDate(date);
+        if (rateChange==null) {
+            rateChange = belApbBank.getRatesByDate(date);
+        }
+        rateChange.putAll(alfaBank.getNow());
 
-        exchangeRateChange.putAll(alfaBank.getNow());
-        exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
-        alfaBankDao.save(date,exchangeRateChange);
+        rateChange.forEach((key, value) -> log.debug(key + " " + value));
+        alfaBankDao.save(date,rateChange);
     }
 
     /**
@@ -70,10 +74,10 @@ public class ScheduledRequest {
                 0
         );
 
-        Map<String, BigDecimal> exchangeRateChange = belApbBank.getRatesByDate(date);
+        rateChange = belApbBank.getRatesByDate(date);
+        rateChange.putAll(alfaBank.getNow());
 
-        exchangeRateChange.putAll(alfaBank.getNow());
-        exchangeRateChange.forEach((key, value) -> log.debug(key + " " + value));
-        alfaBankDao.save(date,exchangeRateChange);
+        rateChange.forEach((key, value) -> log.debug(key + " " + value));
+        alfaBankDao.save(date,rateChange);
     }
 }

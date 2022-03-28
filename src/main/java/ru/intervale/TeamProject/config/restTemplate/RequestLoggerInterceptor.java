@@ -14,7 +14,7 @@ import java.io.IOException;
  * The type Custom client http request interceptor.
  */
 @Slf4j
-public class CustomClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
+public class RequestLoggerInterceptor implements ClientHttpRequestInterceptor {
 
     @Override
     @NonNull
@@ -27,7 +27,7 @@ public class CustomClientHttpRequestInterceptor implements ClientHttpRequestInte
         return execution.execute(request, body);
     }
     private void logRequestDetails(HttpRequest request) {
-        log.info("Request Method: {} Headers: {}", request.getMethod(), request.getHeaders());
-        log.info("Request URI: {}", request.getURI());
+        log.debug("Request Method: {} Headers: {}", request.getMethod(), request.getHeaders());
+        log.debug("Request URI: {}", request.getURI());
     }
 }

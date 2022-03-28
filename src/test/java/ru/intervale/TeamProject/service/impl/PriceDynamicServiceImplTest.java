@@ -1,13 +1,6 @@
-
 /*
  * @author S.Maevsky
- * @since 28.03.2022, 11:02
- * @version V 1.0.0
- */
-
-/*
- * @author S.Maevsky
- * @since 20.03.2022, 18:49
+ * @since 28.03.2022, 15:16
  * @version V 1.0.0
  */
 
@@ -29,7 +22,6 @@ import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
 import ru.intervale.TeamProject.service.generator.JsonGeneratorService;
 import ru.intervale.TeamProject.service.generator.impl.JsonGeneratorServiceImpl;
-import ru.intervale.TeamProject.service.impl.PriceDynamicServiceImpl;
 import ru.intervale.TeamProject.service.rate.Currency;
 import ru.intervale.TeamProject.service.rate.changing.RateCurrencyChanging;
 

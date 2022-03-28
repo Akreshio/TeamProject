@@ -38,7 +38,7 @@ public interface AlfaBankDao {
     RateEntity getById(Long id) throws DataAccessException;
 
     /**
-     * Получение данных по курсам валют по указанной валюте по списоку дат со временем.
+     * Получение данных по курсам в указанной валюте по списоку дат со временем.
      *
      * @param period   the period
      * @param currency the currency
@@ -48,9 +48,17 @@ public interface AlfaBankDao {
     Map<LocalDateTime, BigDecimal> getByPeriod(List<LocalDateTime> period, Currency currency)
             throws DataAccessException;
 
-
+    /**
+     * Получение данных по курсам в указанной валюте с даты начала по дату окончания.
+     *
+     * @param dateStart  the date start
+     * @param dateFinish the date finish
+     * @param currency   the currency
+     * @return the by period
+     */
     Map<LocalDateTime, BigDecimal> getByPeriod(LocalDateTime dateStart, LocalDateTime dateFinish,
                                                Currency currency);
+
     /**
      * Сохранение курсов валют.
      *
@@ -74,8 +82,8 @@ public interface AlfaBankDao {
      * Удаление курсов валют с даты и времени начала периода включительно
      * и по дату и время окончания периода включительно.
      *
-     * @param dateStart the start date
-     * @param dateFinish   the end date
+     * @param dateStart  the start date
+     * @param dateFinish the end date
      * @return the boolean
      * @throws DataAccessException the data access exception
      */

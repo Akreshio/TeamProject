@@ -37,11 +37,11 @@ public class BookDto {
     @JsonProperty("weight")
     private int weight;
 
-    @JsonProperty("price in BYN")
+    @JsonProperty("price")
     private BigDecimal price;
 
     // дата , цена
-    @JsonProperty("price book in select period")
+    @JsonProperty("priceBook")
     private Map<LocalDateTime, BigDecimal> priceBook;
 
 }
