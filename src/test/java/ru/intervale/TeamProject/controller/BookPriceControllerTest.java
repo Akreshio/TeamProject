@@ -16,9 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.intervale.TeamProject.dto.BookDto;
-import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
-import ru.intervale.TeamProject.service.generator.impl.JsonGeneratorServiceImpl;
 import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.math.BigDecimal;
@@ -39,13 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BookPriceTest {
+public class BookPriceControllerTest {
 
     @MockBean
     private PriceDynamicService service;
-
-    @MockBean
-    JsonGeneratorServiceImpl jsonGeneratorService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,10 +50,8 @@ public class BookPriceTest {
 
         List<BookDto> booksTest = getBooksForTest();
 
-        when(service.getJson(anyString(), any(Currency.class), any(ParamRequest.class)))
+        when(service.getJson(anyString(), any(Currency.class), any()))
                 .thenReturn(booksTest);
-
-        System.out.println(service.getJson("l;", Currency.RUB, null));
 
         mockMvc.perform(get("/1.0.0/price/stat")
                 .accept("application/json;charset=UTF-8")
@@ -75,20 +68,33 @@ public class BookPriceTest {
                 .andExpect(jsonPath("$.[0].page").value(1408))
                 .andExpect(jsonPath("$.[0].weight").value(1020))
                 .andExpect(jsonPath("$.[0].price").value(20))
-                .andExpect(jsonPath("$.[0].changePrice.2022-03-01T00:00").value(7.50))
-                .andExpect(jsonPath("$.[0].changePrice.2022-03-02T00:00").value(8.50))
+                .andExpect(jsonPath("$.[0].priceBook.2022-03-01T00:00").value(7.50))
+                .andExpect(jsonPath("$.[0].priceBook.2022-03-02T00:00").value(8.50))
                 .andExpect(jsonPath("$.[1].isbn").value("978-5-389-04935-2"))
                 .andExpect(jsonPath("$.[1].title").value("test2"))
                 .andExpect(jsonPath("$.[1].writer").value("Лев Николаевич Толстой"))
                 .andExpect(jsonPath("$.[1].page").value(864))
                 .andExpect(jsonPath("$.[1].weight").value(571))
                 .andExpect(jsonPath("$.[1].price").value(21.50))
-                .andExpect(jsonPath("$.[1].changePrice.2022-03-01T00:00").value(8.80))
-                .andExpect(jsonPath("$.[1].changePrice.2022-03-02T00:00").value(9.80))
-                .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(jsonPath("$.[1].priceBook.2022-03-01T00:00").value(8.80))
+                .andExpect(jsonPath("$.[1].priceBook.2022-03-02T00:00").value(9.80))
+                .andExpect(status().isOk());
 
-        verify(service).getJson(anyString(), any(Currency.class), any(ParamRequest.class));
+        verify(service).getJson(anyString(), any(Currency.class), any());
+    }
+
+    @Test
+    public void testGetJsonInvalidUrn() throws Exception {
+
+        mockMvc.perform(get("/100.0.0/price/stat")
+                .accept("application/json;charset=UTF-8")
+                .param("name", "test")
+                .param("currency", "USD")
+                .param("sStr", "01.03.2022")
+                .param("fStr", "02.03.2022")
+                .param("d", "day")
+        )
+                .andExpect(status().isNotFound());
     }
 
     private List<BookDto> getBooksForTest() {
@@ -99,16 +105,6 @@ public class BookPriceTest {
 
         return bookDtos;
     }
-
-
-//    private List<BookEntity> getBooksForTest() {
-//
-//        BookEntity bookDtoTest = getBookForTest();
-//        BookEntity bookDtoTest2 = getBook2ForTest();
-//        List<BookEntity> bookDtos = Arrays.asList(bookDtoTest, bookDtoTest2);
-//
-//        return bookDtos;
-//    }
 
     private BookDto getBookForTest() {
 

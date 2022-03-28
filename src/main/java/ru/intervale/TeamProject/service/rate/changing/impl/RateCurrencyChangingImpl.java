@@ -49,7 +49,8 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
         List<LocalDateTime> dateList = new ArrayList<>();
 
         // Дата окончания выборки
-        LocalDateTime fDate = LocalDateTime.now();
+        LocalTime time = LocalTime.of(0, 0, 0, 0);
+        LocalDateTime fDate = LocalDateTime.of(LocalDate.now().plusDays(1), time);
         if (param.getFinish()!=null){
             fDate = param.getFinish();
         }
@@ -116,7 +117,7 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
 
         List<LocalDateTime> dateList = new ArrayList<>();
         LocalTime time = LocalTime.of(0, 0, 0, 0);
-        LocalDateTime std = LocalDateTime.of(LocalDate.now(), time);
+        LocalDateTime std = LocalDateTime.of(LocalDate.now().plusDays(1), time);
 
         for (int i=0; i<10; i++){
             dateList.add(std);

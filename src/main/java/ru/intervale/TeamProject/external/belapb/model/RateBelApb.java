@@ -50,19 +50,4 @@ public class RateBelApb {
 
     @JacksonXmlProperty(localName = "Id")
     public String id;
-
-    @Override
-    public String toString() {
-        return "CurrencyBelApb{" +
-                "numCode=" + numCode +
-                ", charCode='" + charCode + '\'' +
-                ", scale=" + scale +
-                ", name='" + name + '\'' +
-                ", rateBuy=" + rateBuy +
-                ", rateSell=" + rateSell +
-                ", cityId=" + cityId +
-                ", bankId='" + bankId + '\'' +
-                ", id='" + id + '\'' +
-                "}\n";
-    }
 }
