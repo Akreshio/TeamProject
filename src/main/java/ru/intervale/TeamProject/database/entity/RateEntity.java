@@ -38,6 +38,14 @@ public class RateEntity {
 
     private BigDecimal rub;
 
+    private BigDecimal cny;
+    private BigDecimal czk;
+    private BigDecimal sek;
+    private BigDecimal chf;
+    private BigDecimal gbp;
+    private BigDecimal uah;
+    private BigDecimal pln;
+
     /**
      * Instantiates a new Rate entity.
      *

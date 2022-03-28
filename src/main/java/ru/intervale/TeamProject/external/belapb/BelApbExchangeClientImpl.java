@@ -115,7 +115,7 @@ public class BelApbExchangeClientImpl implements BelApbExchangeClient {
 
             BigDecimal rateBuy =
                     rate.getRateBuy().divide(new BigDecimal(rate.getScale()), 5, RoundingMode.HALF_UP);
-            rateMap.put(rate.getCharCode(), rateBuy);
+            rateMap.put(rate.getCharCode().toLowerCase(), rateBuy);
         }
     }
 }

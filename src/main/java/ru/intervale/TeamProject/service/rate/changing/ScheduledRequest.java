@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.intervale.TeamProject.service.dao.AlfaBankDao;
 import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
+import ru.intervale.TeamProject.service.external.alfabank.BelApbExchangeClient;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +30,8 @@ public class ScheduledRequest {
 
     private AlfaBankDao alfaBankDao;
     private AlfaBankService alfaBank;
+    private BelApbExchangeClient belApbBank;
+
 
     /**
      * Request to alfa bank every day from 8am to 6pm with an interval of 10 minutes.
@@ -36,17 +39,20 @@ public class ScheduledRequest {
 //каждый день с 8:00 до 18:00 с шагом в 10 минт
     @Scheduled(cron = "0 0/10 8-18 * * *")
     public void requestEveryTenMinutes () {
-        Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
-        exchangeRateChange.forEach((key, value) -> log.debug(key + " " + value));
         LocalDateTime dateNow = LocalDateTime.now();
-        LocalDateTime dateDB = LocalDateTime.of(
+        LocalDateTime date = LocalDateTime.of(
                 dateNow.getYear(),
                 dateNow.getMonth(),
                 dateNow.getDayOfMonth(),
                 dateNow.getHour(),
                 dateNow.getMinute()
         );
-        alfaBankDao.save(dateDB,exchangeRateChange);
+
+        Map<String, BigDecimal> exchangeRateChange = belApbBank.getRatesByDate(date);
+
+        exchangeRateChange.putAll(alfaBank.getNow());
+        exchangeRateChange.forEach((key, value) -> log.info(key + " " + value));
+        alfaBankDao.save(date,exchangeRateChange);
     }
 
     /**
@@ -55,16 +61,19 @@ public class ScheduledRequest {
 //каждый день в 12 ночи
     @Scheduled(cron = "0 0 0 * * *")
     public void requestCloseDay () {
-        Map<String, BigDecimal> exchangeRateChange = alfaBank.getNow();
-        exchangeRateChange.forEach((key, value) -> log.debug(key + " " + value));
         LocalDateTime dateNow = LocalDateTime.now();
-        LocalDateTime dateDB = LocalDateTime.of(
+        LocalDateTime date = LocalDateTime.of(
                 dateNow.getDayOfMonth(),
                 dateNow.getMonth(),
                 dateNow.getYear(),
                 dateNow.getHour(),
-                dateNow.getMinute()
+                0
         );
-        alfaBankDao.save(dateDB,exchangeRateChange);
+
+        Map<String, BigDecimal> exchangeRateChange = belApbBank.getRatesByDate(date);
+
+        exchangeRateChange.putAll(alfaBank.getNow());
+        exchangeRateChange.forEach((key, value) -> log.debug(key + " " + value));
+        alfaBankDao.save(date,exchangeRateChange);
     }
 }
