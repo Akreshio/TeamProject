@@ -6,15 +6,13 @@
 
 package ru.intervale.TeamProject.service.generator;
 
-import com.itextpdf.text.DocumentException;
 import ru.intervale.TeamProject.model.book.BookEntity;
-
 import java.util.List;
 
 /**
  * The interface Pdf generator service.
  */
-public interface PDFGeneratorService {
+public interface PdfGeneratorService {
 
     /**
      * Get pdf byte [ ].
