@@ -1,11 +1,17 @@
 
 /*
  * @author S.Maevsky
+ * @since 28.03.2022, 11:02
+ * @version V 1.0.0
+ */
+
+/*
+ * @author S.Maevsky
  * @since 20.03.2022, 18:49
  * @version V 1.0.0
  */
 
-package ru.intervale.TeamProject.service;
+package ru.intervale.TeamProject.service.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -13,11 +19,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.intervale.TeamProject.dto.BookDto;
+import ru.intervale.TeamProject.mapper.BookMapper;
 import ru.intervale.TeamProject.model.book.BookEntity;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.dao.DatabaseAccess;
+import ru.intervale.TeamProject.service.generator.JsonGeneratorService;
+import ru.intervale.TeamProject.service.generator.impl.JsonGeneratorServiceImpl;
 import ru.intervale.TeamProject.service.impl.PriceDynamicServiceImpl;
 import ru.intervale.TeamProject.service.rate.Currency;
 import ru.intervale.TeamProject.service.rate.changing.RateCurrencyChanging;
@@ -50,6 +61,12 @@ public class PriceDynamicServiceImplTest {
     @Mock
     private DatabaseAccess bookDao;
 
+    @Spy
+    private BookMapper mapper = new BookMapper();
+
+    @Spy
+    JsonGeneratorService jsonGenerator = new JsonGeneratorServiceImpl(mapper);
+
     @InjectMocks
     private PriceDynamicServiceImpl service;
 
@@ -57,7 +74,7 @@ public class PriceDynamicServiceImplTest {
     void testGetJson() {
 
         List<BookEntity> booksTest = getTestBooks();
-        List<BookEntity> bookEntitiesResult = getResultBooks();
+        List<BookDto> bookEntitiesResult = getResultBooks();
         Map<LocalDateTime, BigDecimal> ratesMapTest = getRatesMapForTest();
 
         Mockito.when(bookDao.get(Mockito.anyString())).thenReturn(booksTest);
@@ -77,7 +94,7 @@ public class PriceDynamicServiceImplTest {
     void testGetJsonWithoutPriceChange() {
 
         List<BookEntity> booksTest = Collections.singletonList(getTestBook1WithoutPriceChange());
-        List<BookEntity> booksResult = getResultBooksWithoutPriceChange();
+        List<BookDto> booksResult = getResultBooksWithoutPriceChange();
         Map<LocalDateTime, BigDecimal> ratesMapTest = getRatesMapForTest();
 
         Mockito.when(bookDao.get(Mockito.anyString())).thenReturn(booksTest);
@@ -98,7 +115,7 @@ public class PriceDynamicServiceImplTest {
     void testGetJsonWithPriceChange() {
 
         List<BookEntity> booksTest = Collections.singletonList(getTestBook2WithPriceChange());
-        List<BookEntity> booksResult = getResultBooksWithPriceChange();
+        List<BookDto> booksResult = getResultBooksWithPriceChange();
         Map<LocalDateTime, BigDecimal> ratesMapTest = getRatesMapForTest();
 
         Mockito.when(bookDao.get(Mockito.anyString())).thenReturn(booksTest);
@@ -114,12 +131,12 @@ public class PriceDynamicServiceImplTest {
         verify(changing).getExchangeRate(Mockito.any(Currency.class), Mockito.any(ParamRequest.class));
     }
 
-    //В период до появления книги в бд цена книги будет 0,00
+    //В период до появления книги в бд цена книги в выводе на UI будет 0,00
     @Test
     void testGetJsonWithNewBook() {
 
         List<BookEntity> booksTest = Collections.singletonList(getTestBook3WithNewBook());
-        List<BookEntity> booksResult = getResultBooksWithNewBook();
+        List<BookDto> booksResult = getResultBooksWithNewBook();
         Map<LocalDateTime, BigDecimal> ratesMapTest = getRatesMapForTest();
 
         Mockito.when(bookDao.get(Mockito.anyString())).thenReturn(booksTest);
@@ -139,7 +156,7 @@ public class PriceDynamicServiceImplTest {
     void testGetJsonWithPriceChangeAfterPeriod() {
 
         List<BookEntity> booksTest = Collections.singletonList(getTestBook4WithPriceChangeAfterPeriod());
-        List<BookEntity> booksResult = getResultBooksWithPriceChangeAfterPeriod();
+        List<BookDto> booksResult = getResultBooksWithPriceChangeAfterPeriod();
         Map<LocalDateTime, BigDecimal> ratesMapTest = getRatesMapForTest();
 
         Mockito.when(bookDao.get(Mockito.anyString())).thenReturn(booksTest);
@@ -167,17 +184,17 @@ public class PriceDynamicServiceImplTest {
                 .build();
     }
 
-    private List<BookEntity> getResultBooksWithoutPriceChange() {
+    private List<BookDto> getResultBooksWithoutPriceChange() {
 
-        List<BookEntity> bookEntitiesResult = Collections.singletonList(getTestBook1WithoutPriceChange());
+        List<BookDto> bookDtosResult = Collections.singletonList(mapper.mapBook(getTestBook1WithoutPriceChange()));
         Map<LocalDateTime, BigDecimal> changePriceMap = new HashMap<>();
 
         changePriceMap.put(DATE_TIME_START, new BigDecimal("600.00"));
         changePriceMap.put(DATE_TIME_MIDLE, new BigDecimal("562.50"));
         changePriceMap.put(DATE_TIME_FINISH, new BigDecimal("580.65"));
-        bookEntitiesResult.get(0).setChangePrice(sortByDate(changePriceMap));
+        bookDtosResult.get(0).setPriceBook(sortByDate(changePriceMap));
 
-        return bookEntitiesResult;
+        return bookDtosResult;
     }
 
     private BookEntity getTestBook2WithPriceChange() {
@@ -198,18 +215,17 @@ public class PriceDynamicServiceImplTest {
         return priceMap;
     }
 
-    private List<BookEntity> getResultBooksWithPriceChange() {
+    private List<BookDto> getResultBooksWithPriceChange() {
 
-        List<BookEntity> bookEntitiesResult = Collections.singletonList(getTestBook1WithoutPriceChange());
+        List<BookDto> bookDtosResult = Collections.singletonList(mapper.mapBook(getTestBook1WithoutPriceChange()));
         Map<LocalDateTime, BigDecimal> changePriceMap = new HashMap<>();
 
         changePriceMap.put(DATE_TIME_START, new BigDecimal("300.00"));
         changePriceMap.put(DATE_TIME_MIDLE, new BigDecimal("93.75"));
         changePriceMap.put(DATE_TIME_FINISH, new BigDecimal("580.65"));
-        bookEntitiesResult.get(0).setPreviousBookPrice(getPreviousPriceMap2());
-        bookEntitiesResult.get(0).setChangePrice(sortByDate(changePriceMap));
+        bookDtosResult.get(0).setPriceBook(sortByDate(changePriceMap));
 
-        return bookEntitiesResult;
+        return bookDtosResult;
     }
 
     private BookEntity getTestBook3WithNewBook() {
@@ -231,18 +247,17 @@ public class PriceDynamicServiceImplTest {
         return priceMap;
     }
 
-    private List<BookEntity> getResultBooksWithNewBook() {
+    private List<BookDto> getResultBooksWithNewBook() {
 
-        List<BookEntity> bookEntitiesResult = Collections.singletonList(getTestBook1WithoutPriceChange());
+        List<BookDto> bookDtosResult = Collections.singletonList(mapper.mapBook(getTestBook1WithoutPriceChange()));
         Map<LocalDateTime, BigDecimal> changePriceMap = new HashMap<>();
 
         changePriceMap.put(DATE_TIME_START, new BigDecimal("0.00"));
         changePriceMap.put(DATE_TIME_MIDLE, new BigDecimal("93.75"));
         changePriceMap.put(DATE_TIME_FINISH, new BigDecimal("580.65"));
-        bookEntitiesResult.get(0).setPreviousBookPrice(getPreviousPriceMap3());
-        bookEntitiesResult.get(0).setChangePrice(sortByDate(changePriceMap));
+        bookDtosResult.get(0).setPriceBook(sortByDate(changePriceMap));
 
-        return bookEntitiesResult;
+        return bookDtosResult;
     }
 
     private BookEntity getTestBook4WithPriceChangeAfterPeriod() {
@@ -265,18 +280,17 @@ public class PriceDynamicServiceImplTest {
         return priceMap;
     }
 
-    private List<BookEntity> getResultBooksWithPriceChangeAfterPeriod() {
+    private List<BookDto> getResultBooksWithPriceChangeAfterPeriod() {
 
-        List<BookEntity> bookEntitiesResult = Collections.singletonList(getTestBook1WithoutPriceChange());
+        List<BookDto> bookDtosResult = Collections.singletonList(mapper.mapBook(getTestBook1WithoutPriceChange()));
         Map<LocalDateTime, BigDecimal> changePriceMap = new HashMap<>();
 
         changePriceMap.put(DATE_TIME_START, new BigDecimal("0.00"));
         changePriceMap.put(DATE_TIME_MIDLE, new BigDecimal("93.75"));
         changePriceMap.put(DATE_TIME_FINISH, new BigDecimal("387.10"));
-        bookEntitiesResult.get(0).setPreviousBookPrice(getPreviousPriceMap4());
-        bookEntitiesResult.get(0).setChangePrice(sortByDate(changePriceMap));
+        bookDtosResult.get(0).setPriceBook(sortByDate(changePriceMap));
 
-        return bookEntitiesResult;
+        return bookDtosResult;
     }
 
     private List<BookEntity> getTestBooks(){
@@ -288,9 +302,9 @@ public class PriceDynamicServiceImplTest {
         return books;
     }
 
-    private List<BookEntity> getResultBooks(){
+    private List<BookDto> getResultBooks(){
 
-        List<BookEntity> booksResult = new ArrayList<>();
+        List<BookDto> booksResult = new ArrayList<>();
         booksResult.addAll(getResultBooksWithoutPriceChange());
         booksResult.addAll(getResultBooksWithPriceChange());
 

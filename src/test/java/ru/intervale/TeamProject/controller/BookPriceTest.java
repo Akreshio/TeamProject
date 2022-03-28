@@ -6,7 +6,6 @@
 
 package ru.intervale.TeamProject.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,15 +15,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.intervale.TeamProject.model.book.BookEntity;
+import ru.intervale.TeamProject.dto.BookDto;
 import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.PriceDynamicService;
+import ru.intervale.TeamProject.service.generator.impl.JsonGeneratorServiceImpl;
 import ru.intervale.TeamProject.service.rate.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,19 +44,21 @@ public class BookPriceTest {
     @MockBean
     private PriceDynamicService service;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @MockBean
+    JsonGeneratorServiceImpl jsonGeneratorService;
 
     @Autowired
-    ObjectMapper mapper;
+    private MockMvc mockMvc;
 
     @Test
     public void testGetJson() throws Exception {
 
-        List<BookEntity> booksTest = getBooksForTest();
+        List<BookDto> booksTest = getBooksForTest();
 
         when(service.getJson(anyString(), any(Currency.class), any(ParamRequest.class)))
                 .thenReturn(booksTest);
+
+        System.out.println(service.getJson("l;", Currency.RUB, null));
 
         mockMvc.perform(get("/1.0.0/price/stat")
                 .accept("application/json;charset=UTF-8")
@@ -86,27 +91,37 @@ public class BookPriceTest {
         verify(service).getJson(anyString(), any(Currency.class), any(ParamRequest.class));
     }
 
-    private List<BookEntity> getBooksForTest() {
+    private List<BookDto> getBooksForTest() {
 
-        BookEntity bookDtoTest = getBookForTest();
-        BookEntity bookDtoTest2 = getBook2ForTest();
-        List<BookEntity> bookDtos = Arrays.asList(bookDtoTest, bookDtoTest2);
+        BookDto bookDtoTest = getBookForTest();
+        BookDto bookDtoTest2 = getBook2ForTest();
+        List<BookDto> bookDtos = Arrays.asList(bookDtoTest, bookDtoTest2);
 
         return bookDtos;
     }
 
-    private BookEntity getBookForTest() {
+
+//    private List<BookEntity> getBooksForTest() {
+//
+//        BookEntity bookDtoTest = getBookForTest();
+//        BookEntity bookDtoTest2 = getBook2ForTest();
+//        List<BookEntity> bookDtos = Arrays.asList(bookDtoTest, bookDtoTest2);
+//
+//        return bookDtos;
+//    }
+
+    private BookDto getBookForTest() {
 
         Map<LocalDateTime, BigDecimal> priceMap = getPriceMap();
 
-        return BookEntity.builder()
+        return BookDto.builder()
                 .isbn("978-5-389-07123-0")
                 .title("test")
                 .writer("Лев Николаевич Толстой")
                 .page(1408)
                 .weight(1020)
                 .price(new BigDecimal(20))
-                .changePrice(priceMap)
+                .priceBook(priceMap)
                 .build();
     }
 
@@ -122,18 +137,18 @@ public class BookPriceTest {
         return priceMap;
     }
 
-    private BookEntity getBook2ForTest() {
+    private BookDto getBook2ForTest() {
 
         Map<LocalDateTime, BigDecimal> priceMap = getPriceMap2();
 
-        return BookEntity.builder()
+        return BookDto.builder()
                 .isbn("978-5-389-04935-2")
                 .title("test2")
                 .writer("Лев Николаевич Толстой")
                 .page(864)
                 .weight(571)
                 .price(new BigDecimal(21.50))
-                .changePrice(priceMap)
+                .priceBook(priceMap)
                 .build();
     }
 
