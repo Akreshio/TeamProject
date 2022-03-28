@@ -25,5 +25,26 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="v0.0.2-28-03-2022" author="s.maevsky">
+        <addColumn tableName="rates">
+            <column name="cad" type="numeric">
+            </column>
+            <column name="cny" type="numeric">
+            </column>
+            <column name="czk" type="numeric">
+            </column>
+            <column name="sek" type="numeric">
+            </column>
+            <column name="chf" type="numeric">
+            </column>
+            <column name="gbp" type="numeric">
+            </column>
+            <column name="uah" type="numeric">
+            </column>
+            <column name="pln" type="numeric">
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

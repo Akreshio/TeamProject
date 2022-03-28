@@ -11,15 +11,16 @@ package ru.intervale.TeamProject.service.rate.changing.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.model.request.Period;
 import ru.intervale.TeamProject.service.dao.AlfaBankDao;
-import ru.intervale.TeamProject.service.external.alfabank.AlfaBankService;
-import ru.intervale.TeamProject.model.request.ParamRequest;
 import ru.intervale.TeamProject.service.rate.Currency;
 import ru.intervale.TeamProject.service.rate.changing.RateCurrencyChanging;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class RateCurrencyChangingImpl implements RateCurrencyChanging {
 
-    private AlfaBankService alfabank;
     private AlfaBankDao alfaBankDao;
 
     @Override
@@ -38,13 +38,11 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
         if (param!=null) {
             List<LocalDateTime> date = getTimePeriod(param);
             if ((param.getPeriod() != null) && (param.getPeriod() == Period.hour)) {
-                alfaBankDao.getByPeriod(date.get(0), date.get(1), currency);
+                return alfaBankDao.getByPeriod(date.get(0), date.get(1), currency);
             }
-            alfaBankDao.getByPeriod(date, currency);
-            return alfabank.get(currency,date);
+            return alfaBankDao.getByPeriod(date, currency);
         }
-        alfaBankDao.getByPeriod(getTimePeriod(), currency);
-        return alfabank.get(currency,getTimePeriod());
+        return alfaBankDao.getByPeriod(getTimePeriod(), currency);
     }
 
     private List<LocalDateTime> getTimePeriod(ParamRequest param) {
@@ -117,9 +115,10 @@ public class RateCurrencyChangingImpl implements RateCurrencyChanging {
         log.debug("Using the period formation without param");
 
         List<LocalDateTime> dateList = new ArrayList<>();
-        LocalDateTime std = LocalDateTime.now();
+        LocalTime time = LocalTime.of(0, 0, 0, 0);
+        LocalDateTime std = LocalDateTime.of(LocalDate.now(), time);
 
-        for (int i=0; i<=10; i++){
+        for (int i=0; i<10; i++){
             dateList.add(std);
             std = std.minusDays(1);
         }
