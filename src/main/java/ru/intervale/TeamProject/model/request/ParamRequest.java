@@ -23,7 +23,7 @@ public class ParamRequest {
     }
 
     private LocalDateTime strToDate (@NotNull String str) {
-        String [] strStd =str.split("\\.");
+        String [] strStd = str.split("\\.");
         return LocalDateTime.of(Integer.parseInt(strStd[2]), Integer.parseInt(strStd[1]), Integer.parseInt(strStd[0]),0,0);
     }
 }

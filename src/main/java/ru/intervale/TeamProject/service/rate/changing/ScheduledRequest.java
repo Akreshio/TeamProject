@@ -39,7 +39,7 @@ public class ScheduledRequest {
      * Request to alfa bank every day from 8am to 6pm with an interval of 10 minutes.
      */
 //каждый день с 8:00 до 18:00 с шагом в 10 минут
-    @Scheduled(cron = "0 0/10 8-18 * * *")
+    @Scheduled(cron = "0 0/1 8-18 * * *")
     public void requestEveryTenMinutes () {
         LocalDateTime dateNow = LocalDateTime.now();
         LocalDateTime date = LocalDateTime.of(

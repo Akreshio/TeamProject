@@ -46,6 +46,7 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
     private CsvGeneratorService csvGenerator;
     private SvgGeneratorService svgGenerator;
     private JsonGeneratorService jsonGenerator;
+
     /**
      * Реализация: Виктор Дробышевский.
      */
@@ -122,7 +123,6 @@ public class PriceDynamicServiceImpl implements PriceDynamicService {
         }
         return bookEntities;
     }
-
 
     private void checkOnNull(List<BookEntity> bookEntities) {
         if (bookEntities == null) throw new BookNotFoundException(", nothing found for your request");

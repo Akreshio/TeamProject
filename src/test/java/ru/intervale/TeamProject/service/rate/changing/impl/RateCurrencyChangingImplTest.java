@@ -157,7 +157,6 @@ public class RateCurrencyChangingImplTest {
         assertEquals(testDateTimeList, result);
     }
 
-    @NotNull
     private List<LocalDateTime> getLastTenDays() {
         LocalTime time = LocalTime.of(0, 0, 0, 0);
         LocalDateTime date = LocalDateTime.of(LocalDate.now(), time);

@@ -46,7 +46,7 @@ public class BookInfo implements DatabaseAccess {
             return rateList.getBookList();
         } catch (RestClientException ex) {
             log.error("RestTemplate Exception when get book from Book info.");
-            log.info("Exception: {}", ex.getStackTrace());
+            log.error("Exception:", ex);
             throw new RestClientException("Exception when handling get book from Book info.");
         }
     }

@@ -7,12 +7,16 @@
 
 package ru.intervale.TeamProject.external.alfabank;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRate;
 import ru.intervale.TeamProject.external.alfabank.model.NationalRateListResponse;
 import ru.intervale.TeamProject.external.alfabank.model.Rate;
@@ -34,17 +38,18 @@ public class AlfaBankServiceImpl implements AlfaBankService {
     /**
      * The Rest template .
      */
-    @Autowired
-    @Qualifier("alfaBank")
-    private RestTemplate restTemplate;
+//    @Autowired
+//    @Qualifier("alfaBank")
+//    private RestTemplate restTemplate;
 
-    @Value("${rest.template.alfabank.urn}")
+    @Value("${urn.bank.alfa}")
     private String urn;
-    @Value("${rest.template.alfabank.urn.now}")
+    @Value("${urn.bank.alfa.now}")
     private String urnNow;
 
-    public AlfaBankServiceImpl() {
-    }
+    @Autowired
+    @Qualifier("alfaBankClient")
+    private WebClient webClient;
 
     @Override
     public Map<LocalDateTime, BigDecimal> get(Currency currency,  List <LocalDateTime> dates) {
@@ -53,12 +58,24 @@ public class AlfaBankServiceImpl implements AlfaBankService {
         try {
             for (LocalDateTime date: dates) {
                 String d = formatDate(date);
-                NationalRateListResponse rateList = restTemplate.getForEntity(
-                    urn,
-                    NationalRateListResponse.class,
-                    d,
-                    currency.getCode()
-                ).getBody();
+//                NationalRateListResponse rateList = restTemplate.getForEntity(
+//                    urn,
+//                    NationalRateListResponse.class,
+//                    d,
+//                    currency.getCode()
+//                ).getBody();
+
+                NationalRateListResponse rateList = webClient
+                        .get()
+                        .uri(urn,d,currency.getCode())
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError,
+                                error -> Mono.error(new RuntimeException("API not found")))
+                        .onStatus(HttpStatus::is5xxServerError,
+                                error -> Mono.error(new RuntimeException("Server is not responding")))
+                        .bodyToMono(NationalRateListResponse.class)
+                        .block();
+
 
                 if (rateList!=null) {
                     for (NationalRate rate : rateList.getRates()) {
@@ -72,7 +89,7 @@ public class AlfaBankServiceImpl implements AlfaBankService {
             }
         } catch (RestClientException ex) {
             log.error("RestTemplate Exception when get rates from Alfa-Bank.");
-            log.info("Exception: {}", ex.getStackTrace());
+            log.error("Exception: {}", ex.getStackTrace());
         throw new RestClientException("Exception when handling get rates from Alfa-Bank.");
         }
         return changePrice;
@@ -80,8 +97,22 @@ public class AlfaBankServiceImpl implements AlfaBankService {
     @Override
     public Map<String, BigDecimal> getNow() {
         Map<String, BigDecimal> exchangeRateChange = new HashMap<>();
-        RateListResponse rateList = restTemplate.getForEntity(urnNow, RateListResponse.class).getBody();
         try {
+
+
+//            RateListResponse rateList = restTemplate.getForEntity(urnNow, RateListResponse.class).getBody();
+
+            RateListResponse rateList = webClient
+                    .get()
+                    .uri(urnNow)
+                    .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError,
+                            error -> Mono.error(new RuntimeException("API not found")))
+                    .onStatus(HttpStatus::is5xxServerError,
+                            error -> Mono.error(new RuntimeException("Server is not responding")))
+                    .bodyToMono(RateListResponse.class)
+                    .block();
+
             if (rateList != null){
                 for (Rate rate:rateList.getRates()) {
                     if (rate.getName() != null) {
@@ -96,7 +127,7 @@ public class AlfaBankServiceImpl implements AlfaBankService {
             }
         } catch (RestClientException ex) {
             log.error("RestTemplate Exception when get rates from Alfa-Bank.");
-            log.info("Exception: {}", ex.getStackTrace());
+            log.error("Exception: {}", ex.getStackTrace());
             throw new RestClientException("Exception when handling get rates from Alfa-Bank.");
         }
         return exchangeRateChange;
